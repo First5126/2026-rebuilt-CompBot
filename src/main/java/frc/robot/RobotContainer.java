@@ -47,10 +47,10 @@ public class RobotContainer {
 
   //Declare Subsystems Here
 
-  private Turret m_turret = new Turret();
-  private Hood m_hood = new Hood();
-  private FuelRollers m_fuelRollers = new FuelRollers();
-  private Intake m_intake = new Intake();
+  //private Turret m_turret = new Turret();
+  //private Hood m_hood = new Hood();
+  //private FuelRollers m_fuelRollers = new FuelRollers();
+  //private Intake m_intake = new Intake();
 
 
 
@@ -59,7 +59,12 @@ public class RobotContainer {
   PhotonDetails[] photonDetails = {
     // AprilTagLocalizationConstants.camera1Details
   };
-  public CommandFactory m_commandFactory = new CommandFactory(m_drivetrain, m_turret, m_hood, m_fuelRollers, m_intake);
+  public CommandFactory m_commandFactory = new CommandFactory(m_drivetrain 
+  //m_turret, 
+  //m_hood, 
+  //m_fuelRollers, 
+  //m_intake
+  );
 
   private AprilTagLocalization m_aprilTagLocalization =
       new AprilTagLocalization(
@@ -76,7 +81,13 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    Driver.init(m_drivetrain, m_aprilTagLocalization, m_commandFactory).configureBindings();
+    Driver.init(m_drivetrain, 
+      m_aprilTagLocalization, 
+      m_commandFactory
+      //m_intake, 
+      //m_turret, 
+      //m_zone
+    ).configureBindings();
 
     // Idle while the robot is disabled. This ensures the configured
     // neutral mode is applied to the drive motors while disabled.

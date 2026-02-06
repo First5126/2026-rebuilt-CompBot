@@ -17,12 +17,20 @@ public class CommandFactory {
   private CommandSwerveDrivetrain m_drivetrain;
   private int m_side = 1;
   private Turret m_turret;
-  private Hood hood;
-  private FuelRollers fuelRollers;
-  private Intake intake;
+  private Hood m_hood;
+  private FuelRollers m_fuelRollers;
+  private Intake m_intake;
 
-  public CommandFactory(CommandSwerveDrivetrain drivetrain, Turret turret, Hood hood, FuelRollers fuelRollers, Intake intake) {
-    m_turret = turret;
+  public CommandFactory(CommandSwerveDrivetrain drivetrain
+  //Turret turret, 
+  //Hood hood, 
+  //FuelRollers fuelRollers, 
+  //Intake intake
+  ) {
+    //m_turret = turret;
+    //m_hood = hood;
+    //m_fuelRollers = fuelRollers;
+    //m_intake = intake;
     this.m_drivetrain = drivetrain;
   }
 
@@ -60,6 +68,8 @@ public class CommandFactory {
         .repeatedly();
   }
 
+  /* 
+
   public Command turretRotateToPosition(Angle position) {
     return Commands.runOnce(
         () -> {
@@ -83,14 +93,7 @@ public class CommandFactory {
 
             Rotation2d robotRelativeAngle =
                 fieldRelativeAngle.minus(robotCurrentPose.get().getRotation());
-            /*
-            SmartDashboard.putNumber("Turret distanceX", distanceX);
-            SmartDashboard.putNumber("Turret distanceY", distanceY);
-            SmartDashboard.putNumber("Turret fieldRelativeAngle in Degrees", fieldRelativeAngle.getDegrees());
-            SmartDashboard.putNumber("Turret robotRelativeAngle in Degrees", robotRelativeAngle.getDegrees());
-            SmartDashboard.putString("Turret Target Poseition", "X: "  + targetPose.get().getX() + " Y: " + targetPose.get().getY());
-            SmartDashboard.putString("Turret Current Position", "X: "  + robotCurrentPose.get().getX() + " Y: " + robotCurrentPose.get().getY());
-            */
+                
             m_turret.setPosition(robotRelativeAngle.getMeasure());
           }
         });
@@ -103,6 +106,6 @@ public class CommandFactory {
           m_turret.setPosition(position);
         });
   }
-
+  */
 
 }

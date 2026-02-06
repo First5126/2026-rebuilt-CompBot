@@ -7,6 +7,7 @@ import frc.robot.subsystems.CommandFactory;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.Zones.Zone;
 import frc.robot.vision.AprilTagLocalization;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,8 +19,9 @@ public class Driver extends CustomXboxController implements Controller {
   @Getter @Setter private CommandSwerveDrivetrain drivetrain;
   @Getter @Setter private AprilTagLocalization aprilTagLocalization;
   @Getter @Setter private CommandFactory commandFactory;
-  @Getter @Setter private Intake intake = new Intake();
-  @Getter @Setter private Turret turret = new Turret();
+  @Getter @Setter private Intake intake;
+  @Getter @Setter private Turret turret;
+  @Getter @Setter private Zone zone;
 
   private final SwerveRequest.SwerveDriveBrake BRAKE = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt POINT = new SwerveRequest.PointWheelsAt();
@@ -39,13 +41,18 @@ public class Driver extends CustomXboxController implements Controller {
 
   public static Driver init(CommandSwerveDrivetrain drivetrain,
       AprilTagLocalization aprilTagLocalization,
-      CommandFactory commandFactory) {
+      CommandFactory commandFactory
+      //Intake intake,
+      //Turret turret,
+      //Zone zone
+      ) {
     Driver driver = getInstance();
     driver.setDrivetrain(drivetrain);
     driver.setAprilTagLocalization(aprilTagLocalization);
     driver.setCommandFactory(commandFactory);
-    driver.setTurret(new Turret());
-    driver.setIntake(new Intake());
+    //driver.setIntake(intake);
+    //driver.setTurret(turret);
+    //driver.setZone(zone);
 
     return driver;
   }
@@ -61,9 +68,12 @@ public class Driver extends CustomXboxController implements Controller {
             this::getLeftY,
             this::getLeftX));
 
+    //Turret Default Command
+    //this.getTurret().setDefaultCommand(commandFactory.trackTargetPose(drivetrain::getPose2d, this.getZone()::getTurretShootingPose));
 
-    this.a().onTrue(aprilTagLocalization.setTrust(true));
-    this.a().onFalse(aprilTagLocalization.setTrust(false));
+
+    //this.a().onTrue(aprilTagLocalization.setTrust(true));
+    //this.a().onFalse(aprilTagLocalization.setTrust(false));
 
     // Reset the field-centric heading on left bumper press.
     SmartDashboard.putNumber("Pose X", 0);
