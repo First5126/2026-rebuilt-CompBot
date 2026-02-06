@@ -12,9 +12,13 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+import frc.robot.constants.AprilTagLocalizationConstants;
+import frc.robot.constants.AprilTagLocalizationConstants.PhotonDetails;
 import frc.robot.controller.Driver;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.CommandFactory;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.vision.AprilTagLocalization;
 
 public class RobotContainer {
   private double MaxSpeed =
@@ -37,12 +41,27 @@ public class RobotContainer {
 
   public final CommandSwerveDrivetrain m_drivetrain = TunerConstants.createDrivetrain();
 
+  PhotonDetails[] photonDetails = {
+    // AprilTagLocalizationConstants.camera1Details
+  };
+  public CommandFactory m_commandFactory = new CommandFactory(m_drivetrain);
+
+  private AprilTagLocalization m_aprilTagLocalization =
+      new AprilTagLocalization(
+          m_drivetrain::getPose2d,
+          m_drivetrain::resetPose,
+          m_drivetrain::addVisionMeasurement,
+          m_drivetrain,
+          photonDetails,
+          AprilTagLocalizationConstants.LIMELIGHT_DETAILS_RIGHT);
+  
+
   public RobotContainer() {
     configureBindings();
   }
 
   private void configureBindings() {
-    Driver.init(m_drivetrain).configureBindings();
+    Driver.init(m_drivetrain, m_aprilTagLocalization, m_commandFactory).configureBindings();
 
     // Idle while the robot is disabled. This ensures the configured
     // neutral mode is applied to the drive motors while disabled.
