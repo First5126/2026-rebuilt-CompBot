@@ -18,6 +18,10 @@ import frc.robot.controller.Driver;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandFactory;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.FuelRollers;
+import frc.robot.subsystems.Hood;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Turret;
 import frc.robot.vision.AprilTagLocalization;
 
 public class RobotContainer {
@@ -41,10 +45,21 @@ public class RobotContainer {
 
   public final CommandSwerveDrivetrain m_drivetrain = TunerConstants.createDrivetrain();
 
+  //Declare Subsystems Here
+
+  private Turret m_turret = new Turret();
+  private Hood m_hood = new Hood();
+  private FuelRollers m_fuelRollers = new FuelRollers();
+  private Intake m_intake = new Intake();
+
+
+
+  //End of Declaring
+
   PhotonDetails[] photonDetails = {
     // AprilTagLocalizationConstants.camera1Details
   };
-  public CommandFactory m_commandFactory = new CommandFactory(m_drivetrain);
+  public CommandFactory m_commandFactory = new CommandFactory(m_drivetrain, m_turret, m_hood, m_fuelRollers, m_intake);
 
   private AprilTagLocalization m_aprilTagLocalization =
       new AprilTagLocalization(

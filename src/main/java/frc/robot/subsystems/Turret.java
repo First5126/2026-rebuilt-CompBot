@@ -64,13 +64,7 @@ public class Turret extends SubsystemBase {
    * @param position The target angle (use WPILib Units, e.g. Units.Degrees.of(90))
    * @return a WPILib Command object to run once
    */
-  public Command rotateToPosition(Angle position) {
-    return runOnce(
-        () -> {
-          setPosition(position);
-          ;
-        });
-  }
+  
 
   @Override
   public void periodic() {
@@ -78,34 +72,9 @@ public class Turret extends SubsystemBase {
     SmartDashboard.putNumber("Turret Angle (deg)", currentAngle);
   }
 
-  public Command trackTargetPose(Supplier<Pose2d> robotCurrentPose, Supplier<Pose2d> targetPose) {
-    return run(
-        () -> {
-          if (robotCurrentPose != null && targetPose.get() != null) {
-            Pose2d turretPose = robotCurrentPose.get().plus(TurretConstants.TURRET_OFFSET);
+  
 
-            double distanceX = targetPose.get().getX() - turretPose.getX();
-            double distanceY = targetPose.get().getY() - turretPose.getY();
-
-            Rotation2d fieldRelativeAngle =
-                Rotation2d.fromRadians(Math.atan2(distanceY, distanceX));
-
-            Rotation2d robotRelativeAngle =
-                fieldRelativeAngle.minus(robotCurrentPose.get().getRotation());
-            /*
-            SmartDashboard.putNumber("Turret distanceX", distanceX);
-            SmartDashboard.putNumber("Turret distanceY", distanceY);
-            SmartDashboard.putNumber("Turret fieldRelativeAngle in Degrees", fieldRelativeAngle.getDegrees());
-            SmartDashboard.putNumber("Turret robotRelativeAngle in Degrees", robotRelativeAngle.getDegrees());
-            SmartDashboard.putString("Turret Target Poseition", "X: "  + targetPose.get().getX() + " Y: " + targetPose.get().getY());
-            SmartDashboard.putString("Turret Current Position", "X: "  + robotCurrentPose.get().getX() + " Y: " + robotCurrentPose.get().getY());
-            */
-            setPosition(robotRelativeAngle.getMeasure());
-          }
-        });
-  }
-
-  private void setPosition(final Angle position) {
+  public void setPosition(final Angle position) {
     // Convert all angles to degrees for clamping
     double minDegrees = TurretConstants.MIN_ANGLE.in(Degrees);
     double maxDegrees = TurretConstants.MAX_ANGLE.in(Degrees);
