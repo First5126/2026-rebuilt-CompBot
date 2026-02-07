@@ -297,7 +297,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             double angle = Math.atan2(x, y) + Math.PI / 2;
             x = Math.cos(angle) * activeThrottleValue;
             y = Math.sin(angle) * activeThrottleValue;
-          } else if (x == 0 && y == 0 && rotation == 0) {
+          } else if (rotation == 0) {
             // robot is not receiving input
             ChassisSpeeds speeds = getSpeeds();
 

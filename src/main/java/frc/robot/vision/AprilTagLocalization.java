@@ -55,9 +55,10 @@ public class AprilTagLocalization {
    * Creates a new AprilTagLocalization.
    *
    * @param poseSupplier supplies the current robot pose
-   * @param visionConsumer // a consumer that accepts the vision pose, timestamp, and std deviations
-   * @param details // the details of the limelight, more than one can be passed to allow for
-   *     multipe on the bot.
+   * @param visionConsumer a consumer that accepts the vision pose, timestamp, and standard
+   *     deviations
+   * @param details the details of the limelight; more than one can be passed to allow for
+   *     multiple on the bot.
    */
   public AprilTagLocalization(
       Supplier<Pose2d> poseSupplier,
@@ -169,8 +170,8 @@ public class AprilTagLocalization {
                 / MAX_TAG_DISTANCE.in(Meters); // scale the std deviation by the distance
         // Validate the pose for sanity reject bad poses  if fullTrust is true accept regarless of
         // sanity
-        SmartDashboard.putNumber("Pose Esitmate X:", poseEstimate.pose.getX());
-        SmartDashboard.putNumber("Pose Esitmate Y:", poseEstimate.pose.getY());
+        SmartDashboard.putNumber("Pose Estimate X:", poseEstimate.pose.getX());
+        SmartDashboard.putNumber("Pose Estimate Y:", poseEstimate.pose.getY());
         if (m_FullTrust) {
           // set the pose in the pose consumer
           m_poseReset.accept(
