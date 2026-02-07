@@ -24,9 +24,16 @@ public class PhotonVisionHelpers {
   public static double getAvrageDistanceBetweenTags(
       PhotonDetails photonDetail, Pose2d robotPose2d) {
 
-    // TODO Cole  Replace deprecated getLasterdResult
+    // TODO Cole  Replace deprecated getLatestResult
     List<PhotonTrackedTarget> targets = photonDetail.camera.getLatestResult().getTargets();
     int numberOfTargets = targets.size();
+
+    // Return 0.0 when no targets are available to avoid division by zero.
+    // This results in a scale factor of 0 in pose estimation, indicating close distance to tags.
+    if (numberOfTargets == 0) {
+      return 0.0;
+    }
+
     double totalDistanceOfTargets = 0;
     for (PhotonTrackedTarget target : targets) {
       totalDistanceOfTargets +=
