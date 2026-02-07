@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.CANConstants;
@@ -37,6 +36,4 @@ public class Hood extends SubsystemBase {
   public void setPosition(Angle position) {
     m_hoodMotor.setControl(m_positionVoltageRequest.withPosition(position));
   }
-
-  
 }

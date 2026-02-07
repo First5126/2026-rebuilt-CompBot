@@ -1,16 +1,9 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.constants.TurretConstants;
 import frc.robot.constants.WaypointConstants;
 import java.util.Set;
-import java.util.function.Supplier;
-
-import javax.swing.text.Position;
 
 public class CommandFactory {
 
@@ -22,15 +15,15 @@ public class CommandFactory {
   private Intake m_intake;
 
   public CommandFactory(CommandSwerveDrivetrain drivetrain
-  //Turret turret, 
-  //Hood hood, 
-  //FuelRollers fuelRollers, 
-  //Intake intake
-  ) {
-    //m_turret = turret;
-    //m_hood = hood;
-    //m_fuelRollers = fuelRollers;
-    //m_intake = intake;
+      // Turret turret,
+      // Hood hood,
+      // FuelRollers fuelRollers,
+      // Intake intake
+      ) {
+    // m_turret = turret;
+    // m_hood = hood;
+    // m_fuelRollers = fuelRollers;
+    // m_intake = intake;
     this.m_drivetrain = drivetrain;
   }
 
@@ -68,7 +61,7 @@ public class CommandFactory {
         .repeatedly();
   }
 
-  /* 
+  /*
 
   public Command turretRotateToPosition(Angle position) {
     return Commands.runOnce(
@@ -93,7 +86,7 @@ public class CommandFactory {
 
             Rotation2d robotRelativeAngle =
                 fieldRelativeAngle.minus(robotCurrentPose.get().getRotation());
-                
+
             m_turret.setPosition(robotRelativeAngle.getMeasure());
           }
         });

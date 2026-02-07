@@ -12,15 +12,11 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorArrangementValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.CANConstants;
 import frc.robot.constants.TurretConstants;
-import java.util.function.Supplier;
 
 public class Turret extends SubsystemBase {
   private final TalonFXS m_turretMotor =
@@ -64,15 +60,11 @@ public class Turret extends SubsystemBase {
    * @param position The target angle (use WPILib Units, e.g. Units.Degrees.of(90))
    * @return a WPILib Command object to run once
    */
-  
-
   @Override
   public void periodic() {
     double currentAngle = m_turretMotor.getPosition().getValueAsDouble() * 360.0;
     SmartDashboard.putNumber("Turret Angle (deg)", currentAngle);
   }
-
-  
 
   public void setPosition(final Angle position) {
     // Convert all angles to degrees for clamping
