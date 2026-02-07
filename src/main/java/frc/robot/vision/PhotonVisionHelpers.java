@@ -29,7 +29,7 @@ public class PhotonVisionHelpers {
     int numberOfTargets = targets.size();
     double totalDistanceOfTargets = 0;
     for (PhotonTrackedTarget target : targets) {
-      numberOfTargets +=
+      totalDistanceOfTargets += 
           PhotonUtils.getDistanceToPose(
               robotPose2d,
               AprilTagLocalizationConstants.FIELD_LAYOUT

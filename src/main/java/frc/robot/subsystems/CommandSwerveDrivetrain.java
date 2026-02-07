@@ -280,20 +280,23 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
               CustomXboxController.modifyAxisWithCustomDeadband(rotationSupplier.get(), 0.05, 1) / 2;
           double x = CustomXboxController.modifyAxis(xSupplier.get());
           double y = CustomXboxController.modifyAxis(ySupplier.get());
-          double activeThrottle;
+          boolean isFieldCentric;
+          double activeThrottleValue;
 
           if (fieldCentricthrottle != 0) {
-            activeThrottle = fieldCentricthrottle;
+            isFieldCentric = true; 
+            activeThrottleValue = fieldCentricthrottle;
           } else {
-            activeThrottle = robotCentricThrottle;
+            isFieldCentric = false;
+            activeThrottleValue = robotCentricThrottle;
           }
 
           boolean isBraking = false;
 
           if (!(x == 0 && y == 0)) {
             double angle = Math.atan2(x, y) + Math.PI / 2;
-            x = Math.cos(angle) * activeThrottle;
-            y = Math.sin(angle) * activeThrottle;
+            x = Math.cos(angle) * activeThrottleValue;
+            y = Math.sin(angle) * activeThrottleValue;
           } else if (x == 0 && y == 0 && rotation == 0) {
             // robot is not receiving input
             ChassisSpeeds speeds = getSpeeds();
@@ -306,17 +309,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
           }
 
           if (!isBraking) {
-            if (activeThrottle == robotCentricThrottle) {
-              setControl(
-                  m_RobotCentricdrive
-                      .withVelocityX(percentOutputToMetersPerSecond(m_xLimiter.calculate(x)))
-                      .withDeadband(0.05)
-                      .withVelocityY(-percentOutputToMetersPerSecond(m_yLimiter.calculate(y)))
-                      .withDeadband(0.05)
-                      .withRotationalRate(
-                          -percentOutputToRadiansPerSecond(m_rotationLimiter.calculate(rotation))));
-            } else {
-              setControl(
+            if (isFieldCentric) {
+                setControl(
                   m_FieldCentricdrive
                       .withVelocityX(percentOutputToMetersPerSecond(m_xLimiter.calculate(x)))
                       .withDeadband(0.05)
@@ -324,6 +318,16 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                       .withDeadband(0.05)
                       .withRotationalRate(
                           -percentOutputToRadiansPerSecond(m_rotationLimiter.calculate(rotation))));
+            } else {
+                 setControl(
+                  m_RobotCentricdrive
+                      .withVelocityX(percentOutputToMetersPerSecond(m_xLimiter.calculate(x)))
+                      .withDeadband(0.05)
+                      .withVelocityY(-percentOutputToMetersPerSecond(m_yLimiter.calculate(y)))
+                      .withDeadband(0.05)
+                      .withRotationalRate(
+                          -percentOutputToRadiansPerSecond(m_rotationLimiter.calculate(rotation))));
+
             }
           }
         });
@@ -369,7 +373,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     public Command goToPose(Supplier<Pose2d> pose) {
-        return goToPose(pose.get());
+        return defer(()->goToPose(pose.get()));
     }
 
     /**

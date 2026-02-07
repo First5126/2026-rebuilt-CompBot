@@ -57,7 +57,6 @@ public class Turret extends SubsystemBase {
   /**
    * Returns a command that rotates the turret to the specified position.
    *
-   * @param position The target angle (use WPILib Units, e.g. Units.Degrees.of(90))
    * @return a WPILib Command object to run once
    */
   @Override

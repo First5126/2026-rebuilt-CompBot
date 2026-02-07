@@ -80,6 +80,7 @@ public class Zones extends SubsystemBase {
     return (x >= minX && x <= maxX) && (y >= minY && y <= maxY);
   }
 
+  @Override
   public void periodic() {
     SmartDashboard.putString("CurrentZone", CurrentZone.name());
   }

@@ -66,15 +66,15 @@ public class AprilTagLocalization {
       CommandSwerveDrivetrain drivetrain,
       PhotonDetails[] photonDetails,
       LimelightDetails... details) {
-    m_notifier.startPeriodic(
-        LOCALIZATION_PERIOD.in(
-            Seconds)); // set up a pose estimation loop with a 0.02 second period.
     m_LimelightDetails = details;
     m_PhotonVisionCameras = photonDetails;
     m_robotPoseSupplier = poseSupplier;
     m_poseReset = resetPose;
     m_VisionConsumer = visionConsumer;
     m_drivetrain = drivetrain;
+     m_notifier.startPeriodic(
+        LOCALIZATION_PERIOD.in(
+            Seconds)); // set up a pose estimation loop with a 0.02 second period.
   }
 
   /**
