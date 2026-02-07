@@ -49,6 +49,7 @@ public class StageData extends SubsystemBase {
     if (auto) return GameStage.Auto;
 
     double gameTime = DriverStation.getMatchTime();
+    if (gameTime < 0) return GameStage.TransitionShift;
     if (gameTime < 30) return GameStage.Endgame;
     else if (gameTime < 55) return GameStage.ShiftFour;
     else if (gameTime < 80) return GameStage.ShiftThree;
