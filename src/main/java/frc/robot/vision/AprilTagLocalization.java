@@ -169,8 +169,8 @@ public class AprilTagLocalization {
                 / MAX_TAG_DISTANCE.in(Meters); // scale the std deviation by the distance
         // Validate the pose for sanity reject bad poses  if fullTrust is true accept regarless of
         // sanity
-        SmartDashboard.putNumber("Pose Esitmate X:", poseEstimate.pose.getX());
-        SmartDashboard.putNumber("Pose Esitmate Y:", poseEstimate.pose.getY());
+        SmartDashboard.putNumber("Pose Estimate X:", poseEstimate.pose.getX());
+        SmartDashboard.putNumber("Pose Estimate Y:", poseEstimate.pose.getY());
         if (m_FullTrust) {
           // set the pose in the pose consumer
           m_poseReset.accept(
