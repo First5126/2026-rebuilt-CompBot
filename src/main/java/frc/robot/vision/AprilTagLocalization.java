@@ -72,7 +72,7 @@ public class AprilTagLocalization {
     m_poseReset = resetPose;
     m_VisionConsumer = visionConsumer;
     m_drivetrain = drivetrain;
-     m_notifier.startPeriodic(
+    m_notifier.startPeriodic(
         LOCALIZATION_PERIOD.in(
             Seconds)); // set up a pose estimation loop with a 0.02 second period.
   }
