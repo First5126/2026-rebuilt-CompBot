@@ -57,8 +57,8 @@ public class AprilTagLocalization {
    * @param poseSupplier supplies the current robot pose
    * @param visionConsumer a consumer that accepts the vision pose, timestamp, and standard
    *     deviations
-   * @param details the details of the limelight; more than one can be passed to allow for
-   *     multiple on the bot.
+   * @param details the details of the limelight; more than one can be passed to allow for multiple
+   *     on the bot.
    */
   public AprilTagLocalization(
       Supplier<Pose2d> poseSupplier,
