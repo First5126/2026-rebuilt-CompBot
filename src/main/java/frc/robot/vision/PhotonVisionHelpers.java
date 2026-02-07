@@ -27,6 +27,12 @@ public class PhotonVisionHelpers {
     // TODO Cole  Replace deprecated getLasterdResult
     List<PhotonTrackedTarget> targets = photonDetail.camera.getLatestResult().getTargets();
     int numberOfTargets = targets.size();
+
+    // Early return if no targets are detected to avoid division by zero
+    if (numberOfTargets == 0) {
+      return 0.0;
+    }
+
     double totalDistanceOfTargets = 0;
     for (PhotonTrackedTarget target : targets) {
       totalDistanceOfTargets +=
