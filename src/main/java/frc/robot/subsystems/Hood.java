@@ -30,7 +30,7 @@ public class Hood extends SubsystemBase {
 
     m_hoodMotor.getConfigurator().apply(m_motorConfigs);
 
-    m_positionVoltageRequest = new PositionVoltage(null).withSlot(0);
+    m_positionVoltageRequest = new PositionVoltage(0).withSlot(0);
   }
 
   public void setPosition(Angle position) {
