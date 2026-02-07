@@ -29,12 +29,16 @@ public class PhotonVisionHelpers {
     int numberOfTargets = targets.size();
     double totalDistanceOfTargets = 0;
     for (PhotonTrackedTarget target : targets) {
-      totalDistanceOfTargets += 
+      totalDistanceOfTargets +=
           PhotonUtils.getDistanceToPose(
               robotPose2d,
               AprilTagLocalizationConstants.FIELD_LAYOUT
                   .getTagPose(target.getFiducialId())
-                  .get()
+                  .orElseThrow(
+                      () ->
+                          new IllegalArgumentException(
+                              "No tag pose found in FIELD_LAYOUT for fiducial ID "
+                                  + target.getFiducialId()))
                   .toPose2d());
     }
     return totalDistanceOfTargets / numberOfTargets;
