@@ -34,26 +34,26 @@ public class CommandFactory {
                 case 1:
                   System.out.println("Heading To BottomLeftCorner");
                   return m_drivetrain
-                      .goToPose(WaypointConstants.BottomLeftCornner)
+                      .goToPose(WaypointConstants.BottomLeftCorner)
                       .andThen(() -> m_side = 2);
 
                 case 2:
                   System.out.println("Heading To TopLeftCorner");
                   return m_drivetrain
-                      .goToPose(WaypointConstants.TopLeftCornner)
+                      .goToPose(WaypointConstants.TopLeftCorner)
                       .andThen(() -> m_side = 3);
 
                 case 3:
                   System.out.println("Heading To TopRightCorner");
                   return m_drivetrain
-                      .goToPose(WaypointConstants.TopRightCornner)
+                      .goToPose(WaypointConstants.TopRightCorner)
                       .andThen(() -> m_side = 4);
 
                 case 4:
                 default:
                   System.out.println("Heading To BottomRightCorner");
                   return m_drivetrain
-                      .goToPose(WaypointConstants.BottomRightCornner)
+                      .goToPose(WaypointConstants.BottomRightCorner)
                       .andThen(() -> m_side = 1);
               }
             },
