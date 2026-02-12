@@ -25,6 +25,7 @@ public class Turret extends SubsystemBase {
       new CANcoder(CANConstants.turretEncoder, CANConstants.driveBaseCanivore);
   private final PositionVoltage m_positionControl = new PositionVoltage(0);
 
+  /** Creates the turret subsystem and configures hardware. */
   public Turret() {
 
     CANcoderConfiguration canCoderConfiguration = new CANcoderConfiguration();
@@ -54,17 +55,18 @@ public class Turret extends SubsystemBase {
     m_turretMotor.getConfigurator().apply(talonFXSConfiguration);
   }
 
-  /**
-   * Returns a command that rotates the turret to the specified position.
-   *
-   * @return a WPILib Command object to run once
-   */
+  /** Updates dashboard telemetry for the turret. */
   @Override
   public void periodic() {
     double currentAngle = m_turretMotor.getPosition().getValueAsDouble() * 360.0;
     SmartDashboard.putNumber("Turret Angle (deg)", currentAngle);
   }
 
+  /**
+   * Sets the turret target position, clamping to configured limits.
+   *
+   * @param position desired turret angle
+   */
   public void setPosition(final Angle position) {
     // Convert all angles to degrees for clamping
     double minDegrees = TurretConstants.MIN_ANGLE.in(Degrees);

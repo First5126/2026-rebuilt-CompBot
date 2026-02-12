@@ -14,6 +14,11 @@ public class CommandFactory {
   private FuelRollers m_fuelRollers;
   private Intake m_intake;
 
+  /**
+   * Creates a command factory for the drivetrain and other subsystems.
+   *
+   * @param drivetrain drivetrain used to build commands
+   */
   public CommandFactory(CommandSwerveDrivetrain drivetrain
       // Turret turret,
       // Hood hood,
@@ -27,6 +32,11 @@ public class CommandFactory {
     this.m_drivetrain = drivetrain;
   }
 
+  /**
+   * Builds a command that drives the robot around the four field corners.
+   *
+   * @return repeating command to cycle through the waypoints
+   */
   public Command driveCircle() {
     return Commands.defer(
             () -> {

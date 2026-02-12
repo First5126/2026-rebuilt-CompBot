@@ -71,6 +71,7 @@ public class RobotContainer {
           photonDetails,
           AprilTagLocalizationConstants.LIMELIGHT_DETAILS_RIGHT);
 
+  /** Creates the container and configures bindings. */
   public RobotContainer() {
     configureBindings();
   }
@@ -93,6 +94,11 @@ public class RobotContainer {
     m_drivetrain.registerTelemetry(logger::telemeterize);
   }
 
+  /**
+   * Builds the autonomous command sequence.
+   *
+   * @return command to run during autonomous
+   */
   public Command getAutonomousCommand() {
     // Simple drive forward auton
     final var idle = new SwerveRequest.Idle();

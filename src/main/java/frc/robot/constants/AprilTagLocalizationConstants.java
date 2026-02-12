@@ -30,8 +30,12 @@ public class AprilTagLocalizationConstants {
     public Matrix<N3, N1> farStdDevs;
     public Matrix<N3, N1> inverseOffset;
 
-    /*
+    /**
+     * Creates a Limelight configuration entry.
      *
+     * @param name limelight network table name
+     * @param closeStdDevs standard deviations for close targets
+     * @param farStdDevs standard deviations for far targets
      */
     public LimelightDetails(String name, Matrix<N3, N1> closeStdDevs, Matrix<N3, N1> farStdDevs) {
       this.name = name;
@@ -47,8 +51,13 @@ public class AprilTagLocalizationConstants {
     public Matrix<N3, N1> farStdDevs;
     public PhotonPoseEstimator poseEstimator;
 
-    /*
+    /**
+     * Creates a PhotonVision configuration entry.
      *
+     * @param camera photon camera instance
+     * @param robotToCam transform from robot to camera
+     * @param closeStdDevs standard deviations for close targets
+     * @param farStdDevs standard deviations for far targets
      */
     public PhotonDetails(
         PhotonCamera camera,

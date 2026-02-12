@@ -16,7 +16,6 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -257,7 +256,17 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
     }
 
-    public Command gasPedalCommand(
+        /**
+         * Creates a command that drives using throttle and joystick inputs.
+         *
+         * @param fieldCentricthrottleSupplier field-centric throttle input
+         * @param robotCentricthrottleSupplier robot-centric throttle input
+         * @param rotationSupplier rotation input
+         * @param xSupplier translation X input
+         * @param ySupplier translation Y input
+         * @return command that applies the drive request continuously
+         */
+        public Command gasPedalCommand(
       Supplier<Double> fieldCentricthrottleSupplier,
       Supplier<Double> robotCentricthrottleSupplier,
       Supplier<Double> rotationSupplier,
@@ -297,8 +306,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             y = Math.sin(angle) * activeThrottleValue;
           } else if (rotation == 0) {
             // robot is not receiving input
-            ChassisSpeeds speeds = getSpeeds();
-
             // are we near stop within a tolarance
             //if (MathUtil.isNear(0, speeds.vxMetersPerSecond, 0.01) && MathUtil.isNear(0, speeds.vyMetersPerSecond, 0.01) && MathUtil.isNear(0, speeds.omegaRadiansPerSecond, 0.01)) {
               //isBraking = true;
@@ -331,18 +338,25 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         });
   }
 
-  public double percentOutputToMetersPerSecond(double percentOutput) {
+    /**
+     * Converts a percent output to a linear velocity.
+     *
+     * @param percentOutput percent output from -1 to 1
+     * @return velocity in meters per second
+     */
+    public double percentOutputToMetersPerSecond(double percentOutput) {
     return DrivetrainConstants.maxSpeedMetersPerSecond * percentOutput;
   }
 
-  public double percentOutputToRadiansPerSecond(double percentOutput) {
+    /**
+     * Converts a percent output to an angular velocity.
+     *
+     * @param percentOutput percent output from -1 to 1
+     * @return angular velocity in radians per second
+     */
+    public double percentOutputToRadiansPerSecond(double percentOutput) {
     return DrivetrainConstants.maxAngularVelocityRadiansPerSecond * percentOutput;
   }
-
-  private ChassisSpeeds getSpeeds() {
-    return getState().Speeds;
-  }
-
 
     private void startSimThread() {
         m_lastSimTime = Utils.getCurrentTimeSeconds();
@@ -359,10 +373,21 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         m_simNotifier.startPeriodic(kSimLoopPeriod);
     }
 
+    /**
+     * Returns the drivetrain's current pose estimate.
+     *
+     * @return current pose
+     */
     public Pose2d getPose2d(){
         return getState().Pose;
     }
 
+    /**
+     * Creates a command that pathfinds to a target pose.
+     *
+     * @param pose target pose
+     * @return command that pathfinds to the pose
+     */
     public Command goToPose(Pose2d pose) {
         double[] debugArray = {pose.getX(), pose.getY()};
         SmartDashboard.putNumberArray("Going to Pose", debugArray);
@@ -370,6 +395,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return AutoBuilder.pathfindToPose(pose, DrivetrainConstants.pathConstraints);
     }
 
+    /**
+     * Creates a command that pathfinds to a pose provided by a supplier.
+     *
+     * @param pose supplier for the target pose
+     * @return command that defers to the supplied pose
+     */
     public Command goToPose(Supplier<Pose2d> pose) {
         return defer(()->goToPose(pose.get()));
     }
