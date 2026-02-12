@@ -29,9 +29,23 @@ public class PhotonVisionHelpers {
    * @param pose2 second pose
    * @return distance in meters between the poses
    */
-  public static double findDIstance(Pose2d pose1, Pose2d pose2) {
+  public static double findDistance(Pose2d pose1, Pose2d pose2) {
 
     return PhotonUtils.getDistanceToPose(pose1, pose2);
+  }
+
+  /**
+   * Computes the distance between two poses.
+   *
+   * @param pose1 first pose
+   * @param pose2 second pose
+   * @return distance in meters between the poses
+   * @deprecated Use {@link #findDistance(Pose2d, Pose2d)} instead.
+   */
+  @Deprecated(forRemoval = false)
+  public static double findDIstance(Pose2d pose1, Pose2d pose2) {
+
+    return findDistance(pose1, pose2);
   }
 
   /**
