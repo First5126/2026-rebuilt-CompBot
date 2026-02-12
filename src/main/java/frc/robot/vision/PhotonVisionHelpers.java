@@ -43,7 +43,7 @@ public class PhotonVisionHelpers {
    * @param robotPose2d current robot pose
    * @return average distance in meters, or 0.0 if no targets are visible
    */
-  public static double getAvrageDistanceBetweenTags(
+  public static double getAverageDistanceBetweenTags(
       PhotonDetails photonDetail, Pose2d robotPose2d) {
 
     // TODO Cole  Replace deprecated getLatestResult
