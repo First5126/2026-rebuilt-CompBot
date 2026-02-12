@@ -1,9 +1,11 @@
 package frc.robot.vision;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import frc.robot.constants.AprilTagLocalizationConstants;
 import frc.robot.constants.AprilTagLocalizationConstants.PhotonDetails;
 import java.util.List;
+import java.util.Optional;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -55,18 +57,14 @@ public class PhotonVisionHelpers {
     }
 
     double totalDistanceOfTargets = 0;
+    Optional<Pose3d> currentTagPose;
     for (PhotonTrackedTarget target : targets) {
-      totalDistanceOfTargets +=
-          PhotonUtils.getDistanceToPose(
-              robotPose2d,
-              AprilTagLocalizationConstants.FIELD_LAYOUT
-                  .getTagPose(target.getFiducialId())
-                  .orElseThrow(
-                      () ->
-                          new IllegalArgumentException(
-                              "No tag pose found in FIELD_LAYOUT for fiducial ID "
-                                  + target.getFiducialId()))
-                  .toPose2d());
+      currentTagPose =
+          AprilTagLocalizationConstants.FIELD_LAYOUT.getTagPose(target.getFiducialId());
+      if (currentTagPose.isPresent()) {
+        totalDistanceOfTargets +=
+            PhotonUtils.getDistanceToPose(robotPose2d, currentTagPose.get().toPose2d());
+      }
     }
     return totalDistanceOfTargets / numberOfTargets;
   }
