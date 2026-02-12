@@ -216,7 +216,7 @@ public class AprilTagLocalization {
           est -> {
             double scale =
                 PhotonVisionHelpers.getAvrageDistanceBetweenTags(
-                        photonDetail, finalEstimation.get().estimatedPose.toPose2d())
+                        result, finalEstimation.get().estimatedPose.toPose2d())
                     / MAX_TAG_DISTANCE.in(Meters);
             // TODO: replace with real STDV's new Matrix<N3, N1>
             // TODO: interpolate this
