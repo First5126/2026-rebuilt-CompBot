@@ -55,11 +55,11 @@ public class AprilTagLocalization {
    * Creates a new AprilTagLocalization.
    *
    * @param poseSupplier supplies the current robot pose
-  * @param resetPose consumer to reset the drivetrain pose
+   * @param resetPose consumer to reset the drivetrain pose
    * @param visionConsumer a consumer that accepts the vision pose, timestamp, and standard
    *     deviations
-  * @param drivetrain drivetrain used for reference and pose access
-  * @param photonDetails details for PhotonVision cameras
+   * @param drivetrain drivetrain used for reference and pose access
+   * @param photonDetails details for PhotonVision cameras
    * @param details the details of the limelight; more than one can be passed to allow for multiple
    *     on the bot.
    */
