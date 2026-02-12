@@ -58,14 +58,16 @@ public class PhotonVisionHelpers {
 
     double totalDistanceOfTargets = 0;
     Optional<Pose3d> currentTagPose;
+    int numberOfValildTargets = 0;
     for (PhotonTrackedTarget target : targets) {
       currentTagPose =
           AprilTagLocalizationConstants.FIELD_LAYOUT.getTagPose(target.getFiducialId());
       if (currentTagPose.isPresent()) {
+        numberOfValildTargets++;
         totalDistanceOfTargets +=
             PhotonUtils.getDistanceToPose(robotPose2d, currentTagPose.get().toPose2d());
       }
     }
-    return totalDistanceOfTargets / numberOfTargets;
+    return totalDistanceOfTargets / numberOfValildTargets;
   }
 }
