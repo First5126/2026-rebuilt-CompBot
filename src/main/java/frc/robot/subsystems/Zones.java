@@ -51,7 +51,7 @@ public class Zones extends SubsystemBase {
    *
    * @param robotPose current robot pose
    */
-  public void UpdateZone(Pose2d robotPose) {
+  public void updateZone(Pose2d robotPose) {
     double x = robotPose.getX();
     double y = robotPose.getY();
 
