@@ -11,16 +11,36 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class PhotonVisionHelpers {
 
+  /**
+   * Retrieves the latest pipeline result from a Photon camera.
+   *
+   * @param camera photon camera instance
+   * @return latest pipeline result
+   */
   public static PhotonPipelineResult getResultOfCamera(PhotonCamera camera) {
 
     return camera.getLatestResult();
   }
 
+  /**
+   * Computes the distance between two poses.
+   *
+   * @param pose1 first pose
+   * @param pose2 second pose
+   * @return distance in meters between the poses
+   */
   public static double findDIstance(Pose2d pose1, Pose2d pose2) {
 
     return PhotonUtils.getDistanceToPose(pose1, pose2);
   }
 
+  /**
+   * Computes the average distance from the robot pose to visible AprilTags.
+   *
+   * @param photonDetail configured PhotonVision camera details
+   * @param robotPose2d current robot pose
+   * @return average distance in meters, or 0.0 if no targets are visible
+   */
   public static double getAvrageDistanceBetweenTags(
       PhotonDetails photonDetail, Pose2d robotPose2d) {
 

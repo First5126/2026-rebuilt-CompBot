@@ -28,6 +28,11 @@ public class Zones extends SubsystemBase {
       this.pose = pose;
     }
 
+    /**
+     * Returns the representative pose for this zone.
+     *
+     * @return pose associated with the zone
+     */
     public Pose2d getPose() {
       return pose;
     }
@@ -36,10 +41,16 @@ public class Zones extends SubsystemBase {
   private static Zone CurrentZone = Zone.ALLIANCE_ZONE;
   private Optional<Alliance> m_team;
 
+  /** Creates the zone tracker and reads the alliance color. */
   public Zones() {
     m_team = DriverStation.getAlliance();
   }
 
+  /**
+   * Updates the current zone based on the robot pose.
+   *
+   * @param robotPose current robot pose
+   */
   public void UpdateZone(Pose2d robotPose) {
     double x = robotPose.getX();
     double y = robotPose.getY();
@@ -56,6 +67,11 @@ public class Zones extends SubsystemBase {
     }
   }
 
+  /**
+   * Returns the turret shooting pose based on the current zone and alliance.
+   *
+   * @return target shooting pose
+   */
   public Pose2d getTurretShootingPose() {
     if (!m_team.isPresent()) {
       return WaypointConstants.blueHub;
@@ -67,8 +83,10 @@ public class Zones extends SubsystemBase {
         return m_team.get() == Alliance.Blue ? WaypointConstants.blueHub : WaypointConstants.redHub;
       case OPPONENT_ZONE:
         return m_team.get() == Alliance.Blue ? WaypointConstants.blueHub : WaypointConstants.redHub;
+      case OUT_OF_BOUNDS:
+      default:
+        return m_team.get() == Alliance.Blue ? WaypointConstants.blueHub : WaypointConstants.redHub;
     }
-    return m_team.get() == Alliance.Blue ? WaypointConstants.blueHub : WaypointConstants.redHub;
   }
 
   private boolean isWithin(double x, double y, Translation2d corner1, Translation2d corner2) {
@@ -80,6 +98,7 @@ public class Zones extends SubsystemBase {
     return (x >= minX && x <= maxX) && (y >= minY && y <= maxY);
   }
 
+  /** Publishes the current zone to the dashboard. */
   @Override
   public void periodic() {
     SmartDashboard.putString("CurrentZone", CurrentZone.name());

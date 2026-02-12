@@ -12,11 +12,13 @@ public class StageData extends SubsystemBase {
   private static char m_firstInactiveAlliance;
   private static char m_alliance;
 
+  /** Initializes cached game-specific stage data. */
   public StageData() {
     m_firstInactiveAlliance = ' ';
     m_alliance = ' ';
   }
 
+  /** Updates cached alliance and stage data from DriverStation. */
   @Override
   public void periodic() {
     if (m_alliance == ' ') {
@@ -44,6 +46,11 @@ public class StageData extends SubsystemBase {
     Endgame
   }
 
+  /**
+   * Returns the current game stage based on match time.
+   *
+   * @return current game stage
+   */
   public static GameStage getStage() {
     boolean auto = DriverStation.isAutonomous();
     if (auto) return GameStage.Auto;
@@ -58,6 +65,11 @@ public class StageData extends SubsystemBase {
     else return GameStage.TransitionShift;
   }
 
+  /**
+   * Determines if scoring is allowed for the current stage and alliance.
+   *
+   * @return true if scoring is allowed
+   */
   public static boolean canScore() {
     GameStage stage = getStage();
 

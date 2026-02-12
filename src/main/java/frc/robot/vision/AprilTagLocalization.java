@@ -55,8 +55,11 @@ public class AprilTagLocalization {
    * Creates a new AprilTagLocalization.
    *
    * @param poseSupplier supplies the current robot pose
+  * @param resetPose consumer to reset the drivetrain pose
    * @param visionConsumer a consumer that accepts the vision pose, timestamp, and standard
    *     deviations
+  * @param drivetrain drivetrain used for reference and pose access
+  * @param photonDetails details for PhotonVision cameras
    * @param details the details of the limelight; more than one can be passed to allow for multiple
    *     on the bot.
    */
@@ -82,12 +85,18 @@ public class AprilTagLocalization {
    * Sets the full trust of the vision system. The robot will trust the vision system over all other
    * sensors.
    *
-   * @param fullTrust
+   * @param fullTrust true to trust vision fully
    */
   public void setFullTrust(boolean fullTrust) {
     m_FullTrust = fullTrust;
   }
 
+  /**
+   * Creates a command to toggle full-trust mode.
+   *
+   * @param trust true to enable full trust, false to disable
+   * @return command that applies the trust setting once
+   */
   public Command setTrust(boolean trust) {
     return Commands.runOnce(
         () -> {
@@ -213,7 +222,6 @@ public class AprilTagLocalization {
             // TODO: interpolate this
             Matrix<N3, N1> interpolated =
                 interpolate(photonDetail.closeStdDevs, photonDetail.farStdDevs, scale);
-            var estStdDevs = VecBuilder.fill(0.05, 0.05, 999999999.9);
 
             m_VisionConsumer.accept(
                 est.estimatedPose.toPose2d(), est.timestampSeconds, interpolated);
