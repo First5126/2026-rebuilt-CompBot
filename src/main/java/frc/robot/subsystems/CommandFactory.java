@@ -11,7 +11,6 @@ public class CommandFactory {
   private int m_side = 1;
   private Turret m_turret;
   private Hood m_hood;
-  private FuelRollers m_fuelRollers;
   private Intake m_intake;
 
   /**
