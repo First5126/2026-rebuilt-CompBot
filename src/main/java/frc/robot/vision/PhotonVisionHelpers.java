@@ -1,9 +1,11 @@
 package frc.robot.vision;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import frc.robot.constants.AprilTagLocalizationConstants;
 import frc.robot.constants.AprilTagLocalizationConstants.PhotonDetails;
 import java.util.List;
+import java.util.Optional;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -29,23 +31,9 @@ public class PhotonVisionHelpers {
    * @param pose2 second pose
    * @return distance in meters between the poses
    */
-  public static double findDistance(Pose2d pose1, Pose2d pose2) {
-
-    return PhotonUtils.getDistanceToPose(pose1, pose2);
-  }
-
-  /**
-   * Computes the distance between two poses.
-   *
-   * @param pose1 first pose
-   * @param pose2 second pose
-   * @return distance in meters between the poses
-   * @deprecated Use {@link #findDistance(Pose2d, Pose2d)} instead.
-   */
-  @Deprecated(forRemoval = false)
   public static double findDIstance(Pose2d pose1, Pose2d pose2) {
 
-    return findDistance(pose1, pose2);
+    return PhotonUtils.getDistanceToPose(pose1, pose2);
   }
 
   /**
@@ -69,19 +57,17 @@ public class PhotonVisionHelpers {
     }
 
     double totalDistanceOfTargets = 0;
+    Optional<Pose3d> currentTagPose;
+    int numberOfValildTargets = 0;
     for (PhotonTrackedTarget target : targets) {
-      totalDistanceOfTargets +=
-          PhotonUtils.getDistanceToPose(
-              robotPose2d,
-              AprilTagLocalizationConstants.FIELD_LAYOUT
-                  .getTagPose(target.getFiducialId())
-                  .orElseThrow(
-                      () ->
-                          new IllegalArgumentException(
-                              "No tag pose found in FIELD_LAYOUT for fiducial ID "
-                                  + target.getFiducialId()))
-                  .toPose2d());
+      currentTagPose =
+          AprilTagLocalizationConstants.FIELD_LAYOUT.getTagPose(target.getFiducialId());
+      if (currentTagPose.isPresent()) {
+        numberOfValildTargets++;
+        totalDistanceOfTargets +=
+            PhotonUtils.getDistanceToPose(robotPose2d, currentTagPose.get().toPose2d());
+      }
     }
-    return totalDistanceOfTargets / numberOfTargets;
+    return totalDistanceOfTargets / numberOfValildTargets;
   }
 }
