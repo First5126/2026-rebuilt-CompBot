@@ -34,11 +34,11 @@ public class Turret extends SubsystemBase {
     m_turretEncoder.getConfigurator().apply(canCoderConfiguration);
 
     TalonFXSConfiguration talonFXSConfiguration = new TalonFXSConfiguration();
-    talonFXSConfiguration.Commutation.MotorArrangement = MotorArrangementValue.Minion_JST;
+    talonFXSConfiguration.Commutation.MotorArrangement = MotorArrangementValue.NEO550_JST;
     talonFXSConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     talonFXSConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     talonFXSConfiguration.ExternalFeedback.withFusedCANcoder(m_turretEncoder);
-    talonFXSConfiguration.ExternalFeedback.RotorToSensorRatio = 4;
+    talonFXSConfiguration.ExternalFeedback.RotorToSensorRatio = 100;
     talonFXSConfiguration.ExternalFeedback.SensorToMechanismRatio = 10;
     // This might work. Look into it before reanabling.
     // talonFXSConfiguration.SoftwareLimitSwitch.ForwardSoftLimitThreshold =
