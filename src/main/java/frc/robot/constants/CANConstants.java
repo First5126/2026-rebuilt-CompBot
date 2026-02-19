@@ -25,6 +25,7 @@ public class CANConstants {
   public static final int hoodMotor = 0; // TODO: Set the real id once we have it
   public static final int intakeMotor = 0;
   public static final int flyWheelMotor = 0;
+  public static final int indexerMotor = 0;
 
   public static CANBus driveBaseCanivore = new CANBus("DriveBase");
 }
