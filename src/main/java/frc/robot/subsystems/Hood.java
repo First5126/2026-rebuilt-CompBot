@@ -8,6 +8,7 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.CANConstants;
 import frc.robot.constants.HoodConstants;
@@ -18,7 +19,6 @@ public class Hood extends SubsystemBase {
 
   private PositionVoltage m_positionVoltageRequest;
 
-  /** Creates the hood subsystem and configures the motor controller. */
   public Hood() {
     m_hoodMotor = new TalonFX(CANConstants.hoodMotor);
 
@@ -31,15 +31,13 @@ public class Hood extends SubsystemBase {
 
     m_hoodMotor.getConfigurator().apply(m_motorConfigs);
 
-    m_positionVoltageRequest = new PositionVoltage(0).withSlot(0);
+    m_positionVoltageRequest = new PositionVoltage(null).withSlot(0);
   }
 
-  /**
-   * Sets the hood target angle.
-   *
-   * @param position desired hood angle
-   */
-  public void setPosition(Angle position) {
-    m_hoodMotor.setControl(m_positionVoltageRequest.withPosition(position));
+  public Command setPosition(Angle angle) {
+    return runOnce(
+        () -> {
+          m_hoodMotor.setControl(m_positionVoltageRequest.withPosition(angle));
+        });
   }
 }

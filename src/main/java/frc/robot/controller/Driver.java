@@ -2,12 +2,12 @@ package frc.robot.controller;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.FMS.Zones;
 import frc.robot.constants.ControllerConstants;
 import frc.robot.subsystems.CommandFactory;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Turret;
-import frc.robot.subsystems.Zones.Zone;
 import frc.robot.vision.AprilTagLocalization;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,7 +21,7 @@ public class Driver extends CustomXboxController implements Controller {
   @Getter @Setter private CommandFactory commandFactory;
   @Getter @Setter private Intake intake;
   @Getter @Setter private Turret turret;
-  @Getter @Setter private Zone zone;
+  @Getter @Setter private Zones zone;
 
   private final SwerveRequest.SwerveDriveBrake BRAKE = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt POINT = new SwerveRequest.PointWheelsAt();
@@ -42,18 +42,17 @@ public class Driver extends CustomXboxController implements Controller {
   public static Driver init(
       CommandSwerveDrivetrain drivetrain,
       AprilTagLocalization aprilTagLocalization,
-      CommandFactory commandFactory
+      CommandFactory commandFactory,
       // Intake intake,
       // Turret turret,
-      // Zone zone
-      ) {
+      Zones zone) {
     Driver driver = getInstance();
     driver.setDrivetrain(drivetrain);
     driver.setAprilTagLocalization(aprilTagLocalization);
     driver.setCommandFactory(commandFactory);
     // driver.setIntake(intake);
     // driver.setTurret(turret);
-    // driver.setZone(zone);
+    driver.setZone(zone);
 
     return driver;
   }
@@ -67,7 +66,8 @@ public class Driver extends CustomXboxController implements Controller {
             this::getLeftTriggerAxis,
             this::getRightX,
             this::getLeftY,
-            this::getLeftX));
+            this::getLeftX,
+            zone));
 
     // Turret Default Command
     // this.getTurret().setDefaultCommand(commandFactory.trackTargetPose(drivetrain::getPose2d,

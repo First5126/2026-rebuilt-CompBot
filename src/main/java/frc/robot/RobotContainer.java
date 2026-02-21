@@ -8,16 +8,19 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import edu.wpi.first.math.geometry.Rotation2d;
+import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+import frc.robot.FMS.Zones;
 import frc.robot.constants.AprilTagLocalizationConstants;
 import frc.robot.constants.AprilTagLocalizationConstants.PhotonDetails;
 import frc.robot.controller.Driver;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandFactory;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.ShootingMechanism;
+import frc.robot.subsystems.Turret;
 import frc.robot.vision.AprilTagLocalization;
 
 public class RobotContainer {
@@ -43,10 +46,11 @@ public class RobotContainer {
 
   // Declare Subsystems Here
 
-  // private Turret m_turret = new Turret();
-  // private Hood m_hood = new Hood();
-  // private FuelRollers m_fuelRollers = new FuelRollers();
-  // private Intake m_intake = new Intake();
+  private Turret m_turret = new Turret();
+  private Zones m_zones = new Zones(m_drivetrain::getPose2d);
+
+  private ShootingMechanism m_shootingMechanism =
+      new ShootingMechanism(m_turret, m_drivetrain, m_zones);
 
   // End of Declaring
 
@@ -54,13 +58,7 @@ public class RobotContainer {
     // AprilTagLocalizationConstants.camera1Details
   };
   public CommandFactory m_commandFactory =
-      new CommandFactory(
-          m_drivetrain
-          // m_turret,
-          // m_hood,
-          // m_fuelRollers,
-          // m_intake
-          );
+      new CommandFactory(m_drivetrain, m_turret, m_zones, m_shootingMechanism);
 
   private AprilTagLocalization m_aprilTagLocalization =
       new AprilTagLocalization(
@@ -71,23 +69,21 @@ public class RobotContainer {
           photonDetails,
           AprilTagLocalizationConstants.LIMELIGHT_DETAILS_RIGHT);
 
+  private final SendableChooser<Command> autoChooser;
+
   /** Creates the container and configures bindings. */
   public RobotContainer() {
+    autoChooser = AutoBuilder.buildAutoChooser();
     configureBindings();
   }
 
   private void configureBindings() {
-    Driver.init(
-            m_drivetrain, m_aprilTagLocalization, m_commandFactory
-            // m_intake,
-            // m_turret,
-            // m_zone
-            )
+    Driver.init(m_drivetrain, m_aprilTagLocalization, m_commandFactory, m_zones)
         .configureBindings();
 
     // Idle while the robot is disabled. This ensures the configured
     // neutral mode is applied to the drive motors while disabled.
-    final var idle = new SwerveRequest.Idle();
+    final SwerveRequest idle = new SwerveRequest.Idle();
     RobotModeTriggers.disabled()
         .whileTrue(m_drivetrain.applyRequest(() -> idle).ignoringDisable(true));
 
@@ -100,17 +96,6 @@ public class RobotContainer {
    * @return command to run during autonomous
    */
   public Command getAutonomousCommand() {
-    // Simple drive forward auton
-    final var idle = new SwerveRequest.Idle();
-    return Commands.sequence(
-        // Reset our field centric heading to match the robot
-        // facing away from our alliance station wall (0 deg).
-        m_drivetrain.runOnce(() -> m_drivetrain.seedFieldCentric(Rotation2d.kZero)),
-        // Then slowly drive forward (away from us) for 5 seconds.
-        m_drivetrain
-            .applyRequest(() -> drive.withVelocityX(0.5).withVelocityY(0).withRotationalRate(0))
-            .withTimeout(5.0),
-        // Finally idle for the rest of auton
-        m_drivetrain.applyRequest(() -> idle));
+    return autoChooser.getSelected();
   }
 }

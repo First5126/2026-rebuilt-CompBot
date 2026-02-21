@@ -30,12 +30,8 @@ public class AprilTagLocalizationConstants {
     public Matrix<N3, N1> farStdDevs;
     public Matrix<N3, N1> inverseOffset;
 
-    /**
-     * Creates a Limelight configuration entry.
+    /*
      *
-     * @param name limelight network table name
-     * @param closeStdDevs standard deviations for close targets
-     * @param farStdDevs standard deviations for far targets
      */
     public LimelightDetails(String name, Matrix<N3, N1> closeStdDevs, Matrix<N3, N1> farStdDevs) {
       this.name = name;
@@ -51,13 +47,8 @@ public class AprilTagLocalizationConstants {
     public Matrix<N3, N1> farStdDevs;
     public PhotonPoseEstimator poseEstimator;
 
-    /**
-     * Creates a PhotonVision configuration entry.
+    /*
      *
-     * @param camera photon camera instance
-     * @param robotToCam transform from robot to camera
-     * @param closeStdDevs standard deviations for close targets
-     * @param farStdDevs standard deviations for far targets
      */
     public PhotonDetails(
         PhotonCamera camera,
@@ -81,6 +72,15 @@ public class AprilTagLocalizationConstants {
       new LimelightDetails(
           LIMELIGHT_NAME_RIGHT, LIMELIGHT_CLOSE_STDDEV_RIGHT, LIMELIGHT_FAR_STDDEV_RIGHT);
 
+  public static final String LIMELIGHT_NAME_RIGHTG = "limelight-rightg";
+  public static final Matrix<N3, N1> LIMELIGHT_CLOSE_STDDEV_RIGHTG =
+      VecBuilder.fill(0.01, 0.01, 999999999.9);
+  public static final Matrix<N3, N1> LIMELIGHT_FAR_STDDEV_RIGHTG =
+      VecBuilder.fill(0.05, 0.05, 999999999.9);
+  public static final LimelightDetails LIMELIGHT_DETAILS_RIGHTG =
+      new LimelightDetails(
+          LIMELIGHT_NAME_RIGHTG, LIMELIGHT_CLOSE_STDDEV_RIGHTG, LIMELIGHT_FAR_STDDEV_RIGHTG);
+
   public static final AprilTagFieldLayout FIELD_LAYOUT =
       AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
   public static final Distance MAX_TAG_DISTANCE = Meters.of(5.0);
@@ -96,7 +96,7 @@ public class AprilTagLocalizationConstants {
       new Transform3d(
           // Meters
           new Translation3d(0, -0.2794, 0.15875),
-          new Rotation3d(0.0, Units.degreesToRadians(-44), Units.degreesToRadians(90.0)));
+          new Rotation3d(0.0, Units.degreesToRadians(-44), 90.0));
 
   public static final PhotonDetails camera1Details =
       new PhotonDetails(
