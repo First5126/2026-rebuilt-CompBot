@@ -11,25 +11,32 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Robot;
+import frc.robot.FMS.Zones;
+import frc.robot.constants.ControllerConstants;
 import frc.robot.constants.DrivetrainConstants;
 import frc.robot.controller.CustomXboxController;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
-import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 
 /**
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements
@@ -43,6 +50,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
 
+    /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
+    private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
+    /* Red alliance sees forward as 180 degrees (toward blue alliance wall) */
+    private static final Rotation2d kRedAlliancePerspectiveRotation = Rotation2d.k180deg;
+    /* Keep track if we've ever applied the operator perspective before or not */
+    private boolean m_hasAppliedOperatorPerspective = false;
+
     private final SwerveRequest.FieldCentric m_FieldCentricdrive =
       new SwerveRequest.FieldCentric()
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
@@ -53,17 +67,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private SlewRateLimiter m_rotationLimiter = new SlewRateLimiter(3);
     private final SwerveRequest m_brake = new SwerveRequest.SwerveDriveBrake();
 
-    /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
-    private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
-    /* Red alliance sees forward as 180 degrees (toward blue alliance wall) */
-    private static final Rotation2d kRedAlliancePerspectiveRotation = Rotation2d.k180deg;
-    /* Keep track if we've ever applied the operator perspective before or not */
-    private boolean m_hasAppliedOperatorPerspective = false;
-
     /* Swerve requests to apply during SysId characterization */
     private final SwerveRequest.SysIdSwerveTranslation m_translationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
     private final SwerveRequest.SysIdSwerveSteerGains m_steerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
     private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
+
+    /** Swerve request to apply during robot-centric path following */
+    private final SwerveRequest.ApplyRobotSpeeds m_pathApplyRobotSpeeds =
+        new SwerveRequest.ApplyRobotSpeeds();
 
     /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
     private final SysIdRoutine m_sysIdRoutineTranslation = new SysIdRoutine(
@@ -96,7 +107,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             this
         )
     );
-
+//test
     /*
      * SysId routine for characterizing rotation.
      * This is used to find PID gains for the FieldCentricFacingAngle HeadingController.
@@ -104,7 +115,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      */
     private final SysIdRoutine m_sysIdRoutineRotation = new SysIdRoutine(
         new SysIdRoutine.Config(
-            /* This is in radians per second², but SysId only supports "volts per second" */
+            /* This is in radians per second, but SysId only supports "volts per second" */
             Volts.of(Math.PI / 6).per(Second),
             /* This is in radians per second, but SysId only supports "volts" */
             Volts.of(Math.PI),
@@ -145,6 +156,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if (Utils.isSimulation()) {
             startSimThread();
         }
+        configureAutobuilder();
     }
 
     /**
@@ -169,6 +181,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if (Utils.isSimulation()) {
             startSimThread();
         }
+        configureAutobuilder();
     }
 
     /**
@@ -183,10 +196,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      *                                  unspecified or set to 0 Hz, this is 250 Hz on
      *                                  CAN FD, and 100 Hz on CAN 2.0.
      * @param odometryStandardDeviation The standard deviation for odometry calculation
-     *                                  in the form [x, y, theta]ᵀ, with units in meters
+     *                                  in the form [x, y, theta], with units in meters
      *                                  and radians
      * @param visionStandardDeviation   The standard deviation for vision calculation
-     *                                  in the form [x, y, theta]ᵀ, with units in meters
+     *                                  in the form [x, y, theta], with units in meters
      *                                  and radians
      * @param modules                   Constants for each specific module
      */
@@ -201,6 +214,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if (Utils.isSimulation()) {
             startSimThread();
         }
+        configureAutobuilder();
     }
 
     /**
@@ -211,6 +225,21 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      */
     public Command applyRequest(Supplier<SwerveRequest> request) {
         return run(() -> this.setControl(request.get()));
+    }
+
+    public Pose2d getPose2d(){
+        return getState().Pose;
+    }
+
+    public Command goToPose(Pose2d pose) {
+        double[] debugArray = {pose.getX(), pose.getY()};
+        SmartDashboard.putNumberArray("Going to Pose", debugArray);
+
+        return AutoBuilder.pathfindToPose(pose, DrivetrainConstants.pathConstraints);
+    }
+
+    public Command goToPose(Supplier<Pose2d> pose) {
+        return goToPose(pose.get());
     }
 
     /**
@@ -256,108 +285,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
     }
 
-        /**
-         * Creates a command that drives using throttle and joystick inputs.
-         *
-         * @param fieldCentricthrottleSupplier field-centric throttle input
-         * @param robotCentricthrottleSupplier robot-centric throttle input
-         * @param rotationSupplier rotation input
-         * @param xSupplier translation X input
-         * @param ySupplier translation Y input
-         * @return command that applies the drive request continuously
-         */
-        public Command gasPedalCommand(
-      Supplier<Double> fieldCentricthrottleSupplier,
-      Supplier<Double> robotCentricthrottleSupplier,
-      Supplier<Double> rotationSupplier,
-      Supplier<Double> xSupplier,
-      Supplier<Double> ySupplier 
-      ) {
-    return run(
-        () -> {
-
-          double fieldCentricthrottle =
-              (CustomXboxController.modifyAxisWithCustomDeadband(
-                  fieldCentricthrottleSupplier.get(), 0.08, 1));
-          double robotCentricThrottle =
-              (CustomXboxController.modifyAxisWithCustomDeadband(
-                      robotCentricthrottleSupplier.get(), 0.08, 2)
-                  / 2);
-          double rotation =
-              CustomXboxController.modifyAxisWithCustomDeadband(rotationSupplier.get(), 0.05, 1) / 2;
-          double x = CustomXboxController.modifyAxis(xSupplier.get());
-          double y = CustomXboxController.modifyAxis(ySupplier.get());
-          boolean isFieldCentric;
-          double activeThrottleValue;
-
-          if (fieldCentricthrottle != 0) {
-            isFieldCentric = true; 
-            activeThrottleValue = fieldCentricthrottle;
-          } else {
-            isFieldCentric = false;
-            activeThrottleValue = robotCentricThrottle;
-          }
-
-          boolean isBraking = false;
-
-          if (!(x == 0 && y == 0)) {
-            double angle = Math.atan2(x, y) + Math.PI / 2;
-            x = Math.cos(angle) * activeThrottleValue;
-            y = Math.sin(angle) * activeThrottleValue;
-          } else if (rotation == 0) {
-            // robot is not receiving input
-            // are we near stop within a tolarance
-            //if (MathUtil.isNear(0, speeds.vxMetersPerSecond, 0.01) && MathUtil.isNear(0, speeds.vyMetersPerSecond, 0.01) && MathUtil.isNear(0, speeds.omegaRadiansPerSecond, 0.01)) {
-              //isBraking = true;
-              //brake();
-            //}
-          }
-
-          if (!isBraking) {
-            if (isFieldCentric) {
-                setControl(
-                  m_FieldCentricdrive
-                      .withVelocityX(percentOutputToMetersPerSecond(m_xLimiter.calculate(x)))
-                      .withDeadband(0.05)
-                      .withVelocityY(-percentOutputToMetersPerSecond(m_yLimiter.calculate(y)))
-                      .withDeadband(0.05)
-                      .withRotationalRate(
-                          -percentOutputToRadiansPerSecond(m_rotationLimiter.calculate(rotation))));
-            } else {
-                 setControl(
-                  m_RobotCentricdrive
-                      .withVelocityX(percentOutputToMetersPerSecond(m_xLimiter.calculate(x)))
-                      .withDeadband(0.05)
-                      .withVelocityY(-percentOutputToMetersPerSecond(m_yLimiter.calculate(y)))
-                      .withDeadband(0.05)
-                      .withRotationalRate(
-                          -percentOutputToRadiansPerSecond(m_rotationLimiter.calculate(rotation))));
-
-            }
-          }
-        });
-  }
-
-    /**
-     * Converts a percent output to a linear velocity.
-     *
-     * @param percentOutput percent output from -1 to 1
-     * @return velocity in meters per second
-     */
-    public double percentOutputToMetersPerSecond(double percentOutput) {
-    return DrivetrainConstants.maxSpeedMetersPerSecond * percentOutput;
-  }
-
-    /**
-     * Converts a percent output to an angular velocity.
-     *
-     * @param percentOutput percent output from -1 to 1
-     * @return angular velocity in radians per second
-     */
-    public double percentOutputToRadiansPerSecond(double percentOutput) {
-    return DrivetrainConstants.maxAngularVelocityRadiansPerSecond * percentOutput;
-  }
-
     private void startSimThread() {
         m_lastSimTime = Utils.getCurrentTimeSeconds();
 
@@ -371,38 +298,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             updateSimState(deltaTime, RobotController.getBatteryVoltage());
         });
         m_simNotifier.startPeriodic(kSimLoopPeriod);
-    }
-
-    /**
-     * Returns the drivetrain's current pose estimate.
-     *
-     * @return current pose
-     */
-    public Pose2d getPose2d(){
-        return getState().Pose;
-    }
-
-    /**
-     * Creates a command that pathfinds to a target pose.
-     *
-     * @param pose target pose
-     * @return command that pathfinds to the pose
-     */
-    public Command goToPose(Pose2d pose) {
-        double[] debugArray = {pose.getX(), pose.getY()};
-        SmartDashboard.putNumberArray("Going to Pose", debugArray);
-
-        return AutoBuilder.pathfindToPose(pose, DrivetrainConstants.pathConstraints);
-    }
-
-    /**
-     * Creates a command that pathfinds to a pose provided by a supplier.
-     *
-     * @param pose supplier for the target pose
-     * @return command that defers to the supplied pose
-     */
-    public Command goToPose(Supplier<Pose2d> pose) {
-        return defer(()->goToPose(pose.get()));
     }
 
     /**
@@ -428,7 +323,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      * @param visionRobotPoseMeters The pose of the robot as measured by the vision camera.
      * @param timestampSeconds The timestamp of the vision measurement in seconds.
      * @param visionMeasurementStdDevs Standard deviations of the vision pose measurement
-     *     in the form [x, y, theta]ᵀ, with units in meters and radians.
+     *     in the form [x, y, theta], with units in meters and radians.
      */
     @Override
     public void addVisionMeasurement(
@@ -437,6 +332,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         Matrix<N3, N1> visionMeasurementStdDevs
     ) {
         super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds), visionMeasurementStdDevs);
+    }
+
+    public Command resetPose2d(Pose2d pose) {
+        return runOnce( () -> {
+            resetPose(pose);
+        });
     }
 
     /**
@@ -449,4 +350,155 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public Optional<Pose2d> samplePoseAt(double timestampSeconds) {
         return super.samplePoseAt(Utils.fpgaToCurrentTime(timestampSeconds));
     }
+
+    private void brake() {
+    setControl(m_brake);
+  }
+
+    public Command gasPedalCommand(
+      Supplier<Double> fieldCentricthrottleSupplier,
+      Supplier<Double> robotCentricthrottleSupplier,
+      Supplier<Double> rotationSupplier,
+      Supplier<Double> xSupplier,
+      Supplier<Double> ySupplier,
+      Zones zones
+      ) {
+    return run(
+        () -> {
+            double fieldCentricthrottle =
+                (CustomXboxController.modifyAxisWithCustomDeadband(
+                    fieldCentricthrottleSupplier.get(), 0.08, 1));
+            double robotCentricThrottle =
+                (CustomXboxController.modifyAxisWithCustomDeadband(
+                        robotCentricthrottleSupplier.get(), 0.08, 2)
+                    / 2);
+            double rotation =
+                CustomXboxController.modifyAxisWithCustomDeadband(rotationSupplier.get(), 0.05, 1) / 2;
+            double x = CustomXboxController.modifyAxis(xSupplier.get());
+            double y = CustomXboxController.modifyAxis(ySupplier.get());
+            double activeThrottle;
+
+            if (fieldCentricthrottle != 0) {
+                activeThrottle = fieldCentricthrottle;
+            } else {
+                activeThrottle = robotCentricThrottle;
+            }
+
+            boolean isBraking = false;
+
+            if (!(x == 0 && y == 0)) {
+                double angle = Math.atan2(x, y) + Math.PI / 2;
+                x = Math.cos(angle) * activeThrottle;
+                y = Math.sin(angle) * activeThrottle;
+            } else if (x == 0 && y == 0 && rotation == 0) {
+                // robot is not receiving input
+                ChassisSpeeds speeds = getSpeeds();
+
+                // are we near stop within a tolarance
+                //if (MathUtil.isNear(0, speeds.vxMetersPerSecond, 0.01) && MathUtil.isNear(0, speeds.vyMetersPerSecond, 0.01) && MathUtil.isNear(0, speeds.omegaRadiansPerSecond, 0.01)) {
+                //isBraking = true;
+                //brake();
+                //}
+            }
+
+            // Apply max speed when on bump
+            boolean onBump = zones.onBump();
+            SmartDashboard.putBoolean("On Bump", onBump);
+            if (onBump) {
+                double absX = Math.abs(x); 
+                double absY = Math.abs(y); 
+                if (absX > 0.6 || absY > 0.6) {
+                    double largerAxis = Math.max(absX, absY);
+
+                    double speedMultiplier = 0.6 / largerAxis;
+
+                    x = x * speedMultiplier;
+                    y = y * speedMultiplier;
+                }
+            }
+
+            if (!isBraking) {
+                if (activeThrottle == robotCentricThrottle) {
+                setControl(
+                    m_RobotCentricdrive
+                        .withVelocityX(percentOutputToMetersPerSecond(m_xLimiter.calculate(x)))
+                        .withDeadband(0.05)
+                        .withVelocityY(-percentOutputToMetersPerSecond(m_yLimiter.calculate(y)))
+                        .withDeadband(0.05)
+                        .withRotationalRate(
+                            -percentOutputToRadiansPerSecond(m_rotationLimiter.calculate(rotation))));
+                } else {
+                setControl(
+                    m_FieldCentricdrive
+                        .withVelocityX(percentOutputToMetersPerSecond(m_xLimiter.calculate(x)))
+                        .withDeadband(0.05)
+                        .withVelocityY(-percentOutputToMetersPerSecond(m_yLimiter.calculate(y)))
+                        .withDeadband(0.05)
+                        .withRotationalRate(
+                            -percentOutputToRadiansPerSecond(m_rotationLimiter.calculate(rotation))));
+                }
+            }
+            });
+  }
+
+  public double percentOutputToMetersPerSecond(double percentOutput) {
+    return DrivetrainConstants.maxSpeedMetersPerSecond * percentOutput;
+  }
+
+  public double percentOutputToRadiansPerSecond(double percentOutput) {
+    return DrivetrainConstants.maxAngularVelocityRadiansPerSecond * percentOutput;
+  }
+
+  public ChassisSpeeds getSpeeds() {
+    return getState().Speeds;
+  }
+
+  private void configureAutobuilder() {
+    // Load the RobotConfig from the GUI settings. You should probably
+    // store this in your Constants file
+    try {
+      RobotConfig config = RobotConfig.fromGUISettings();
+
+      // Configure AutoBuilder last
+      AutoBuilder.configure(
+          this::getPose2d, // Robot pose supplier
+          this::resetPose, // Method to reset odometry (will be called if your auto has a starting
+          // pose)
+          this::getSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+          (speeds, feedforwards) ->
+              setControl(
+                  m_pathApplyRobotSpeeds
+                      .withSpeeds(speeds)
+                      .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
+                      .withWheelForceFeedforwardsY(
+                          feedforwards
+                              .robotRelativeForcesYNewtons())), // Method that will drive the robot
+          // given ROBOT RELATIVE
+          // ChassisSpeeds. Also optionally
+          // outputs individual module
+          // feedforwards
+          new PPHolonomicDriveController( // PPHolonomicController is the built in path following
+              // controller for holonomic drive trains
+              new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+              new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+              ),
+          config, // The robot configuration
+          () -> {
+            // Boolean supplier that controls when the path will be mirrored for the red alliance
+            // This will flip the path being followed to the red side of the field.
+            // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+            var alliance = DriverStation.getAlliance();
+            if (alliance.isPresent()) {
+              return alliance.get() == DriverStation.Alliance.Red;
+            }
+            return false;
+          },
+          this // Reference to this subsystem to set requirements
+          );
+    } catch (Exception e) {
+      // Handle exception as needed
+      e.printStackTrace();
+    }
+  }
 }
