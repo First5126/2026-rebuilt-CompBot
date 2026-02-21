@@ -11,6 +11,6 @@ public class HoodConstants {
 
   // TODO: Very important to fix this so we dont rip the hood off
   public static final InterpolatingDoubleTreeMap DISTANCE_TO_ANGLE_INTERPOLATOR =
-      InterpolatingDoubleTreeMap
-          .ofEntries(Map.entry(0.0, 0.0), Map.entry(2.0, 0.5), Map.entry(5.0, 1.0));
+      InterpolatingDoubleTreeMap.ofEntries(
+          Map.entry(0.0, 0.0), Map.entry(2.0, 0.5), Map.entry(5.0, 1.0));
 }

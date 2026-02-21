@@ -20,6 +20,6 @@ public class TurretConstants {
 
   // Distance first then Time
   public static final InterpolatingDoubleTreeMap DISTANCE_TO_TIME_INTERPOLATOR =
-      InterpolatingDoubleTreeMap
-          .ofEntries(Map.entry(0.0, 0.0), Map.entry(2.0, 0.5), Map.entry(5.0, 1.0));
+      InterpolatingDoubleTreeMap.ofEntries(
+          Map.entry(0.0, 0.0), Map.entry(2.0, 0.5), Map.entry(5.0, 1.0));
 }
