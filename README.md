@@ -4,3 +4,8 @@
 Welcome to the Parkhill South CompBot robot code for the [2026 REBUILT][1].
 
 [1]: https://www.firstinspires.org/programs/frc/game-and-season
+
+
+Remove Later:
+Robot thought it drove 2m
+it actualy drove 1.98m
