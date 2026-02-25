@@ -42,14 +42,14 @@ public class Driver extends CustomXboxController implements Controller {
   public static Driver init(
       CommandSwerveDrivetrain drivetrain,
       AprilTagLocalization aprilTagLocalization,
-      CommandFactory commandFactory,
+      // CommandFactory commandFactory,
       // Intake intake,
       // Turret turret,
       Zones zone) {
     Driver driver = getInstance();
     driver.setDrivetrain(drivetrain);
     driver.setAprilTagLocalization(aprilTagLocalization);
-    driver.setCommandFactory(commandFactory);
+    // driver.setCommandFactory(commandFactory);
     // driver.setIntake(intake);
     // driver.setTurret(turret);
     driver.setZone(zone);
