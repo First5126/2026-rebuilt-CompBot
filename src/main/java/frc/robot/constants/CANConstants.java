@@ -23,6 +23,8 @@ public class CANConstants {
   public static final int turretMotor = 11;
 
   public static final int hoodMotor = 0; // TODO: Set the real id once we have it
+  public static final int indexerMotor = 0;
+  public static final int spindexerMotor = 0;
 
   public static CANBus driveBaseCanivore = new CANBus("DriveBase");
 }
