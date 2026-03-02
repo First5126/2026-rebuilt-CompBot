@@ -13,7 +13,7 @@ import frc.robot.constants.IndexerConstants;
 
 public class Indexer extends SubsystemBase {
 
-  private TalonFXS m_indexerMotor = new TalonFXS(CANConstants.indexerMotor);
+  private TalonFXS m_indexerMotor = new TalonFXS(CANConstants.indexFeederMotor);
   private TalonFXS m_spindexerMotor = new TalonFXS(CANConstants.spindexerMotor);
 
   private VelocityVoltage m_indexerVelocityVoltage = new VelocityVoltage(0);

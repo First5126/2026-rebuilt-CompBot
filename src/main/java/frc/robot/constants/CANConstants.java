@@ -4,48 +4,46 @@ import com.ctre.phoenix6.CANBus;
 
 public class CANConstants {
 
-  //Swerve Drive Motors
+  // Swerve Drive Motors
   public static final int frontLeftDrive = 13;
   public static final int frontRightDrive = 4;
   public static final int backLeftDrive = 11;
   public static final int backRightDrive = 6;
 
-  //Swerve Rotation Motors
+  // Swerve Rotation Motors
   public static final int frontLeftRotation = 15;
   public static final int frontRightRotation = 2;
   public static final int backLeftRotation = 9;
   public static final int backRightRotation = 8;
 
-  //Swerve Motor Encoders
+  // Swerve Motor Encoders
   public static final int swerveFrontLeftEncoder = 14;
   public static final int swerveFrontRightEncoder = 3;
   public static final int swerveBackLeftEncoder = 10;
   public static final int swerveBackRightEncoder = 7;
 
-  //Motors
-  public static final int intakeDeloyer = 2;
-  public static final int rightClimber = 2;
-  public static final int spindexer = 3;
-  public static final int intakeWheels = 4;
-  public static final int indexFeeder = 7;
+  // Motors
+  public static final int intakeDeloyerMotor = 2;
+  public static final int rightClimberMotor = 2;
+  public static final int spindexerMotor = 3;
+  public static final int intakeWheelsMotor = 4;
+  public static final int indexFeederMotor = 7;
   public static final int turretMotor = 9;
   public static final int hoodMotor = 11;
-  public static final int leftClimber = 12;
-  public static final int flyWheels = 12;
+  public static final int leftClimberMotor = 12;
+  public static final int flyWheelsMotor = 12;
 
-  //Encoders
+  // Encoders
   public static final int intakeEncoder = 6;
   public static final int turretEncoder = 8;
-  public static final int hoodEncoder = 13; 
+  public static final int hoodEncoder = 13;
 
-
-  //Other
+  // Other
   public static final int pigeon = 1;
   public static final int candle = 1;
   public static final int canID = 10;
 
-
-  //CANBuses
+  // CANBuses
   public static CANBus driveBaseCanivore = new CANBus("DriveBase");
   public static CANBus Canivore2 = new CANBus("Canivore 2");
 }
