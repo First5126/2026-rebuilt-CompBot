@@ -51,6 +51,10 @@ public class Indexer extends SubsystemBase {
     return runOnce(() -> stopMotors());
   }
 
+  public Command clearIndexing() {
+    return runOnce(() -> clear());
+  }
+
   private void startMotors() {
     m_indexerMotor.setControl(m_indexerVelocityVoltage.withVelocity(IndexerConstants.indexerSpeed));
     m_spindexerMotor.setControl(
