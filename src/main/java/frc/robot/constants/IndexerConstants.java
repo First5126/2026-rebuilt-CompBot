@@ -10,4 +10,7 @@ public class IndexerConstants {
 
   public static AngularVelocity indexerSpeed = RotationsPerSecond.of(3);
   public static AngularVelocity spindexerSpeed = RotationsPerSecond.of(3);
+
+  public static AngularVelocity clearIndexerSpeed = RotationsPerSecond.of(3);
+  public static AngularVelocity clearSpindexerSpeed = RotationsPerSecond.of(3);
 }

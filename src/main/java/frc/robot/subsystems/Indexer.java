@@ -61,4 +61,10 @@ public class Indexer extends SubsystemBase {
     m_indexerMotor.setControl(m_dutyCycleOut.withOutput(0));
     m_spindexerMotor.setControl(m_dutyCycleOut.withOutput(0));
   }
+
+  private void clear() {
+    m_indexerMotor.setControl(m_indexerVelocityVoltage.withVelocity(IndexerConstants.clearIndexerSpeed));
+    m_spindexerMotor.setControl(
+        m_spindexerVelocityVoltage.withVelocity(IndexerConstants.clearSpindexerSpeed));
+  }
 }
