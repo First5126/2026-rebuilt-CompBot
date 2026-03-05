@@ -5,7 +5,7 @@ import static edu.wpi.first.units.Units.Degrees;
 import edu.wpi.first.units.measure.Angle;
 
 public class IntakeDeployerConstants {
-  public static double intakeKP = 3;
+  public static double intakeKP = 40;
 
   public static Angle INTAKE_UP = Degrees.of(0);
   public static Angle INTAKE_DOWN = Degrees.of(90);

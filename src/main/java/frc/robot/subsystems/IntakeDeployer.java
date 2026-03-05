@@ -1,11 +1,17 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
+
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.CANConstants;
@@ -13,7 +19,8 @@ import frc.robot.constants.IntakeDeployerConstants;
 
 public class IntakeDeployer extends SubsystemBase {
 
-  private TalonFX m_intakeDeployerMotor = new TalonFX(CANConstants.intakeDeloyerMotor);
+  private TalonFX m_intakeDeployerMotorRight = new TalonFX(CANConstants.intakePiviotRight, CANConstants.Canivore2);
+  private TalonFX m_intakeDeployerMotorLeft = new TalonFX(CANConstants.intakePiviotLeft, CANConstants.Canivore2);
   final MotionMagicExpoVoltage m_request = new MotionMagicExpoVoltage(0);
 
   public IntakeDeployer() {
@@ -23,21 +30,25 @@ public class IntakeDeployer extends SubsystemBase {
     m_intakeDeployerSlot0Configs.kP = IntakeDeployerConstants.intakeKP;
 
     m_intakeDeployerConfiguration.Slot0 = m_intakeDeployerSlot0Configs;
+    m_intakeDeployerConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    m_intakeDeployerConfiguration.Feedback.SensorToMechanismRatio = 18;
 
     MotionMagicConfigs motionMagic = m_intakeDeployerConfiguration.MotionMagic;
 
     motionMagic.MotionMagicCruiseVelocity = IntakeDeployerConstants.CRUISE_VELOCITY;
     motionMagic.MotionMagicAcceleration = IntakeDeployerConstants.ACCELERATION;
 
-    m_intakeDeployerMotor.getConfigurator().apply(m_intakeDeployerConfiguration);
+    m_intakeDeployerMotorRight.getConfigurator().apply(m_intakeDeployerConfiguration);
+
+    m_intakeDeployerMotorLeft.setControl(new Follower(6, MotorAlignmentValue.Aligned));
   }
 
   public Command raiseIntakeUpCommand() {
-    return run(() -> raiseIntakeUp());
+    return runOnce(() -> raiseIntakeUp());
   }
 
   public Command lowerIntakeDownCommand() {
-    return run(() -> lowerIntakeDown());
+    return runOnce(() -> lowerIntakeDown());
   }
 
   private void raiseIntakeUp() {
@@ -49,6 +60,7 @@ public class IntakeDeployer extends SubsystemBase {
   }
 
   private void rotate(Angle setpoint) {
-    m_intakeDeployerMotor.setControl(m_request.withPosition(setpoint));
+    m_intakeDeployerMotorRight.setControl(m_request.withPosition(setpoint));
   }
+
 }

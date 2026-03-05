@@ -80,7 +80,7 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    Driver.init(m_drivetrain, m_aprilTagLocalization, m_commandFactory, m_zones)
+    Driver.init(m_drivetrain, m_aprilTagLocalization, m_commandFactory, m_intakeDeployer, m_zones)
         .configureBindings();
 
     // Idle while the robot is disabled. This ensures the configured
