@@ -1,6 +1,7 @@
 package frc.robot.controller;
 
 import frc.robot.constants.ControllerConstants;
+import frc.robot.subsystems.Indexer;
 
 public class Operator extends CustomXboxController implements Controller {
   // Singleton instance
@@ -19,7 +20,7 @@ public class Operator extends CustomXboxController implements Controller {
     return INSTANCE;
   }
 
-  public static Operator init() {
+  public static Operator init(Indexer m_indexer) {
     return getInstance();
   }
 

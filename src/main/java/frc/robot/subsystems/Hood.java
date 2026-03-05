@@ -4,9 +4,12 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -15,19 +18,29 @@ import frc.robot.constants.HoodConstants;
 
 public class Hood extends SubsystemBase {
   private TalonFX m_hoodMotor;
-  private Slot0Configs m_motorConfigs;
+  private TalonFXConfiguration m_motorConfigs;
 
   private PositionVoltage m_positionVoltageRequest;
+
+  private final CANcoder m_hoodEncoder =
+      new CANcoder(CANConstants.hoodEncoder, CANConstants.driveBaseCanivore);
 
   public Hood() {
     m_hoodMotor = new TalonFX(CANConstants.hoodMotor);
 
-    m_motorConfigs = new Slot0Configs();
+    CANcoderConfiguration canCoderConfiguration = new CANcoderConfiguration();
+    canCoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+    m_hoodEncoder.getConfigurator().apply(canCoderConfiguration);
+
+    m_motorConfigs = new TalonFXConfiguration();
+
+    // m_motorConfigs.HardwareLimitSwitch.ForwardLimitRemoteSensorID =
+
     // Set the PID values
-    m_motorConfigs.kP = HoodConstants.kP;
-    m_motorConfigs.kI = HoodConstants.kI;
-    m_motorConfigs.kD = HoodConstants.kD;
-    m_motorConfigs.kV = HoodConstants.kV;
+    m_motorConfigs.Slot0.kP = HoodConstants.kP;
+    m_motorConfigs.Slot0.kI = HoodConstants.kI;
+    m_motorConfigs.Slot0.kD = HoodConstants.kD;
+    m_motorConfigs.Slot0.kV = HoodConstants.kV;
 
     m_hoodMotor.getConfigurator().apply(m_motorConfigs);
 
