@@ -27,7 +27,7 @@ public class FlyWheel extends SubsystemBase {
     slot0.kP = FlyWheelConstants.kP;
 
     flyWheelConfiguration.Slot0 = slot0;
-
+    
     m_shooterMotor.getConfigurator().apply(flyWheelConfiguration);
 
     SmartDashboard.putNumber("Shooter Speed (MPS)", 40);
@@ -48,5 +48,6 @@ public class FlyWheel extends SubsystemBase {
 
   private void stopMotors() {
     m_shooterMotor.setControl(m_dutyCycleOut.withOutput(0));
+    
   }
 }
