@@ -89,7 +89,7 @@ public class Driver extends CustomXboxController implements Controller {
     this.a().onTrue(indexer.startIndexing());
     this.a().onFalse(indexer.stopIndexing());
 
-    this.b().onTrue(flyWheel.startSpinning());
+    this.b().onTrue(flyWheel.setSpeed(flyWheel::getDashboardSpeed));
     this.b().onFalse(flyWheel.stopSpinning());
 
 

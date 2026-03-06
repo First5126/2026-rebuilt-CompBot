@@ -6,6 +6,8 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
+import java.util.function.Supplier;
+
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -18,6 +20,7 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.CANConstants;
 import frc.robot.constants.FlyWheelConstants;
@@ -37,25 +40,34 @@ public class FlyWheel extends SubsystemBase {
 
     Slot0Configs slot0 = new Slot0Configs();
     slot0.kP = FlyWheelConstants.kP;
+    slot0.kI = FlyWheelConstants.kI;
+    slot0.kD = FlyWheelConstants.kD;
+    slot0.kS = FlyWheelConstants.kS;
+    slot0.kV = FlyWheelConstants.kV;
+    slot0.kA = FlyWheelConstants.kA;
 
     flyWheelConfiguration.Slot0 = slot0;
     
     m_shooterMotor.getConfigurator().apply(flyWheelConfiguration);
 
-    SmartDashboard.putNumber("Shooter Speed (MPS)", 40);
+    SmartDashboard.putNumber("Shooter Speed (MPS)", 5);
   }
 
 
-  public Command startSpinning() {
-    return runOnce(() -> startMotors());
+  public Command setSpeed(Supplier<LinearVelocity> ballSpeed) {
+    return runOnce(() -> setSpeedControl(ballSpeed));
   }
 
   public Command stopSpinning() {
     return runOnce(() -> stopMotors());
   }
 
-  private void startMotors() {
-    AngularVelocity motorSpeed = calculateAngularVelocity(MetersPerSecond.of(3));
+  public LinearVelocity getDashboardSpeed() {
+    return MetersPerSecond.of(SmartDashboard.getNumber("Shooter Speed (MPS)", 0));
+  }
+
+  private void setSpeedControl(Supplier<LinearVelocity> ballSpeed) {
+    AngularVelocity motorSpeed = calculateAngularVelocity(ballSpeed.get());
     m_shooterMotor.setControl(
         m_shooterSpeed.withVelocity(motorSpeed));
   }
