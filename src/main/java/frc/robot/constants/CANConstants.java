@@ -23,8 +23,7 @@ public class CANConstants {
   public static final int swerveBackRightEncoder = 7;
 
   // Motors
-  public static final int intakePiviotRight = 6;
-  public static final int intakePiviotLeft = 2;
+  public static final int intakeDeloyerMotor = 2;
   public static final int rightClimberMotor = 2;
   public static final int spindexerMotor = 3;
   public static final int intakeWheelsMotor = 5;
