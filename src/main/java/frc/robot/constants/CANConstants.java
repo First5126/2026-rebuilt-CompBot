@@ -27,7 +27,7 @@ public class CANConstants {
   public static final int intakePiviotLeft = 2;
   public static final int rightClimberMotor = 2;
   public static final int spindexerMotor = 3;
-  public static final int intakeWheelsMotor = 4;
+  public static final int intakeWheelsMotor = 5;
   public static final int indexFeederMotor = 7;
   public static final int turretMotor = 9;
   public static final int hoodMotor = 11;
