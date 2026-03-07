@@ -94,9 +94,7 @@ public class RobotContainer {
 
     // this.m_turret.setDefaultCommand(m_turret.rotateToPosition(() ->
     // m_shootingMechanism.getShootingSolution().predictedTurretAngle));
-
-    configureBindings();
-
+    
     // Idle while the robot is disabled. This ensures the configured
     // neutral mode is applied to the drive motors while disabled.
     final SwerveRequest idle = new SwerveRequest.Idle();
