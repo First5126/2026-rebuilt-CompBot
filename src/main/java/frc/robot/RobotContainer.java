@@ -19,6 +19,7 @@ import frc.robot.controller.Driver;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandFactory;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.ShootingMechanism;
 import frc.robot.subsystems.Turret;
 import frc.robot.vision.AprilTagLocalization;
@@ -46,19 +47,21 @@ public class RobotContainer {
 
   // Declare Subsystems Here
 
-  private Turret m_turret = new Turret();
-  private Zones m_zones = new Zones(m_drivetrain::getPose2d);
+  // private Turret m_turret = new Turret();
+  // private Zones m_zones = new Zones(m_drivetrain::getPose2d);
 
-  private ShootingMechanism m_shootingMechanism =
-      new ShootingMechanism(m_turret, m_drivetrain, m_zones);
+  private Hood m_hood = new Hood();
+
+  // private ShootingMechanism m_shootingMechanism =
+  //     new ShootingMechanism(m_turret, m_drivetrain, m_zones);
 
   // End of Declaring
 
   PhotonDetails[] photonDetails = {
     // AprilTagLocalizationConstants.camera1Details
   };
-  public CommandFactory m_commandFactory =
-      new CommandFactory(m_drivetrain, m_turret, m_zones, m_shootingMechanism);
+  // public CommandFactory m_commandFactory =
+      // new CommandFactory(m_drivetrain, m_turret, m_zones, m_shootingMechanism);
 
   private AprilTagLocalization m_aprilTagLocalization =
       new AprilTagLocalization(
@@ -78,8 +81,8 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    Driver.init(m_drivetrain, m_aprilTagLocalization, m_commandFactory, m_zones)
-        .configureBindings();
+    // Driver.init(m_drivetrain, m_aprilTagLocalization, m_commandFactory, m_zones)
+        // .configureBindings();
 
     // Idle while the robot is disabled. This ensures the configured
     // neutral mode is applied to the drive motors while disabled.
