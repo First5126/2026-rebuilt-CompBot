@@ -19,6 +19,8 @@ import frc.robot.controller.Driver;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandFactory;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.FlyWheel;
+import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.ShootingMechanism;
 import frc.robot.subsystems.Turret;
 import frc.robot.vision.AprilTagLocalization;
@@ -48,6 +50,10 @@ public class RobotContainer {
 
   private Turret m_turret = new Turret();
   private Zones m_zones = new Zones(m_drivetrain::getPose2d);
+
+  private FlyWheel m_flyWheel = new FlyWheel();
+
+  private Hood m_hood = new Hood();
 
   private ShootingMechanism m_shootingMechanism =
       new ShootingMechanism(m_turret, m_drivetrain, m_zones);
