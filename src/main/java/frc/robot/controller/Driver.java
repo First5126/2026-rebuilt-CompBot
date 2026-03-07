@@ -69,8 +69,6 @@ public class Driver extends CustomXboxController implements Controller {
             this::getLeftX,
             zone));
 
-    
-
     // this.a().onTrue(aprilTagLocalization.setTrust(true));
     // this.a().onFalse(aprilTagLocalization.setTrust(false));
 
