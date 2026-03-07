@@ -43,7 +43,7 @@ public class PhotonVisionHelpers {
    * @param robotPose2d current robot pose
    * @return average distance in meters, or 0.0 if no targets are visible
    */
-  public static double getAverageDistanceBetweenTags(
+  public static double getAvrageDistanceBetweenTags(
       PhotonDetails photonDetail, Pose2d robotPose2d) {
 
     // TODO Cole  Replace deprecated getLatestResult
@@ -58,16 +58,14 @@ public class PhotonVisionHelpers {
 
     double totalDistanceOfTargets = 0;
     Optional<Pose3d> currentTagPose;
-    int numberOfValildTargets = 0;
     for (PhotonTrackedTarget target : targets) {
       currentTagPose =
           AprilTagLocalizationConstants.FIELD_LAYOUT.getTagPose(target.getFiducialId());
       if (currentTagPose.isPresent()) {
-        numberOfValildTargets++;
         totalDistanceOfTargets +=
             PhotonUtils.getDistanceToPose(robotPose2d, currentTagPose.get().toPose2d());
       }
     }
-    return totalDistanceOfTargets / numberOfValildTargets;
+    return totalDistanceOfTargets / numberOfTargets;
   }
 }
