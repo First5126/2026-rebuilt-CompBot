@@ -4,7 +4,7 @@ import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import java.util.Map;
 
 public class HoodConstants {
-  public static double kP = 60.0;
+  public static double kP = 135.0;
   public static double kI = 0.0;
   public static double kD = 0.0;
   public static double kS = 0.35;
