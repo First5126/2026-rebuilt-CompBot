@@ -6,6 +6,7 @@ import frc.robot.FMS.Zones;
 import frc.robot.constants.ControllerConstants;
 import frc.robot.subsystems.CommandFactory;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Turret;
 import frc.robot.vision.AprilTagLocalization;
@@ -22,6 +23,7 @@ public class Driver extends CustomXboxController implements Controller {
   @Getter @Setter private Intake intake;
   @Getter @Setter private Turret turret;
   @Getter @Setter private Zones zone;
+  @Getter @Setter private Indexer indexer;
 
   private final SwerveRequest.SwerveDriveBrake BRAKE = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt POINT = new SwerveRequest.PointWheelsAt();
@@ -45,7 +47,8 @@ public class Driver extends CustomXboxController implements Controller {
       CommandFactory commandFactory,
       // Intake intake,
       Turret turret,
-      Zones zone) {
+      Zones zone,
+      Indexer indexer) {
     Driver driver = getInstance();
     driver.setDrivetrain(drivetrain);
     driver.setAprilTagLocalization(aprilTagLocalization);
@@ -53,6 +56,7 @@ public class Driver extends CustomXboxController implements Controller {
     // driver.setIntake(intake);
     driver.setTurret(turret);
     driver.setZone(zone);
+    driver.setIndexer(indexer);
 
     return driver;
   }
@@ -78,6 +82,7 @@ public class Driver extends CustomXboxController implements Controller {
 
     // Reset the field-centric heading on left bumper press.
     this.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+    this.a().onTrue(indexer.startIndexing()).onFalse(indexer.stopIndexing());
 
     return this;
   }
