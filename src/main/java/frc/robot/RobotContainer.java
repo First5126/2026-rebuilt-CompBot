@@ -84,7 +84,8 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    Driver.init(m_drivetrain, m_aprilTagLocalization, m_commandFactory, m_turret, m_zones, m_indexer);
+    Driver.init(
+        m_drivetrain, m_aprilTagLocalization, m_commandFactory, m_turret, m_zones, m_indexer);
 
     // Turret Default Command
 
