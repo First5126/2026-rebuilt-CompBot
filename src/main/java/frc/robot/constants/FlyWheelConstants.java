@@ -14,8 +14,6 @@ public class FlyWheelConstants {
   public static double kV = 0.1168;
   public static double kA = 0;
 
-  public static AngularVelocity flyWheelSpeed = RotationsPerSecond.of(-100);
-
   public static final int gearRatio = 2;
   public static final Distance radius = Meters.of(0.0508);
 }
