@@ -95,10 +95,6 @@ public class RobotContainer {
     // Idle while the robot is disabled. This ensures the configured
     // neutral mode is applied to the drive motors while disabled.
 
-    // Turret Default Command
-    // this.getTurret().setDefaultCommand(commandFactory.trackTargetPose(drivetrain::getPose2d)),
-    // this.getZone()::getTurretShootingPose));
-
     Trigger trenchTrigger = new Trigger(m_zones::nearTrench);
     trenchTrigger.onTrue(m_commandFactory.goUnderTrenchCommand());
 
