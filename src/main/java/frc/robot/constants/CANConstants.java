@@ -53,5 +53,5 @@ public class CANConstants {
 
   // CANBuses
   public static CANBus driveBaseCanivore = new CANBus("DriveBase");
-  public static CANBus mechanismCanivore = new CANBus("Canivore 2");
+  public static CANBus mechanismCanivore = new CANBus("Mechanism");
 }
