@@ -22,7 +22,8 @@ import java.util.function.Supplier;
 
 public class FlyWheel extends SubsystemBase {
 
-  private TalonFX m_shooterMotor = new TalonFX(CANConstants.flyWheelsMotor, CANConstants.Canivore2);
+  private TalonFX m_shooterMotor =
+      new TalonFX(CANConstants.flyWheelsMotor, CANConstants.mechanismCanivore);
 
   private VelocityVoltage m_shooterSpeed = new VelocityVoltage(0);
   private DutyCycleOut m_dutyCycleOut = new DutyCycleOut(0);

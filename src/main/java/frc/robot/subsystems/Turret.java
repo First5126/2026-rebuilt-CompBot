@@ -27,8 +27,8 @@ public class Turret extends SubsystemBase {
   private final PositionVoltage m_positionControl;
 
   public Turret() {
-    m_turretMotor = new TalonFXS(CANConstants.turretMotor, CANConstants.Canivore2);
-    m_turretEncoder = new CANcoder(CANConstants.turretEncoder, CANConstants.Canivore2);
+    m_turretMotor = new TalonFXS(CANConstants.turretMotor, CANConstants.mechanismCanivore);
+    m_turretEncoder = new CANcoder(CANConstants.turretEncoder, CANConstants.mechanismCanivore);
 
     CANcoderConfiguration canCoderConfiguration = new CANcoderConfiguration();
     canCoderConfiguration.MagnetSensor.withSensorDirection(
