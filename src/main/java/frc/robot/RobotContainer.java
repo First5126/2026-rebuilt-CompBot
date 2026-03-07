@@ -11,7 +11,10 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.FMS.Zones;
 import frc.robot.constants.AprilTagLocalizationConstants;
 import frc.robot.constants.AprilTagLocalizationConstants.PhotonDetails;
@@ -20,6 +23,7 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandFactory;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.FlyWheel;
+import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.ShootingMechanism;
 import frc.robot.subsystems.Turret;
 import frc.robot.vision.AprilTagLocalization;
@@ -50,6 +54,7 @@ public class RobotContainer {
   private Turret m_turret = new Turret();
   private Zones m_zones = new Zones(m_drivetrain::getPose2d);
   private FlyWheel m_flyWheel = new FlyWheel();
+  private Hood m_hood = new Hood();
 
   private ShootingMechanism m_shootingMechanism =
       new ShootingMechanism(m_turret, m_drivetrain, m_zones);
@@ -85,6 +90,14 @@ public class RobotContainer {
 
     // Idle while the robot is disabled. This ensures the configured
     // neutral mode is applied to the drive motors while disabled.
+
+    // Turret Default Command
+    // this.getTurret().setDefaultCommand(commandFactory.trackTargetPose(drivetrain::getPose2d,
+    // this.getZone()::getTurretShootingPose));
+
+    Trigger trenchTrigger = new Trigger(m_zones::nearTrench);
+    trenchTrigger.onTrue(m_commandFactory.goUnderTrenchCommand());
+
     final SwerveRequest idle = new SwerveRequest.Idle();
     RobotModeTriggers.disabled()
         .whileTrue(m_drivetrain.applyRequest(() -> idle).ignoringDisable(true));

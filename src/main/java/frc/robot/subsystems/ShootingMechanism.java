@@ -73,10 +73,6 @@ public class ShootingMechanism extends SubsystemBase {
         && speed.get() != null) {
       SmartDashboard.putBoolean("Valid Shooting Solution", true);
 
-      if (m_zone.nearTrench() && !m_zone.getShootingOveride()) {
-        return new ShootingSolution(Degrees.of(0), Degrees.of(0));
-      }
-
       // retreive the value of all the suppliers
       Pose2d robotPose = robotPoseSupplier.get();
       ChassisSpeeds robotSpeeds = speed.get();
