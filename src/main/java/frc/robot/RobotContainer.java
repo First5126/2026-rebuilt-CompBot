@@ -19,8 +19,6 @@ import frc.robot.controller.Driver;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandFactory;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.FlyWheel;
-import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.ShootingMechanism;
 import frc.robot.subsystems.Turret;
 import frc.robot.vision.AprilTagLocalization;
@@ -56,9 +54,7 @@ public class RobotContainer {
 
   // End of Declaring
 
-  PhotonDetails[] photonDetails = {
-    AprilTagLocalizationConstants.camera1Details
-  };
+  PhotonDetails[] photonDetails = {AprilTagLocalizationConstants.camera1Details};
   public CommandFactory m_commandFactory =
       new CommandFactory(m_drivetrain, m_turret, m_zones, m_shootingMechanism);
 
