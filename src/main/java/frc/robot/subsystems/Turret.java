@@ -31,7 +31,8 @@ public class Turret extends SubsystemBase {
     m_turretEncoder = new CANcoder(CANConstants.turretEncoder, CANConstants.Canivore2);
 
     CANcoderConfiguration canCoderConfiguration = new CANcoderConfiguration();
-    canCoderConfiguration.MagnetSensor.withSensorDirection(SensorDirectionValue.CounterClockwise_Positive);
+    canCoderConfiguration.MagnetSensor.withSensorDirection(
+        SensorDirectionValue.CounterClockwise_Positive);
     canCoderConfiguration.MagnetSensor.withMagnetOffset(TurretConstants.ENCODER_OFFSET);
 
     m_turretEncoder.getConfigurator().apply(canCoderConfiguration);
@@ -43,10 +44,12 @@ public class Turret extends SubsystemBase {
     talonFXSConfiguration.ExternalFeedback.withFusedCANcoder(m_turretEncoder);
     talonFXSConfiguration.ExternalFeedback.RotorToSensorRatio = 10;
     talonFXSConfiguration.ExternalFeedback.SensorToMechanismRatio = 10;
-    
-    talonFXSConfiguration.SoftwareLimitSwitch.withForwardSoftLimitThreshold(TurretConstants.MAX_ANGLE);
+
+    talonFXSConfiguration.SoftwareLimitSwitch.withForwardSoftLimitThreshold(
+        TurretConstants.MAX_ANGLE);
     talonFXSConfiguration.SoftwareLimitSwitch.withForwardSoftLimitEnable(true);
-    talonFXSConfiguration.SoftwareLimitSwitch.withReverseSoftLimitThreshold(TurretConstants.MIN_ANGLE);
+    talonFXSConfiguration.SoftwareLimitSwitch.withReverseSoftLimitThreshold(
+        TurretConstants.MIN_ANGLE);
     talonFXSConfiguration.SoftwareLimitSwitch.withReverseSoftLimitEnable(true);
 
     talonFXSConfiguration.ExternalFeedback.FeedbackRemoteSensorID = CANConstants.turretEncoder;

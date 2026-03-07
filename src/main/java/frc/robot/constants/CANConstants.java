@@ -30,7 +30,7 @@ public class CANConstants {
 
   // Turret
   public static final int turretMotor = 8;
-  
+
   public static final int rightClimberMotor = 2;
   public static final int spindexerMotor = 3;
   public static final int indexFeederMotor = 7;

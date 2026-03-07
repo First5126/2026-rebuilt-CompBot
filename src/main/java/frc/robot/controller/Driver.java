@@ -68,10 +68,7 @@ public class Driver extends CustomXboxController implements Controller {
             this::getLeftY,
             this::getLeftX,
             zone));
-
-    // Turret Default Command
-    // this.getTurret().setDefaultCommand(commandFactory.trackTargetPose(drivetrain::getPose2d,
-    // this.getZone()::getTurretShootingPose));
+            
 
     // this.a().onTrue(aprilTagLocalization.setTrust(true));
     // this.a().onFalse(aprilTagLocalization.setTrust(false));

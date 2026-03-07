@@ -20,7 +20,8 @@ public class TurretConstants {
 
   public static final Angle ENCODER_OFFSET = Units.Rotations.of(-0.433);
 
-  // Meters per second at 12 volts. This is used for feedforward calculations, and should be measured at the output of the turret gearbox.
+  // Meters per second at 12 volts. This is used for feedforward calculations, and should be
+  // measured at the output of the turret gearbox.
   public static final Transform2d TURRET_OFFSET = new Transform2d(0, 0, new Rotation2d());
   public static final int gearRatio = 100;
 
