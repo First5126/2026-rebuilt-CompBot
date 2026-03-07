@@ -26,6 +26,7 @@ public class Turret extends SubsystemBase {
       new TalonFXS(CANConstants.turretMotor, CANConstants.driveBaseCanivore);
   private final CANcoder m_turretEncoder =
       new CANcoder(CANConstants.turretEncoder, CANConstants.driveBaseCanivore);
+  private final TalonFXSConfiguration m_talonFXSConfiguration = new TalonFXSConfiguration();
   private final PositionVoltage m_positionControl = new PositionVoltage(0);
 
   public Turret() {
@@ -42,17 +43,25 @@ public class Turret extends SubsystemBase {
     talonFXSConfiguration.ExternalFeedback.withFusedCANcoder(m_turretEncoder);
     talonFXSConfiguration.ExternalFeedback.RotorToSensorRatio = 4;
     talonFXSConfiguration.ExternalFeedback.SensorToMechanismRatio = 10;
+    // Software Limit Switches should be in rotations, not degrees. We convert it into rotations by dividing the angle in degrees by 360, since one rotation is essentially 360 degrees.
+    talonFXSConfiguration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = TurretConstants.MAX_ANGLE.in(Degrees)/360.0;
+    talonFXSConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+    talonFXSConfiguration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = TurretConstants.MIN_ANGLE.in(Degrees)/360.0;
+    talonFXSConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
     // This might work. Look into it before reanabling.
     // talonFXSConfiguration.SoftwareLimitSwitch.ForwardSoftLimitThreshold =
     // TurretConstants.MAX_ANGLE.in(Degrees);
     // talonFXSConfiguration.SoftwareLimitSwitch.ReverseSoftLimitThreshold =
     // TurretConstants.MIN_ANGLE.in(Degrees);
-    // talonFXSConfiguration.ExternalFeedback.FeedbackRemoteSensorID = CANConstants.turretEncoder;
+    talonFXSConfiguration.ExternalFeedback.FeedbackRemoteSensorID = CANConstants.turretEncoder;
 
     Slot0Configs slotConfigs = new Slot0Configs();
     slotConfigs.kP = TurretConstants.kP;
     slotConfigs.kI = TurretConstants.kI;
     slotConfigs.kD = TurretConstants.kD;
+    slotConfigs.kS = TurretConstants.kS;
+    slotConfigs.kV = TurretConstants.kV;
+    slotConfigs.kA = TurretConstants.kA;
 
     talonFXSConfiguration.Slot0 = slotConfigs;
 
@@ -96,6 +105,10 @@ public class Turret extends SubsystemBase {
 
   public Angle getPosition() {
     return m_turretMotor.getPosition().getValue();
+  }
+
+  public boolean isAtPosition(Angle targetPosition, Angle tolerance) {
+    return getPosition().isNear(targetPosition, tolerance);
   }
 
   private void setPosition(final Angle position) {

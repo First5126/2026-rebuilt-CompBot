@@ -11,12 +11,17 @@ public class TurretConstants {
   public static final Angle MIN_ANGLE = Units.Degrees.of(-135);
   public static final Angle MAX_ANGLE = Units.Degrees.of(135);
 
-  public static final double kP = 96;
+  public static final double kP = 0;
   public static final double kI = 0;
   public static final double kD = 0;
+  public static final double kS = 0;
+  public static final double kV = 0;
+  public static final double kA = 0;
 
-  // Meters
+
+  // Meters per second at 12 volts. This is used for feedforward calculations, and should be measured at the output of the turret gearbox.
   public static final Transform2d TURRET_OFFSET = new Transform2d(0, 0, new Rotation2d());
+  public static final int gearRatio = 100;
 
   // Distance first then Time
   public static final InterpolatingDoubleTreeMap DISTANCE_TO_TIME_INTERPOLATOR =
