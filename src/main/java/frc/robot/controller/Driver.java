@@ -44,14 +44,14 @@ public class Driver extends CustomXboxController implements Controller {
       AprilTagLocalization aprilTagLocalization,
       CommandFactory commandFactory,
       // Intake intake,
-      // Turret turret,
+      Turret turret,
       Zones zone) {
     Driver driver = getInstance();
     driver.setDrivetrain(drivetrain);
     driver.setAprilTagLocalization(aprilTagLocalization);
     driver.setCommandFactory(commandFactory);
     // driver.setIntake(intake);
-    // driver.setTurret(turret);
+    driver.setTurret(turret);
     driver.setZone(zone);
 
     return driver;
