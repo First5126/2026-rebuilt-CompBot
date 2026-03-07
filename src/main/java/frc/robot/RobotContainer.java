@@ -56,16 +56,14 @@ public class RobotContainer {
   private Hood m_hood = new Hood();
 
   private ShootingMechanism m_shootingMechanism =
-  new ShootingMechanism(m_turret, m_drivetrain, m_zones);
+      new ShootingMechanism(m_turret, m_drivetrain, m_zones);
 
   // End of Declaring
 
-  PhotonDetails[] photonDetails = {
-    AprilTagLocalizationConstants.camera1Details
-  };
+  PhotonDetails[] photonDetails = {AprilTagLocalizationConstants.camera1Details};
 
-
-   private AprilTagLocalization m_aprilTagLocalization = new AprilTagLocalization(
+  private AprilTagLocalization m_aprilTagLocalization =
+      new AprilTagLocalization(
           m_drivetrain::getPose2d,
           m_drivetrain::resetPose,
           m_drivetrain::addVisionMeasurement,
@@ -75,7 +73,6 @@ public class RobotContainer {
 
   public CommandFactory m_commandFactory =
       new CommandFactory(m_drivetrain, m_turret, m_zones, m_shootingMechanism);
-
 
   private final SendableChooser<Command> autoChooser;
 

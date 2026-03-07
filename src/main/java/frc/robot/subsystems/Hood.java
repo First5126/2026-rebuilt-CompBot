@@ -14,7 +14,6 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.ReverseLimitValue;
-
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -33,18 +32,18 @@ public class Hood extends SubsystemBase {
   public Hood() {
     m_hoodMotor = new TalonFX(CANConstants.hoodMotor, CANConstants.mechanismCanivore);
     m_CANdi = new CANdi(CANConstants.hoodCANdi, CANConstants.mechanismCanivore);
-    
+
     TalonFXConfiguration talonConfiguration = new TalonFXConfiguration();
     talonConfiguration.Feedback.RotorToSensorRatio = 8.33;
     talonConfiguration.Feedback.SensorToMechanismRatio = 18;
     talonConfiguration.Feedback.withFusedCANcoder(
-      new CANcoder(CANConstants.hoodEncoder, CANConstants.mechanismCanivore));
+        new CANcoder(CANConstants.hoodEncoder, CANConstants.mechanismCanivore));
 
     m_hoodMotor.getConfigurator().apply(talonConfiguration);
 
     // PID Configs
     m_motorConfigs = new Slot0Configs();
-    
+
     m_motorConfigs.kP = HoodConstants.kP;
     m_motorConfigs.kI = HoodConstants.kI;
     m_motorConfigs.kD = HoodConstants.kD;
@@ -65,14 +64,16 @@ public class Hood extends SubsystemBase {
 
     // Initalize the PositionVoltage request
     m_positionVoltageRequest = new PositionVoltage(0).withSlot(0);
-
-
   }
 
   @Override
   public void periodic() {
-      SmartDashboard.putBoolean("Reverse Limit", m_hoodMotor.getReverseLimit().getValue() == ReverseLimitValue.ClosedToGround);
-      SmartDashboard.putBoolean("Forward Limit", m_hoodMotor.getReverseLimit().getValue() == ReverseLimitValue.ClosedToGround);
+    SmartDashboard.putBoolean(
+        "Reverse Limit",
+        m_hoodMotor.getReverseLimit().getValue() == ReverseLimitValue.ClosedToGround);
+    SmartDashboard.putBoolean(
+        "Forward Limit",
+        m_hoodMotor.getReverseLimit().getValue() == ReverseLimitValue.ClosedToGround);
   }
 
   public Command setPosition(Angle angle) {
