@@ -20,6 +20,7 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandFactory;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.IntakeDeployer;
+import frc.robot.subsystems.FlyWheel;
 import frc.robot.subsystems.ShootingMechanism;
 import frc.robot.subsystems.Turret;
 import frc.robot.vision.AprilTagLocalization;
@@ -50,6 +51,7 @@ public class RobotContainer {
   private Turret m_turret = new Turret();
   private Zones m_zones = new Zones(m_drivetrain::getPose2d);
   private IntakeDeployer m_intakeDeployer = new IntakeDeployer();
+  private FlyWheel m_flyWheel = new FlyWheel();
 
   private ShootingMechanism m_shootingMechanism =
       new ShootingMechanism(m_turret, m_drivetrain, m_zones);
@@ -80,8 +82,14 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    Driver.init(m_drivetrain, m_aprilTagLocalization, m_commandFactory, m_intakeDeployer, m_zones)
-        .configureBindings();
+    Driver.init(m_drivetrain, m_aprilTagLocalization, m_commandFactory, m_intakeDeployer, m_turret, m_zones);
+
+    // Turret Default Command
+
+    // this.m_turret.setDefaultCommand(m_turret.rotateToPosition(() ->
+    // m_shootingMechanism.getShootingSolution().predictedTurretAngle));
+
+    configureBindings();
 
     // Idle while the robot is disabled. This ensures the configured
     // neutral mode is applied to the drive motors while disabled.

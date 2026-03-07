@@ -17,9 +17,9 @@ import frc.robot.constants.IntakeDeployerConstants;
 public class IntakeDeployer extends SubsystemBase {
 
   private TalonFX m_intakeDeployerMotorRight =
-      new TalonFX(CANConstants.intakePiviotRight, CANConstants.Canivore2);
+      new TalonFX(CANConstants.intakePivotRightMotor, CANConstants.Canivore2);
   private TalonFX m_intakeDeployerMotorLeft =
-      new TalonFX(CANConstants.intakePiviotLeft, CANConstants.Canivore2);
+      new TalonFX(CANConstants.intakePivotLeftMotor, CANConstants.Canivore2);
   final MotionMagicExpoVoltage m_request = new MotionMagicExpoVoltage(0);
 
   public IntakeDeployer() {
