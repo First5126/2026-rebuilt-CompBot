@@ -1,10 +1,23 @@
 package frc.robot.controller;
 
+import frc.robot.FMS.Zones;
 import frc.robot.constants.ControllerConstants;
+import frc.robot.subsystems.CommandFactory;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Turret;
+import frc.robot.vision.AprilTagLocalization;
+import lombok.Getter;
+import lombok.Setter;
 
 public class Operator extends CustomXboxController implements Controller {
   // Singleton instance
   private static Operator INSTANCE;
+
+  @Getter @Setter private AprilTagLocalization aprilTagLocalization;
+  @Getter @Setter private CommandFactory commandFactory;
+  @Getter @Setter private Intake intake;
+  @Getter @Setter private Turret turret;
+  @Getter @Setter private Zones zone;
 
   // Private constructor to prevent instantiation from outside
   private Operator() {
@@ -19,13 +32,23 @@ public class Operator extends CustomXboxController implements Controller {
     return INSTANCE;
   }
 
-  public static Operator init() {
-    return getInstance();
+  public static Operator init(Zones zone) {
+
+    Operator operator = getInstance();
+
+    operator.setZone(zone);
+
+    return operator;
   }
 
   @Override
   public Operator configureBindings() {
     // TODO: add methods to bind controller
+
+    this.a()
+        .onTrue(zone.setShootingOverideCommand(true))
+        .onFalse(zone.setShootingOverideCommand(false));
+
     return this;
   }
 }

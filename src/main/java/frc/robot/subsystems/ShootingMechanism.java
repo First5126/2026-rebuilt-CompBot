@@ -65,12 +65,17 @@ public class ShootingMechanism extends SubsystemBase {
       Supplier<Pose2d> robotPoseSupplier,
       Supplier<ChassisSpeeds> speed,
       Supplier<Pose2d> targetPoseSupplier) {
+    boolean override = false;
 
     // check to see if our suppliers are valid
     if (robotPoseSupplier.get() != null
         && targetPoseSupplier.get() != null
         && speed.get() != null) {
       SmartDashboard.putBoolean("Valid Shooting Solution", true);
+
+      if (m_zone.nearTrench() && !m_zone.getShootingOveride()) {
+        return new ShootingSolution(Degrees.of(0), Degrees.of(0));
+      }
 
       // retreive the value of all the suppliers
       Pose2d robotPose = robotPoseSupplier.get();

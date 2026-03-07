@@ -9,9 +9,12 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.constants.GoalPoseConstants;
 import frc.robot.constants.GoalPoseConstants.GoalPose;
 import frc.robot.constants.ZonesConstants.Bump;
+import frc.robot.constants.ZonesConstants.Trench;
 import frc.robot.constants.ZonesConstants.Zone;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -21,6 +24,8 @@ public class Zones {
   private static Supplier<Pose2d> m_pose;
 
   private Optional<Alliance> m_team;
+
+  private boolean shootingOveride = false;
 
   public Zones(Supplier<Pose2d> robotPoseSupplier) {
     m_team = DriverStation.getAlliance();
@@ -77,6 +82,31 @@ public class Zones {
     }
 
     return false;
+  }
+
+  public boolean nearTrench() {
+    double x = m_pose.get().getX();
+    double y = m_pose.get().getY();
+
+    for (Trench tench : Trench.values()) {
+      if (isWithin(x, y, tench.getTopLeftTranslation(), tench.getBottomRightTranslation())) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  public Command setShootingOverideCommand(Boolean state) {
+    return Commands.runOnce(
+        () -> {
+          shootingOveride = state;
+          SmartDashboard.putBoolean("Shooting Overide", shootingOveride);
+        });
+  }
+
+  public boolean getShootingOveride() {
+    return shootingOveride;
   }
 
   public Pose2d getTurretShootingPose() {
