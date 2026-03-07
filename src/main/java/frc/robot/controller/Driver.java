@@ -17,10 +17,10 @@ public class Driver extends CustomXboxController implements Controller {
   private static Driver INSTANCE;
 
   @Getter @Setter private CommandSwerveDrivetrain drivetrain;
-  //@Getter @Setter private AprilTagLocalization aprilTagLocalization;
-  //@Getter @Setter private CommandFactory commandFactory;
-  //@Getter @Setter private Intake intake;
-  //@Getter @Setter private Turret turret;
+  @Getter @Setter private AprilTagLocalization aprilTagLocalization;
+  @Getter @Setter private CommandFactory commandFactory;
+  @Getter @Setter private Intake intake;
+  @Getter @Setter private Turret turret;
   @Getter @Setter private Zones zone;
 
   private final SwerveRequest.SwerveDriveBrake BRAKE = new SwerveRequest.SwerveDriveBrake();
@@ -41,18 +41,18 @@ public class Driver extends CustomXboxController implements Controller {
 
   public static Driver init(
       CommandSwerveDrivetrain drivetrain,
-      //AprilTagLocalization aprilTagLocalization,
-      //CommandFactory commandFactory,
-      // Intake intake,
-      // Turret turret,
+      AprilTagLocalization aprilTagLocalization,
+      CommandFactory commandFactory,
+      //Intake intake,
+      Turret turret,
       Zones zone) {
     Driver driver = getInstance();
     driver.setDrivetrain(drivetrain);
-    //driver.setAprilTagLocalization(aprilTagLocalization);
-    //driver.setCommandFactory(commandFactory);
-    // driver.setIntake(intake);
-    // driver.setTurret(turret);
-    //driver.setZone(zone);
+    driver.setAprilTagLocalization(aprilTagLocalization);
+    driver.setCommandFactory(commandFactory);
+    //driver.setIntake(intake);
+    driver.setTurret(turret);
+    driver.setZone(zone);
 
     return driver;
   }
@@ -68,10 +68,6 @@ public class Driver extends CustomXboxController implements Controller {
             this::getLeftY,
             this::getLeftX,
             zone));
-
-    // Turret Default Command
-    // this.getTurret().setDefaultCommand(commandFactory.trackTargetPose(drivetrain::getPose2d,
-    // this.getZone()::getTurretShootingPose));
 
     // this.a().onTrue(aprilTagLocalization.setTrust(true));
     // this.a().onFalse(aprilTagLocalization.setTrust(false));
