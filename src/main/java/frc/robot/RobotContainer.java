@@ -19,8 +19,8 @@ import frc.robot.controller.Driver;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandFactory;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.IntakeDeployer;
 import frc.robot.subsystems.FlyWheel;
+import frc.robot.subsystems.IntakeDeployer;
 import frc.robot.subsystems.ShootingMechanism;
 import frc.robot.subsystems.Turret;
 import frc.robot.vision.AprilTagLocalization;
@@ -82,7 +82,13 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    Driver.init(m_drivetrain, m_aprilTagLocalization, m_commandFactory, m_intakeDeployer, m_turret, m_zones);
+    Driver.init(
+        m_drivetrain,
+        m_aprilTagLocalization,
+        m_commandFactory,
+        m_intakeDeployer,
+        m_turret,
+        m_zones);
 
     // Turret Default Command
 
