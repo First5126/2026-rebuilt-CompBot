@@ -1,6 +1,10 @@
 package frc.robot.constants;
 
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.units.measure.Angle;
+
+import static edu.wpi.first.units.Units.Degrees;
+
 import java.util.Map;
 
 public class HoodConstants {
@@ -9,6 +13,9 @@ public class HoodConstants {
   public static double kD = 0.0;
   public static double kS = 0.35;
   public static double kV = 13.84;
+  
+  public static final Angle minimumHoodAngle = Degrees.of(42);
+  public static final Angle maximumHoodAngle = Degrees.of(69);
 
   // TODO: Very important to fix this so we dont rip the hood off
   public static final InterpolatingDoubleTreeMap DISTANCE_TO_ANGLE_INTERPOLATOR =

@@ -21,6 +21,7 @@ import frc.robot.subsystems.CommandFactory;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.FlyWheel;
 import frc.robot.subsystems.Hood;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.ShootingMechanism;
 import frc.robot.subsystems.Turret;
 import frc.robot.vision.AprilTagLocalization;
@@ -52,11 +53,11 @@ public class RobotContainer {
   // private Zones m_zones = new Zones(m_drivetrain::getPose2d);
   private FlyWheel m_flyWheel = new FlyWheel();
   private Zones m_zones = new Zones(m_drivetrain::getPose2d);
-
   private Hood m_hood = new Hood();
+  private Indexer m_indexer = new Indexer();
 
   private ShootingMechanism m_shootingMechanism =
-      new ShootingMechanism(m_turret, m_drivetrain, m_zones);
+      new ShootingMechanism(m_drivetrain, m_zones, m_flyWheel, m_hood);
 
   // End of Declaring
 
@@ -83,7 +84,7 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    Driver.init(m_drivetrain, m_aprilTagLocalization, m_commandFactory, m_turret, m_zones);
+    Driver.init(m_drivetrain, m_aprilTagLocalization, m_commandFactory, m_turret, m_zones, m_indexer);
 
     // Turret Default Command
 
@@ -99,6 +100,9 @@ public class RobotContainer {
         .whileTrue(m_drivetrain.applyRequest(() -> idle).ignoringDisable(true));
 
     m_drivetrain.registerTelemetry(logger::telemeterize);
+
+    m_hood.setDefaultCommand(m_hood.updatePosition(m_shootingMechanism::getShootingSolution));
+    m_flyWheel.setDefaultCommand(m_flyWheel.setSpeedSolution(m_shootingMechanism::getShootingSolution));
   }
 
   /**

@@ -1,11 +1,11 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.configs.TalonFXSConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
-import com.ctre.phoenix6.hardware.TalonFXS;
-import com.ctre.phoenix6.signals.MotorArrangementValue;
+import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.CANConstants;
@@ -13,8 +13,9 @@ import frc.robot.constants.IndexerConstants;
 
 public class Indexer extends SubsystemBase {
 
-  private TalonFXS m_indexerMotor = new TalonFXS(CANConstants.indexFeederMotor);
-  private TalonFXS m_spindexerMotor = new TalonFXS(CANConstants.spindexerMotor);
+  private TalonFX m_indexerMotor = new TalonFX(CANConstants.indexFeederMotor, CANConstants.mechanismCanivore);
+  private TalonFX m_spindexerMotor =
+      new TalonFX(CANConstants.spindexerMotor,CANConstants.mechanismCanivore);
 
   private VelocityVoltage m_indexerVelocityVoltage = new VelocityVoltage(0);
   private VelocityVoltage m_spindexerVelocityVoltage = new VelocityVoltage(0);
@@ -22,8 +23,7 @@ public class Indexer extends SubsystemBase {
 
   public Indexer() {
 
-    TalonFXSConfiguration m_indexerConfiguration = new TalonFXSConfiguration();
-    m_indexerConfiguration.Commutation.MotorArrangement = MotorArrangementValue.Disabled;
+    TalonFXConfiguration m_indexerConfiguration = new TalonFXConfiguration();
 
     Slot0Configs m_indexerSlot0Configs = new Slot0Configs();
     m_indexerSlot0Configs.kP = IndexerConstants.indexerKP;
@@ -32,8 +32,7 @@ public class Indexer extends SubsystemBase {
 
     m_indexerMotor.getConfigurator().apply(m_indexerConfiguration);
 
-    TalonFXSConfiguration m_spindexerConfiguration = new TalonFXSConfiguration();
-    m_spindexerConfiguration.Commutation.MotorArrangement = MotorArrangementValue.Disabled;
+    TalonFXConfiguration m_spindexerConfiguration = new TalonFXConfiguration();
 
     Slot0Configs m_spindexerSlot0Configs = new Slot0Configs();
     m_spindexerSlot0Configs.kP = IndexerConstants.indexerKP;
