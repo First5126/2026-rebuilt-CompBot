@@ -83,11 +83,11 @@ public class RobotContainer {
 
   private void configureBindings() {
 
-     // Turret Default Command
+    // Turret Default Command
 
     // this.m_turret.setDefaultCommand(m_turret.rotateToPosition(() ->
     // m_shootingMechanism.getShootingSolution().predictedTurretAngle));
-    
+
     Driver.init(m_drivetrain, m_aprilTagLocalization, m_commandFactory, m_turret, m_zones)
         .configureBindings();
 
