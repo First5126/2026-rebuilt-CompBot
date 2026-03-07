@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import java.util.function.Supplier;
 
@@ -14,6 +15,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
@@ -37,6 +39,8 @@ public class FlyWheel extends SubsystemBase {
 
   public FlyWheel() {
     TalonFXConfiguration flyWheelConfiguration = new TalonFXConfiguration();
+    
+    flyWheelConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
     Slot0Configs slot0 = new Slot0Configs();
     slot0.kP = FlyWheelConstants.kP;
@@ -50,7 +54,7 @@ public class FlyWheel extends SubsystemBase {
     
     m_shooterMotor.getConfigurator().apply(flyWheelConfiguration);
 
-    SmartDashboard.putNumber("Shooter Speed (MPS)", 5);
+    SmartDashboard.putNumber("Set Shooter Speed (MPS)", 5);
   }
 
 
@@ -63,11 +67,13 @@ public class FlyWheel extends SubsystemBase {
   }
 
   public LinearVelocity getDashboardSpeed() {
-    return MetersPerSecond.of(SmartDashboard.getNumber("Shooter Speed (MPS)", 0));
+    return MetersPerSecond.of(SmartDashboard.getNumber("Set Shooter Speed (MPS)", 0));
   }
 
   private void setSpeedControl(Supplier<LinearVelocity> ballSpeed) {
     AngularVelocity motorSpeed = calculateAngularVelocity(ballSpeed.get());
+
+    SmartDashboard.putNumber("Calculated Shooter Speed RPS", motorSpeed.in(RotationsPerSecond));
     m_shooterMotor.setControl(
         m_shooterSpeed.withVelocity(motorSpeed));
   }
@@ -79,6 +85,6 @@ public class FlyWheel extends SubsystemBase {
 
 
   private AngularVelocity calculateAngularVelocity(LinearVelocity linearVelocity) {
-    return RadiansPerSecond.of(-linearVelocity.in(MetersPerSecond) / FlyWheelConstants.radius.in(Meters) * FlyWheelConstants.gearRatio);
+    return RadiansPerSecond.of(linearVelocity.in(MetersPerSecond) / FlyWheelConstants.radius.in(Meters) * FlyWheelConstants.gearRatio);
   }
 }
