@@ -22,37 +22,33 @@ import frc.robot.subsystems.ShootingMechanism.ShootingSolution;
 import java.util.function.Supplier;
 
 public class Turret extends SubsystemBase {
-  private final TalonFXS m_turretMotor =
-      new TalonFXS(CANConstants.turretMotor, CANConstants.driveBaseCanivore);
-  private final CANcoder m_turretEncoder =
-      new CANcoder(CANConstants.turretEncoder, CANConstants.driveBaseCanivore);
-  private final TalonFXSConfiguration m_talonFXSConfiguration = new TalonFXSConfiguration();
-  private final PositionVoltage m_positionControl = new PositionVoltage(0);
+  private final TalonFXS m_turretMotor;
+  private final CANcoder m_turretEncoder;
+  private final PositionVoltage m_positionControl;
 
   public Turret() {
+    m_turretMotor = new TalonFXS(CANConstants.turretMotor, CANConstants.Canivore2);
+    m_turretEncoder = new CANcoder(CANConstants.turretEncoder, CANConstants.Canivore2);
 
     CANcoderConfiguration canCoderConfiguration = new CANcoderConfiguration();
-    canCoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+    canCoderConfiguration.MagnetSensor.withSensorDirection(SensorDirectionValue.CounterClockwise_Positive);
+    canCoderConfiguration.MagnetSensor.withMagnetOffset(TurretConstants.ENCODER_OFFSET);
 
     m_turretEncoder.getConfigurator().apply(canCoderConfiguration);
 
     TalonFXSConfiguration talonFXSConfiguration = new TalonFXSConfiguration();
     talonFXSConfiguration.Commutation.MotorArrangement = MotorArrangementValue.Minion_JST;
     talonFXSConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    talonFXSConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    talonFXSConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     talonFXSConfiguration.ExternalFeedback.withFusedCANcoder(m_turretEncoder);
-    talonFXSConfiguration.ExternalFeedback.RotorToSensorRatio = 4;
+    talonFXSConfiguration.ExternalFeedback.RotorToSensorRatio = 10;
     talonFXSConfiguration.ExternalFeedback.SensorToMechanismRatio = 10;
-    // Software Limit Switches should be in rotations, not degrees. We convert it into rotations by dividing the angle in degrees by 360, since one rotation is essentially 360 degrees.
-    talonFXSConfiguration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = TurretConstants.MAX_ANGLE.in(Degrees)/360.0;
-    talonFXSConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-    talonFXSConfiguration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = TurretConstants.MIN_ANGLE.in(Degrees)/360.0;
-    talonFXSConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-    // This might work. Look into it before reanabling.
-    // talonFXSConfiguration.SoftwareLimitSwitch.ForwardSoftLimitThreshold =
-    // TurretConstants.MAX_ANGLE.in(Degrees);
-    // talonFXSConfiguration.SoftwareLimitSwitch.ReverseSoftLimitThreshold =
-    // TurretConstants.MIN_ANGLE.in(Degrees);
+    
+    talonFXSConfiguration.SoftwareLimitSwitch.withForwardSoftLimitThreshold(TurretConstants.MAX_ANGLE);
+    talonFXSConfiguration.SoftwareLimitSwitch.withForwardSoftLimitEnable(true);
+    talonFXSConfiguration.SoftwareLimitSwitch.withReverseSoftLimitThreshold(TurretConstants.MIN_ANGLE);
+    talonFXSConfiguration.SoftwareLimitSwitch.withReverseSoftLimitEnable(true);
+
     talonFXSConfiguration.ExternalFeedback.FeedbackRemoteSensorID = CANConstants.turretEncoder;
 
     Slot0Configs slotConfigs = new Slot0Configs();
@@ -66,6 +62,7 @@ public class Turret extends SubsystemBase {
     talonFXSConfiguration.Slot0 = slotConfigs;
 
     m_turretMotor.getConfigurator().apply(talonFXSConfiguration);
+    m_positionControl = new PositionVoltage(0);
   }
 
   /**
