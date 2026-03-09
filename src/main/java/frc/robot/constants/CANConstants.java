@@ -38,6 +38,9 @@ public class CANConstants {
   public static final int leftClimberMotor = 12;
   public static final int flyWheelsMotor = 12;
 
+  // CANdi
+  public static final int hoodCANdi = 9;
+
   // Encoders
   public static final int intakeEncoder = 6;
   public static final int turretEncoder = 10;
@@ -50,5 +53,5 @@ public class CANConstants {
 
   // CANBuses
   public static CANBus driveBaseCanivore = new CANBus("DriveBase");
-  public static CANBus Canivore2 = new CANBus("Canivore 2");
+  public static CANBus mechanismCanivore = new CANBus("Mechanism");
 }

@@ -51,7 +51,10 @@ public class RobotContainer {
 
   private Turret m_turret = new Turret();
   private Zones m_zones = new Zones(m_drivetrain::getPose2d);
+
   private FlyWheel m_flyWheel = new FlyWheel();
+  private Hood m_hood = new Hood();
+
   private Hood m_hood = new Hood();
 
   private ShootingMechanism m_shootingMechanism =
@@ -59,9 +62,7 @@ public class RobotContainer {
 
   // End of Declaring
 
-  PhotonDetails[] photonDetails = {
-    // AprilTagLocalizationConstants.camera1Details
-  };
+  PhotonDetails[] photonDetails = {AprilTagLocalizationConstants.camera1Details};
   public CommandFactory m_commandFactory =
       new CommandFactory(m_drivetrain, m_turret, m_zones, m_shootingMechanism);
 
@@ -83,14 +84,14 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    Driver.init(m_drivetrain, m_aprilTagLocalization, m_commandFactory, m_turret, m_zones);
 
     // Turret Default Command
 
     // this.m_turret.setDefaultCommand(m_turret.rotateToPosition(() ->
     // m_shootingMechanism.getShootingSolution().predictedTurretAngle));
 
-    configureBindings();
+    Driver.init(m_drivetrain, m_aprilTagLocalization, m_commandFactory, m_turret, m_zones)
+        .configureBindings();
 
     // Idle while the robot is disabled. This ensures the configured
     // neutral mode is applied to the drive motors while disabled.
