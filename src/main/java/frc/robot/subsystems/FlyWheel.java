@@ -18,6 +18,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.CANConstants;
 import frc.robot.constants.FlyWheelConstants;
+import frc.robot.subsystems.ShootingMechanism.ShootingSolution;
+
 import java.util.function.Supplier;
 
 public class FlyWheel extends SubsystemBase {
@@ -48,8 +50,14 @@ public class FlyWheel extends SubsystemBase {
     SmartDashboard.putNumber("Set Shooter Speed (MPS)", 5);
   }
 
+  public Command setSpeedSolution(Supplier<ShootingSolution> solution) {
+    return runOnce(() -> {
+        setSpeedControl(solution.get().getFlyWheelSpeed());
+    });
+  }
+
   public Command setSpeed(Supplier<LinearVelocity> ballSpeed) {
-    return runOnce(() -> setSpeedControl(ballSpeed));
+    return runOnce(() -> setSpeedControl(ballSpeed.get()));
   }
 
   public Command stopSpinning() {
@@ -60,8 +68,12 @@ public class FlyWheel extends SubsystemBase {
     return MetersPerSecond.of(SmartDashboard.getNumber("Set Shooter Speed (MPS)", 0));
   }
 
-  private void setSpeedControl(Supplier<LinearVelocity> ballSpeed) {
-    AngularVelocity motorSpeed = calculateAngularVelocity(ballSpeed.get());
+  public LinearVelocity getSpeed() {
+    return  MetersPerSecond.of((m_shooterMotor.getVelocity().getValue().in(RadiansPerSecond) / FlyWheelConstants.gearRatio) * FlyWheelConstants.radius.in(Meters));
+  }
+
+  private void setSpeedControl(LinearVelocity ballSpeed) {
+    AngularVelocity motorSpeed = calculateAngularVelocity(ballSpeed);
 
     SmartDashboard.putNumber("Calculated Shooter Speed RPS", motorSpeed.in(RotationsPerSecond));
     m_shooterMotor.setControl(m_shooterSpeed.withVelocity(motorSpeed));

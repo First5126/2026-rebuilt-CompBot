@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Rotations;
 
+import java.util.function.Supplier;
+
 import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -20,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.CANConstants;
 import frc.robot.constants.HoodConstants;
+import frc.robot.subsystems.ShootingMechanism.ShootingSolution;
 
 public class Hood extends SubsystemBase {
   private TalonFX m_hoodMotor;
@@ -76,10 +79,21 @@ public class Hood extends SubsystemBase {
         m_hoodMotor.getReverseLimit().getValue() == ReverseLimitValue.ClosedToGround);
   }
 
+  public Command updatePosition(Supplier<ShootingSolution> soltuion) {
+    return runOnce(
+        () -> {
+          m_hoodMotor.setControl(m_positionVoltageRequest.withPosition(soltuion.get().predictedHoodAngle.minus(HoodConstants.minimumHoodAngle)));
+        });
+  }
+
   public Command setPosition(Angle angle) {
     return runOnce(
         () -> {
           m_hoodMotor.setControl(m_positionVoltageRequest.withPosition(angle));
         });
+  }
+
+  public Angle getPosition() {
+    return m_hoodMotor.getPosition().getValue();
   }
 }
