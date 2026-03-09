@@ -61,7 +61,7 @@ public class RobotContainer {
 
   // End of Declaring
 
-  PhotonDetails[] photonDetails = {AprilTagLocalizationConstants.camera1Details};
+  PhotonDetails[] photonDetails = {};
 
   private AprilTagLocalization m_aprilTagLocalization =
       new AprilTagLocalization(
@@ -85,14 +85,13 @@ public class RobotContainer {
 
   private void configureBindings() {
     Driver.init(
-        m_drivetrain, m_aprilTagLocalization, m_commandFactory, m_turret, m_zones, m_indexer);
+        m_drivetrain, m_aprilTagLocalization, m_commandFactory, m_turret, m_zones, m_indexer, m_flyWheel)
+        .configureBindings();
 
     // Turret Default Command
 
     // this.m_turret.setDefaultCommand(m_turret.rotateToPosition(() ->
     // m_shootingMechanism.getShootingSolution().predictedTurretAngle));
-
-    configureBindings();
 
     // Idle while the robot is disabled. This ensures the configured
     // neutral mode is applied to the drive motors while disabled.

@@ -25,7 +25,7 @@ public class Indexer extends SubsystemBase {
   public Indexer() {
 
     TalonFXConfiguration m_indexerConfiguration = new TalonFXConfiguration();
-    m_indexerConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    m_indexerConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     Slot0Configs m_indexerSlot0Configs = new Slot0Configs();
     m_indexerSlot0Configs.kP = IndexerConstants.indexerKP;
