@@ -12,7 +12,6 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.FMS.Zones;
 import frc.robot.constants.AprilTagLocalizationConstants;
 import frc.robot.constants.AprilTagLocalizationConstants.PhotonDetails;
@@ -55,8 +54,6 @@ public class RobotContainer {
   private FlyWheel m_flyWheel = new FlyWheel();
   private Hood m_hood = new Hood();
 
-  private Hood m_hood = new Hood();
-
   private ShootingMechanism m_shootingMechanism =
       new ShootingMechanism(m_turret, m_drivetrain, m_zones);
 
@@ -96,8 +93,8 @@ public class RobotContainer {
     // Idle while the robot is disabled. This ensures the configured
     // neutral mode is applied to the drive motors while disabled.
 
-    Trigger trenchTrigger = new Trigger(m_zones::nearTrench);
-    trenchTrigger.onTrue(m_commandFactory.goUnderTrenchCommand());
+    // Trigger trenchTrigger = new Trigger(m_zones::nearTrench);
+    // trenchTrigger.onTrue(m_commandFactory.goUnderTrenchCommand());
 
     final SwerveRequest idle = new SwerveRequest.Idle();
     RobotModeTriggers.disabled()

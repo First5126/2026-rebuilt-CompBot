@@ -2,6 +2,7 @@ package frc.robot.controller;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.FMS.Zones;
 import frc.robot.constants.ControllerConstants;
 import frc.robot.subsystems.CommandFactory;
@@ -9,6 +10,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Turret;
 import frc.robot.vision.AprilTagLocalization;
+import java.util.function.Supplier;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -78,6 +80,13 @@ public class Driver extends CustomXboxController implements Controller {
 
     // Reset the field-centric heading on left bumper press.
     this.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+    this.a()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  Supplier<Boolean> nearTrench = () -> zone.nearTrench();
+                  SmartDashboard.putBoolean("Near Trench", nearTrench.get());
+                }));
 
     return this;
   }
