@@ -1,0 +1,89 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.639190140845071,
+        "y": 1.9750880281690137
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.639190140845071,
+        "y": 1.9750880281690133
+      },
+      "isLocked": false,
+      "linkedName": "Bump - Outpost Side"
+    },
+    {
+      "anchor": {
+        "x": 5.933542039355992,
+        "y": 1.804007155635062
+      },
+      "prevControl": {
+        "x": 5.641484794275492,
+        "y": 2.274543828264758
+      },
+      "nextControl": {
+        "x": 6.154363936232131,
+        "y": 1.448238544001283
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.695140845070423,
+        "y": 1.3010196779964212
+      },
+      "prevControl": {
+        "x": 7.036869409660108,
+        "y": 0.42484794275491944
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Neutral Zone - Outpost Side"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.75,
+      "rotationDegrees": 0.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 0.65,
+      "constraints": {
+        "maxVelocity": 2.88,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 90.0
+  },
+  "reversed": false,
+  "folder": "Outpost Side",
+  "idealStartingState": {
+    "velocity": 0.0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}

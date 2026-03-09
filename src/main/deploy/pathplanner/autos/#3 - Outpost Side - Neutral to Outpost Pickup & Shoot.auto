@@ -1,0 +1,37 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Outpost Side Bump to Neutral Zone"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Neutral Zone Outpost Side Pickup"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Neutral Zone Outpost Side Post-pickup to Alliance Zone"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Alliance Zone Outpost Side to Outpost"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

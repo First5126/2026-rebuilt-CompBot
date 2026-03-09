@@ -1,0 +1,99 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 6.976566901408452,
+        "y": 2.99705985915493
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.976566901408452,
+        "y": 2.9970598591549305
+      },
+      "isLocked": false,
+      "linkedName": "Neutral Zone - Outpost Side Hub Pickup"
+    },
+    {
+      "anchor": {
+        "x": 6.976566901408452,
+        "y": 5.248591549295774
+      },
+      "prevControl": {
+        "x": 8.49355633802817,
+        "y": 4.97713028169014
+      },
+      "nextControl": {
+        "x": 5.459577464788733,
+        "y": 5.5200528169014085
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.910651408450705,
+        "y": 5.536021126760563
+      },
+      "prevControl": {
+        "x": 4.930857303695506,
+        "y": 5.4226649161778075
+      },
+      "nextControl": {
+        "x": 3.479507042253522,
+        "y": 5.5839260563380275
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.0643309859154937,
+        "y": 5.488116197183099
+      },
+      "prevControl": {
+        "x": 3.479507042253522,
+        "y": 5.615862676056338
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Alliance Zone - Depot Side"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 1.0,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 2.0,
+      "rotationDegrees": 180.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0.0,
+    "rotation": 131.309
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 4.0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}

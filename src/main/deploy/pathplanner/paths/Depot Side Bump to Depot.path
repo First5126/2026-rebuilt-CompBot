@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.6457602862254017,
+        "y": 5.973935599284436
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.645760286225401,
+        "y": 5.973935599284436
+      },
+      "isLocked": false,
+      "linkedName": "Bump - Depot Side"
+    },
+    {
+      "anchor": {
+        "x": 0.9361180679785326,
+        "y": 5.973935599284436
+      },
+      "prevControl": {
+        "x": 1.9361180679785324,
+        "y": 5.973935599284436
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Pickup - Depot"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "reversed": false,
+  "folder": "Depot Side",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": true
+}

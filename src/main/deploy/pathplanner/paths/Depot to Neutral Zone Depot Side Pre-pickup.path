@@ -1,0 +1,89 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.9361180679785326,
+        "y": 5.973935599284436
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.9361180679785326,
+        "y": 5.973935599284436
+      },
+      "isLocked": false,
+      "linkedName": "Pickup - Depot"
+    },
+    {
+      "anchor": {
+        "x": 5.333202146690519,
+        "y": 5.681878354203935
+      },
+      "prevControl": {
+        "x": 4.459838272362265,
+        "y": 5.1948100396747146
+      },
+      "nextControl": {
+        "x": 6.176923076923077,
+        "y": 6.152415026833632
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.718336314847942,
+        "y": 6.801431127012522
+      },
+      "prevControl": {
+        "x": 7.718336314847942,
+        "y": 8.034561717352414
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Neutral Zone - Depot Side"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.0,
+      "rotationDegrees": 180.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.7238095238095236,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 2.88,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 3.0,
+    "rotation": -90.0
+  },
+  "reversed": false,
+  "folder": "Depot Side",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": true
+}
