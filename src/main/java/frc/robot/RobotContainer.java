@@ -82,13 +82,12 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
+    Driver.init(m_drivetrain, m_aprilTagLocalization, m_commandFactory, m_turret, m_zones, m_indexer).configureBindings();
+
     // Turret Default Command
 
     // this.m_turret.setDefaultCommand(m_turret.rotateToPosition(() ->
     // m_shootingMechanism.getShootingSolution().predictedTurretAngle));
-
-    Driver.init(m_drivetrain, m_aprilTagLocalization, m_commandFactory, m_turret, m_zones, m_indexer)
-        .configureBindings();
 
     // Idle while the robot is disabled. This ensures the configured
     // neutral mode is applied to the drive motors while disabled.
