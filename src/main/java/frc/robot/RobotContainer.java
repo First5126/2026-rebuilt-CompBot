@@ -91,7 +91,7 @@ public class RobotContainer {
     // this.m_turret.setDefaultCommand(m_turret.rotateToPosition(() ->
     // m_shootingMechanism.getShootingSolution().predictedTurretAngle));
 
-    Driver.init(m_drivetrain, m_aprilTagLocalization, m_commandFactory, m_intake, m_turret, m_zones)
+    Driver.init(m_drivetrain, m_aprilTagLocalization, m_commandFactory, m_intake, m_zones)
         .configureBindings();
 
     // Idle while the robot is disabled. This ensures the configured
