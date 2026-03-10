@@ -9,7 +9,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.FMS.ShiftData;
@@ -162,7 +161,8 @@ public class ShootingMechanism extends SubsystemBase {
   }
 
   public Command startTrackingCommand() {
-    //Command trackingCommand = m_turret.rotateToPosition(this::getShootingSolution).alongWith(m_hood.setPosition(this::getShootingSolution));
+    // Command trackingCommand =
+    // m_turret.rotateToPosition(this::getShootingSolution).alongWith(m_hood.setPosition(this::getShootingSolution));
     Command trackingCommand = m_hood.setPosition(this::getShootingSolution);
     trackingCommand.addRequirements(this);
     return trackingCommand;

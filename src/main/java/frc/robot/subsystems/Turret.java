@@ -47,9 +47,9 @@ public class Turret extends SubsystemBase {
     talonFXSConfiguration.ExternalFeedback.SensorToMechanismRatio = 10;
 
     CurrentLimitsConfigs limitsConfigs = new CurrentLimitsConfigs();
-    //limitsConfigs.SupplyCurrentLimit = TurretConstants.CURRENT_LIMIT;
+    // limitsConfigs.SupplyCurrentLimit = TurretConstants.CURRENT_LIMIT;
     limitsConfigs.StatorCurrentLimit = TurretConstants.STATOR_LIMIT;
-    //limitsConfigs.SupplyCurrentLimitEnable = true;
+    // limitsConfigs.SupplyCurrentLimitEnable = true;
     limitsConfigs.StatorCurrentLimitEnable = true;
 
     talonFXSConfiguration.CurrentLimits = limitsConfigs;
