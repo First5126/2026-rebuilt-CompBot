@@ -45,26 +45,37 @@ public class FlyWheel extends SubsystemBase {
 
     m_shooterMotor.getConfigurator().apply(flyWheelConfiguration);
 
-    SmartDashboard.putNumber("Set Shooter Speed (MPS)", 5);
+    SmartDashboard.putNumber("Set Shooter Speed (RPS)", 5);
   }
 
-  public Command setSpeed(Supplier<LinearVelocity> ballSpeed) {
-    return runOnce(() -> setSpeedControl(ballSpeed));
+  public Command setSpeed(Supplier<AngularVelocity> rps) {
+    return runOnce(() -> setSpeedControl(rps));
   }
 
   public Command stopSpinning() {
     return runOnce(() -> stopMotors());
   }
 
-  public LinearVelocity getDashboardSpeed() {
-    return MetersPerSecond.of(SmartDashboard.getNumber("Set Shooter Speed (MPS)", 0));
+  //public LinearVelocity getDashboardSpeed() {
+  //  return MetersPerSecond.of(SmartDashboard.getNumber("Set Shooter Speed (MPS)", 0));
+  //}
+
+  public AngularVelocity getDashboardSpeedRPS() {
+    return RotationsPerSecond.of(SmartDashboard.getNumber("Set Shooter Speed (RPS)", 0));
   }
 
-  private void setSpeedControl(Supplier<LinearVelocity> ballSpeed) {
+  /*private void setSpeedControl(Supplier<LinearVelocity> ballSpeed) {
     AngularVelocity motorSpeed = calculateAngularVelocity(ballSpeed.get());
 
     SmartDashboard.putNumber("Calculated Shooter Speed RPS", motorSpeed.in(RotationsPerSecond));
     m_shooterMotor.setControl(m_shooterSpeed.withVelocity(motorSpeed));
+  }*/
+
+  private void setSpeedControl(Supplier<AngularVelocity> rps) {
+    AngularVelocity rotationSpeed = rps.get();
+
+    if (rotationSpeed.isEquivalent(RotationsPerSecond.of(0))) stopMotors();
+    else m_shooterMotor.setControl(m_shooterSpeed.withVelocity(rps.get()));
   }
 
   private void stopMotors() {

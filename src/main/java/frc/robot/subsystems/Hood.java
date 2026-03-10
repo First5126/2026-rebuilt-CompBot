@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Rotations;
 
 import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
@@ -64,6 +65,8 @@ public class Hood extends SubsystemBase {
 
     // Initalize the PositionVoltage request
     m_positionVoltageRequest = new PositionVoltage(0).withSlot(0);
+
+    SmartDashboard.putNumber("Hood Angle (Deg)", 0);
   }
 
   @Override
@@ -74,6 +77,9 @@ public class Hood extends SubsystemBase {
     SmartDashboard.putBoolean(
         "Forward Limit",
         m_hoodMotor.getReverseLimit().getValue() == ReverseLimitValue.ClosedToGround);
+
+        m_hoodMotor.setControl(m_positionVoltageRequest.withPosition(Degrees.of(SmartDashboard.getNumber("Hood Angle (Deg)", 0))));
+
   }
 
   public Command setPosition(Angle angle) {

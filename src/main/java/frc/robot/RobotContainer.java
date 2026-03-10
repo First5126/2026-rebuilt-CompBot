@@ -21,6 +21,7 @@ import frc.robot.subsystems.CommandFactory;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.FlyWheel;
 import frc.robot.subsystems.Hood;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.ShootingMechanism;
 import frc.robot.subsystems.Turret;
 import frc.robot.vision.AprilTagLocalization;
@@ -52,7 +53,7 @@ public class RobotContainer {
   private Zones m_zones = new Zones(m_drivetrain::getPose2d);
 
   private FlyWheel m_flyWheel = new FlyWheel();
-
+  private Indexer m_indexer = new Indexer();
   private Hood m_hood = new Hood();
 
   private ShootingMechanism m_shootingMechanism =
@@ -60,7 +61,7 @@ public class RobotContainer {
 
   // End of Declaring
 
-  PhotonDetails[] photonDetails = {AprilTagLocalizationConstants.camera1Details};
+  PhotonDetails[] photonDetails = {};
   public CommandFactory m_commandFactory =
       new CommandFactory(m_drivetrain, m_turret, m_zones, m_shootingMechanism);
 
@@ -88,7 +89,7 @@ public class RobotContainer {
     // this.m_turret.setDefaultCommand(m_turret.rotateToPosition(() ->
     // m_shootingMechanism.getShootingSolution().predictedTurretAngle));
 
-    Driver.init(m_drivetrain, m_aprilTagLocalization, m_commandFactory, m_turret, m_zones)
+    Driver.init(m_drivetrain, m_aprilTagLocalization, m_commandFactory, m_turret, m_zones, m_indexer)
         .configureBindings();
 
     // Idle while the robot is disabled. This ensures the configured
@@ -98,6 +99,8 @@ public class RobotContainer {
         .whileTrue(m_drivetrain.applyRequest(() -> idle).ignoringDisable(true));
 
     m_drivetrain.registerTelemetry(logger::telemeterize);
+
+    m_flyWheel.setDefaultCommand(m_flyWheel.setSpeed(m_flyWheel::getDashboardSpeedRPS));
   }
 
   /**
