@@ -57,13 +57,13 @@ public class RobotContainer {
   private Hood m_hood = new Hood();
 
   private ShootingMechanism m_shootingMechanism =
-      new ShootingMechanism(m_turret, m_drivetrain, m_zones);
+      new ShootingMechanism(m_turret, m_drivetrain, m_zones, m_hood);
 
   // End of Declaring
 
   PhotonDetails[] photonDetails = {};
   public CommandFactory m_commandFactory =
-      new CommandFactory(m_drivetrain, m_turret, m_zones, m_shootingMechanism);
+      new CommandFactory(m_drivetrain, m_turret, m_zones, m_shootingMechanism, m_flyWheel);
 
   private AprilTagLocalization m_aprilTagLocalization =
       new AprilTagLocalization(
@@ -92,6 +92,9 @@ public class RobotContainer {
             m_indexer,
             m_flyWheel)
         .configureBindings();
+
+    // Shooting Mechanism Default Command
+    m_shootingMechanism.setDefaultCommand(m_shootingMechanism.startTrackingCommand());
 
     // Turret Default Command
 

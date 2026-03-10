@@ -8,6 +8,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.FlyWheel;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.ShootingMechanism;
 import frc.robot.subsystems.Turret;
 import frc.robot.vision.AprilTagLocalization;
 import lombok.Getter;
@@ -25,6 +26,7 @@ public class Driver extends CustomXboxController implements Controller {
   @Getter @Setter private Zones zone;
   @Getter @Setter private Indexer indexer;
   @Getter @Setter private FlyWheel flyWheel;
+  @Getter @Setter private ShootingMechanism shootingMechanism;
 
   private final SwerveRequest.SwerveDriveBrake BRAKE = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt POINT = new SwerveRequest.PointWheelsAt();
@@ -87,6 +89,8 @@ public class Driver extends CustomXboxController implements Controller {
     this.b()
         .onTrue(flyWheel.setSpeed(flyWheel::getDashboardSpeedRPS))
         .onFalse(flyWheel.stopSpinning());
+
+    this.x().whileTrue(commandFactory.startShooting()).onFalse(commandFactory.stopShooting());
 
     return this;
   }

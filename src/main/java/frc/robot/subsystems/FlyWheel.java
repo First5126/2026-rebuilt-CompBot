@@ -11,6 +11,7 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -50,6 +51,20 @@ public class FlyWheel extends SubsystemBase {
 
   public Command setSpeed(Supplier<AngularVelocity> rps) {
     return runOnce(() -> setSpeedControl(rps));
+  }
+
+  public Command startShootingWithInterpolation(
+      Supplier<Pose2d> robotPose, Supplier<Pose2d> targetPose) {
+    return runOnce(
+        () -> {
+          double distanceToTarget =
+              robotPose.get().getTranslation().getDistance(targetPose.get().getTranslation());
+          Supplier<AngularVelocity> rps =
+              () ->
+                  RotationsPerSecond.of(
+                      FlyWheelConstants.DISTANCE_TO_SPEED_INTERPOLATOR.get(distanceToTarget));
+          setSpeedControl(rps);
+        });
   }
 
   public Command stopSpinning() {

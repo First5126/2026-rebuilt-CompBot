@@ -8,6 +8,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.FMS.ShiftData;
@@ -37,11 +39,12 @@ public class ShootingMechanism extends SubsystemBase {
   private CommandSwerveDrivetrain m_drivetrain;
   private Zones m_zone;
 
-  public ShootingMechanism(Turret m_turret, CommandSwerveDrivetrain m_drivetrain, Zones m_zone) {
+  public ShootingMechanism(
+      Turret m_turret, CommandSwerveDrivetrain m_drivetrain, Zones m_zone, Hood m_hood) {
     this.m_turret = m_turret;
     this.m_drivetrain = m_drivetrain;
     this.m_zone = m_zone;
-    // TODO: get the hood too
+    this.m_hood = m_hood;
 
     canShoot = new Trigger(this::canShootFuel);
   }
@@ -156,5 +159,12 @@ public class ShootingMechanism extends SubsystemBase {
         "Turret Deviation Deg",
         m_turret.getPosition().minus(m_currentShootingSolution.predictedTurretAngle).in(Degrees));
     return check;
+  }
+
+  public Command startTrackingCommand() {
+    //Command trackingCommand = m_turret.rotateToPosition(this::getShootingSolution).alongWith(m_hood.setPosition(this::getShootingSolution));
+    Command trackingCommand = m_hood.setPosition(this::getShootingSolution);
+    trackingCommand.addRequirements(this);
+    return trackingCommand;
   }
 }

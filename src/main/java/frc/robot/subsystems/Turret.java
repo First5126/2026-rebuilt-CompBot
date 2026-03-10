@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.Degrees;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXSConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
@@ -44,6 +45,14 @@ public class Turret extends SubsystemBase {
     talonFXSConfiguration.ExternalFeedback.withFusedCANcoder(m_turretEncoder);
     talonFXSConfiguration.ExternalFeedback.RotorToSensorRatio = 10;
     talonFXSConfiguration.ExternalFeedback.SensorToMechanismRatio = 10;
+
+    CurrentLimitsConfigs limitsConfigs = new CurrentLimitsConfigs();
+    //limitsConfigs.SupplyCurrentLimit = TurretConstants.CURRENT_LIMIT;
+    limitsConfigs.StatorCurrentLimit = TurretConstants.STATOR_LIMIT;
+    //limitsConfigs.SupplyCurrentLimitEnable = true;
+    limitsConfigs.StatorCurrentLimitEnable = true;
+
+    talonFXSConfiguration.CurrentLimits = limitsConfigs;
 
     talonFXSConfiguration.SoftwareLimitSwitch.withForwardSoftLimitThreshold(
         TurretConstants.MAX_ANGLE);
@@ -116,8 +125,11 @@ public class Turret extends SubsystemBase {
     double minDegrees = TurretConstants.MIN_ANGLE.in(Degrees);
     double maxDegrees = TurretConstants.MAX_ANGLE.in(Degrees);
     double requestedDegrees = position.in(Degrees);
+    SmartDashboard.putNumber("Turret Wanting Position before clamp", requestedDegrees);
+    SmartDashboard.putNumber("Turret Position", getPosition().in(Degrees));
 
     double clampedDegrees = Math.max(minDegrees, Math.min(requestedDegrees, maxDegrees));
+    SmartDashboard.putNumber("Turret Wanting Position after clamp", clampedDegrees);
     // Construct the measure back in degrees
     Angle clampedPosition = Degrees.of(clampedDegrees);
 

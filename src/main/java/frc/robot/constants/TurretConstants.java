@@ -5,11 +5,15 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Voltage;
+
+import static edu.wpi.first.units.Units.Volts;
+
 import java.util.Map;
 
 public class TurretConstants {
-  public static final Angle MIN_ANGLE = Units.Degrees.of(-135);
-  public static final Angle MAX_ANGLE = Units.Degrees.of(135);
+  public static final Angle MIN_ANGLE = Units.Degrees.of(-30);
+  public static final Angle MAX_ANGLE = Units.Degrees.of(30);
 
   public static final double kP = 90;
   public static final double kI = 0;
@@ -17,6 +21,9 @@ public class TurretConstants {
   public static final double kS = 0.32;
   public static final double kV = 0.106;
   public static final double kA = 0;
+
+  public static final double CURRENT_LIMIT = 30;
+  public static final double STATOR_LIMIT = 30;
 
   public static final Angle ENCODER_OFFSET = Units.Rotations.of(-0.433);
 
@@ -28,5 +35,10 @@ public class TurretConstants {
   // Distance first then Time
   public static final InterpolatingDoubleTreeMap DISTANCE_TO_TIME_INTERPOLATOR =
       InterpolatingDoubleTreeMap.ofEntries(
-          Map.entry(0.0, 0.0), Map.entry(2.0, 0.5), Map.entry(5.0, 1.0));
+          Map.entry(1.8, 0.8),
+          Map.entry(2.12, 1.0),
+          Map.entry(2.74, 1.0),
+          Map.entry(3.1, 1.4),
+          Map.entry(3.68, 1.0),
+          Map.entry(4.32, 1.1));
 }

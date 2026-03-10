@@ -5,9 +5,9 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Rotations;
 
-import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
+import java.util.function.Supplier;
+
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.CANConstants;
 import frc.robot.constants.HoodConstants;
+import frc.robot.subsystems.ShootingMechanism.ShootingSolution;
 
 public class Hood extends SubsystemBase {
   private TalonFX m_hoodMotor;
@@ -61,7 +62,7 @@ public class Hood extends SubsystemBase {
 
     limitSwitchConfigs.withReverseLimitAutosetPositionEnable(true);
     limitSwitchConfigs.withReverseLimitAutosetPositionValue(Rotations.of(0));*/
-    
+
     SoftwareLimitSwitchConfigs softConfigs = new SoftwareLimitSwitchConfigs();
     softConfigs.ForwardSoftLimitEnable = true;
     softConfigs.ForwardSoftLimitThreshold = 0.075;
@@ -95,6 +96,13 @@ public class Hood extends SubsystemBase {
     return runOnce(
         () -> {
           m_hoodMotor.setControl(m_positionVoltageRequest.withPosition(angle));
+        });
+  }
+
+  public Command setPosition(Supplier<ShootingSolution> shootingSolution) {
+    return runOnce(
+        () -> {
+          m_hoodMotor.setControl(m_positionVoltageRequest.withPosition(shootingSolution.get().predictedHoodAngle));
         });
   }
 }
