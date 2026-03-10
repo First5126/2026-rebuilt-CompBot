@@ -81,7 +81,6 @@ public class AprilTagLocalizationConstants {
       new LimelightDetails(
           LIMELIGHT_NAME_LEFT, LIMELIGHT_CLOSE_STDDEV_LEFT, LIMELIGHT_FAR_STDDEV_LEFT);
 
-
   public static final AprilTagFieldLayout FIELD_LAYOUT =
       AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
   public static final Distance MAX_TAG_DISTANCE = Meters.of(5.0);
