@@ -1,11 +1,14 @@
 package frc.robot.controller;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
+
+import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.FMS.Zones;
 import frc.robot.constants.ControllerConstants;
 import frc.robot.subsystems.CommandFactory;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.FlyWheel;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Turret;
@@ -24,6 +27,7 @@ public class Driver extends CustomXboxController implements Controller {
   @Getter @Setter private Turret turret;
   @Getter @Setter private Zones zone;
   @Getter @Setter private Indexer indexer;
+  @Getter @Setter private FlyWheel flyWheel;
 
   private final SwerveRequest.SwerveDriveBrake BRAKE = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt POINT = new SwerveRequest.PointWheelsAt();
@@ -48,7 +52,8 @@ public class Driver extends CustomXboxController implements Controller {
       // Intake intake,
       Turret turret,
       Zones zone,
-      Indexer indexer) {
+      Indexer indexer,
+      FlyWheel flyWheel) {
     Driver driver = getInstance();
     driver.setDrivetrain(drivetrain);
     driver.setAprilTagLocalization(aprilTagLocalization);
@@ -57,6 +62,7 @@ public class Driver extends CustomXboxController implements Controller {
     driver.setTurret(turret);
     driver.setZone(zone);
     driver.setIndexer(indexer);
+    driver.setFlyWheel(flyWheel);
 
     return driver;
   }
@@ -80,6 +86,8 @@ public class Driver extends CustomXboxController implements Controller {
 
     // Reset the field-centric heading on left bumper press.
     this.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+    this.a().onTrue(indexer.startIndexing()).onFalse(indexer.stopIndexing());
+    this.b().onTrue(flyWheel.setSpeed(flyWheel::getDashboardSpeedRPS)).onFalse(flyWheel.stopSpinning());
 
     return this;
   }
