@@ -56,9 +56,9 @@ public class FlyWheel extends SubsystemBase {
     return runOnce(() -> stopMotors());
   }
 
-  //public LinearVelocity getDashboardSpeed() {
+  // public LinearVelocity getDashboardSpeed() {
   //  return MetersPerSecond.of(SmartDashboard.getNumber("Set Shooter Speed (MPS)", 0));
-  //}
+  // }
 
   public AngularVelocity getDashboardSpeedRPS() {
     return RotationsPerSecond.of(SmartDashboard.getNumber("Set Shooter Speed (RPS)", 0));

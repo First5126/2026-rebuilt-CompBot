@@ -22,7 +22,6 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.FlyWheel;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.ShootingMechanism;
 import frc.robot.subsystems.Turret;
 import frc.robot.vision.AprilTagLocalization;
@@ -85,7 +84,13 @@ public class RobotContainer {
 
   private void configureBindings() {
     Driver.init(
-        m_drivetrain, m_aprilTagLocalization, m_commandFactory, m_turret, m_zones, m_indexer, m_flyWheel)
+            m_drivetrain,
+            m_aprilTagLocalization,
+            m_commandFactory,
+            m_turret,
+            m_zones,
+            m_indexer,
+            m_flyWheel)
         .configureBindings();
 
     // Turret Default Command
@@ -101,7 +106,7 @@ public class RobotContainer {
 
     m_drivetrain.registerTelemetry(logger::telemeterize);
 
-    m_flyWheel.setDefaultCommand(m_flyWheel.setSpeed(m_flyWheel::getDashboardSpeedRPS));
+    // m_flyWheel.setDefaultCommand(m_flyWheel.setSpeed(m_flyWheel::getDashboardSpeedRPS));
   }
 
   /**

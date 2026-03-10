@@ -1,9 +1,6 @@
 package frc.robot.controller;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
-
-import edu.wpi.first.wpilibj.simulation.FlywheelSim;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.FMS.Zones;
 import frc.robot.constants.ControllerConstants;
 import frc.robot.subsystems.CommandFactory;
@@ -86,8 +83,10 @@ public class Driver extends CustomXboxController implements Controller {
 
     // Reset the field-centric heading on left bumper press.
     this.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
-    this.a().onTrue(indexer.startIndexing()).onFalse(indexer.stopIndexing());
-    this.b().onTrue(flyWheel.setSpeed(flyWheel::getDashboardSpeedRPS)).onFalse(flyWheel.stopSpinning());
+    // this.a().onTrue(indexer.startIndexing()).onFalse(indexer.stopIndexing());
+    this.b()
+        .onTrue(flyWheel.setSpeed(flyWheel::getDashboardSpeedRPS))
+        .onFalse(flyWheel.stopSpinning());
 
     return this;
   }

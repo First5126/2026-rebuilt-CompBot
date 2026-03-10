@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.Rotations;
 
 import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -54,14 +55,21 @@ public class Hood extends SubsystemBase {
     m_hoodMotor.getConfigurator().apply(m_motorConfigs);
 
     // Hardware Limit Switches
-    HardwareLimitSwitchConfigs limitSwitchConfigs = new HardwareLimitSwitchConfigs();
+    /*HardwareLimitSwitchConfigs limitSwitchConfigs = new HardwareLimitSwitchConfigs();
     limitSwitchConfigs.withReverseLimitRemoteCANdiS2(m_CANdi);
     limitSwitchConfigs.withForwardLimitRemoteCANdiS1(m_CANdi);
 
     limitSwitchConfigs.withReverseLimitAutosetPositionEnable(true);
-    limitSwitchConfigs.withReverseLimitAutosetPositionValue(Rotations.of(0));
+    limitSwitchConfigs.withReverseLimitAutosetPositionValue(Rotations.of(0));*/
+    
+    SoftwareLimitSwitchConfigs softConfigs = new SoftwareLimitSwitchConfigs();
+    softConfigs.ForwardSoftLimitEnable = true;
+    softConfigs.ForwardSoftLimitThreshold = 0.075;
 
-    m_hoodMotor.getConfigurator().apply(limitSwitchConfigs);
+    softConfigs.ReverseSoftLimitEnable = true;
+    softConfigs.ReverseSoftLimitThreshold = 0;
+
+    m_hoodMotor.getConfigurator().apply(softConfigs);
 
     // Initalize the PositionVoltage request
     m_positionVoltageRequest = new PositionVoltage(0).withSlot(0);
@@ -78,8 +86,9 @@ public class Hood extends SubsystemBase {
         "Forward Limit",
         m_hoodMotor.getReverseLimit().getValue() == ReverseLimitValue.ClosedToGround);
 
-        m_hoodMotor.setControl(m_positionVoltageRequest.withPosition(Degrees.of(SmartDashboard.getNumber("Hood Angle (Deg)", 0))));
-
+    m_hoodMotor.setControl(
+        m_positionVoltageRequest.withPosition(
+            Degrees.of(SmartDashboard.getNumber("Hood Angle (Deg)", 0))));
   }
 
   public Command setPosition(Angle angle) {
