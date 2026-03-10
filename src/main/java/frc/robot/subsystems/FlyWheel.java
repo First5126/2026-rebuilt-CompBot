@@ -29,11 +29,14 @@ public class FlyWheel extends SubsystemBase {
 
   private VelocityVoltage m_shooterSpeed = new VelocityVoltage(0);
   private DutyCycleOut m_dutyCycleOut = new DutyCycleOut(0);
+  private LinearVelocity m_lastSpeed = MetersPerSecond.of(0);
 
   public FlyWheel() {
     TalonFXConfiguration flyWheelConfiguration = new TalonFXConfiguration();
 
     flyWheelConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    flyWheelConfiguration.CurrentLimits.StatorCurrentLimit = 50;
+    flyWheelConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
 
     Slot0Configs slot0 = new Slot0Configs();
     slot0.kP = FlyWheelConstants.kP;
@@ -50,9 +53,11 @@ public class FlyWheel extends SubsystemBase {
     SmartDashboard.putNumber("Set Shooter Speed (MPS)", 5);
   }
 
-  public Command setSpeedSolution(Supplier<ShootingSolution> solution) {
+  public Command setSpeedSolution(Supplier<ShootingSolution> solutionSupplier) {
     return runOnce(() -> {
-        setSpeedControl(solution.get().getFlyWheelSpeed());
+        ShootingSolution solution = solutionSupplier.get();
+        setSpeedControl(solution.getFlyWheelSpeed());
+        m_lastSpeed = solution.getFlyWheelSpeed();
     });
   }
 
@@ -69,7 +74,7 @@ public class FlyWheel extends SubsystemBase {
   }
 
   public LinearVelocity getSpeed() {
-    return  MetersPerSecond.of((m_shooterMotor.getVelocity().getValue().in(RadiansPerSecond) / FlyWheelConstants.gearRatio) * FlyWheelConstants.radius.in(Meters));
+    return  m_lastSpeed;
   }
 
   private void setSpeedControl(LinearVelocity ballSpeed) {
