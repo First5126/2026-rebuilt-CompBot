@@ -62,13 +62,9 @@ public class Hood extends SubsystemBase {
     m_hoodMotor.getConfigurator().apply(m_motorConfigs);
 
     // Hardware Limit Switches
-    /*HardwareLimitSwitchConfigs limitSwitchConfigs = new HardwareLimitSwitchConfigs();
-    limitSwitchConfigs.withReverseLimitRemoteCANdiS2(m_CANdi);
-    limitSwitchConfigs.withForwardLimitRemoteCANdiS1(m_CANdi);
-    
-    limitSwitchConfigs.withReverseLimitAutosetPositionEnable(true);
-    limitSwitchConfigs.withReverseLimitAutosetPositionValue(Rotations.of(0));*/
 
+
+    // Software Limit Switches
     SoftwareLimitSwitchConfigs softConfigs = new SoftwareLimitSwitchConfigs();
     softConfigs.ForwardSoftLimitEnable = true;
     softConfigs.ForwardSoftLimitThreshold = 0.070;
