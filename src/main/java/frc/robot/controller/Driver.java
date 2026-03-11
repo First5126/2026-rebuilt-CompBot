@@ -6,6 +6,7 @@ import frc.robot.constants.ControllerConstants;
 import frc.robot.subsystems.CommandFactory;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.FlyWheel;
+import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.ShootingMechanism;
@@ -27,6 +28,7 @@ public class Driver extends CustomXboxController implements Controller {
   @Getter @Setter private Indexer indexer;
   @Getter @Setter private FlyWheel flyWheel;
   @Getter @Setter private ShootingMechanism shootingMechanism;
+  @Getter @Setter private Hood hood;
 
   private final SwerveRequest.SwerveDriveBrake BRAKE = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt POINT = new SwerveRequest.PointWheelsAt();
@@ -52,7 +54,9 @@ public class Driver extends CustomXboxController implements Controller {
       Turret turret,
       Zones zone,
       Indexer indexer,
-      FlyWheel flyWheel) {
+      FlyWheel flyWheel,
+      Hood hood,
+      ShootingMechanism shootingMechanism) {
     Driver driver = getInstance();
     driver.setDrivetrain(drivetrain);
     driver.setAprilTagLocalization(aprilTagLocalization);
@@ -62,6 +66,8 @@ public class Driver extends CustomXboxController implements Controller {
     driver.setZone(zone);
     driver.setIndexer(indexer);
     driver.setFlyWheel(flyWheel);
+    driver.setHood(hood);
+    driver.setShootingMechanism(shootingMechanism);
 
     return driver;
   }
@@ -87,7 +93,7 @@ public class Driver extends CustomXboxController implements Controller {
     this.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
     // this.a().onTrue(indexer.startIndexing()).onFalse(indexer.stopIndexing());
     this.b()
-        .onTrue(flyWheel.setSpeed(flyWheel::getDashboardSpeedRPS))
+        .whileTrue(flyWheel.setSpeed(flyWheel::getDashboardSpeedRPS).alongWith(hood.setPosition(shootingMechanism::getShootingSolution)))
         .onFalse(flyWheel.stopSpinning());
 
     this.x().whileTrue(commandFactory.startShooting()).onFalse(commandFactory.stopShooting());

@@ -121,7 +121,7 @@ public class ShootingMechanism extends SubsystemBase {
 
       // find the angle of the hood from the predicted pose
       Angle hoodAngle =
-          Rotations.of(
+          Degrees.of(
               HoodConstants.DISTANCE_TO_ANGLE_INTERPOLATOR.get(
                   Math.hypot(targetDistanceX, targetDistanceY)));
       SmartDashboard.putNumber("Hood Angle Interpolated (Deg)", hoodAngle.in(Degrees));
