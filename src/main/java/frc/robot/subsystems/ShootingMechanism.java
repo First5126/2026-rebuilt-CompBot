@@ -124,7 +124,7 @@ public class ShootingMechanism extends SubsystemBase {
           Rotations.of(
               HoodConstants.DISTANCE_TO_ANGLE_INTERPOLATOR.get(
                   Math.hypot(targetDistanceX, targetDistanceY)));
-
+      SmartDashboard.putNumber("Hood Angle Interpolated (Deg)", hoodAngle.in(Degrees));
       return new ShootingSolution(hoodAngle, robotRelativeAngle);
     } else {
       SmartDashboard.putBoolean("Valid Shooting Solution", false);

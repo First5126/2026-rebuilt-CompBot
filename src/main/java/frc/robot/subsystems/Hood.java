@@ -64,7 +64,7 @@ public class Hood extends SubsystemBase {
 
     SoftwareLimitSwitchConfigs softConfigs = new SoftwareLimitSwitchConfigs();
     softConfigs.ForwardSoftLimitEnable = true;
-    softConfigs.ForwardSoftLimitThreshold = 0.075;
+    softConfigs.ForwardSoftLimitThreshold = 0.070;
 
     softConfigs.ReverseSoftLimitEnable = true;
     softConfigs.ReverseSoftLimitThreshold = 0;
