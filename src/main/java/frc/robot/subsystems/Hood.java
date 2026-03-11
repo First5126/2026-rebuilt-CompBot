@@ -72,7 +72,9 @@ public class Hood extends SubsystemBase {
     m_positionVoltageRequest = new PositionVoltage(0).withSlot(0);
     
     m_zeroTrigger = new Trigger(this::getLowerLimitValue);
-    m_zeroTrigger.onFalse(runOnce(() -> {m_hoodCANCoder.setPosition(Rotations.of(0.0));}));
+    m_zeroTrigger.onTrue(runOnce(
+      () -> {m_hoodCANCoder.setPosition(Rotations.of(0.0));})
+      .ignoringDisable(true));
   }
 
   private boolean getLowerLimitValue() {
