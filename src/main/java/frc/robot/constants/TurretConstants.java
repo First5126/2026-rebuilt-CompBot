@@ -1,5 +1,6 @@
 package frc.robot.constants;
 
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
@@ -8,10 +9,10 @@ import edu.wpi.first.units.measure.Angle;
 import java.util.Map;
 
 public class TurretConstants {
-  public static final Angle MIN_ANGLE = Units.Degrees.of(-30);
-  public static final Angle MAX_ANGLE = Units.Degrees.of(30);
+  public static final Angle MIN_ANGLE = Units.Degrees.of(-165);
+  public static final Angle MAX_ANGLE = Units.Degrees.of(165);
 
-  public static final double kP = 90;
+  public static final double kP = 120;
   public static final double kI = 0;
   public static final double kD = 0;
   public static final double kS = 0.32;
@@ -19,7 +20,7 @@ public class TurretConstants {
   public static final double kA = 0;
 
   public static final double CURRENT_LIMIT = 30;
-  public static final double STATOR_LIMIT = 30;
+  public static final double STATOR_LIMIT = 50;
 
   public static final Angle ENCODER_OFFSET = Units.Rotations.of(-0.433);
 

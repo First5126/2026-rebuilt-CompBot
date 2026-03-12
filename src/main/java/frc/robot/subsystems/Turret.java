@@ -39,7 +39,7 @@ public class Turret extends SubsystemBase {
     m_turretEncoder.getConfigurator().apply(canCoderConfiguration);
 
     TalonFXSConfiguration talonFXSConfiguration = new TalonFXSConfiguration();
-    talonFXSConfiguration.Commutation.MotorArrangement = MotorArrangementValue.Minion_JST;
+    talonFXSConfiguration.Commutation.MotorArrangement = MotorArrangementValue.NEO550_JST;
     talonFXSConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     talonFXSConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     talonFXSConfiguration.ExternalFeedback.withFusedCANcoder(m_turretEncoder);

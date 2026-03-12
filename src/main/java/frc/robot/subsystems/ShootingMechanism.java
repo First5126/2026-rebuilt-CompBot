@@ -107,7 +107,7 @@ public class ShootingMechanism extends SubsystemBase {
 
       // find the field relative angle from the distance
       Rotation2d fieldRelativeAngle =
-          Rotation2d.fromRadians(Math.atan2(targetDistanceY, targetDistanceX));
+          Rotation2d.fromRadians(Math.atan2(targetDistanceY, targetDistanceX)-Math.PI);
 
       // find the robot realtive angle of the turret
       Angle robotRelativeAngle =
@@ -162,7 +162,7 @@ public class ShootingMechanism extends SubsystemBase {
   public Command startTrackingCommand() {
     // Command trackingCommand =
     // m_turret.rotateToPosition(this::getShootingSolution).alongWith(m_hood.setPosition(this::getShootingSolution));
-    Command trackingCommand = m_hood.setPosition(this::getShootingSolution);
+    Command trackingCommand = m_turret.rotateToPosition(this::getShootingSolution);
     trackingCommand.addRequirements(this);
     return trackingCommand;
   }

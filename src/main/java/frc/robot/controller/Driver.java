@@ -93,7 +93,7 @@ public class Driver extends CustomXboxController implements Controller {
     this.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
     // this.a().onTrue(indexer.startIndexing()).onFalse(indexer.stopIndexing());
     this.b()
-        .whileTrue(flyWheel.setSpeed(flyWheel::getDashboardSpeedRPS).alongWith(hood.setPosition(shootingMechanism::getShootingSolution)))
+        .whileTrue(flyWheel.startShootingWithInterpolation(drivetrain::getPose2d,zone::getTurretShootingPose).alongWith(hood.setPosition(shootingMechanism::getShootingSolution)))
         .onFalse(flyWheel.stopSpinning());
 
     this.x().whileTrue(commandFactory.startShooting()).onFalse(commandFactory.stopShooting());
