@@ -64,8 +64,9 @@ public class CommandFactory {
         .repeatedly();
   }
 
-  public ConditionalCommand goUnderTrenchCommand() {
-    return new ConditionalCommand(
-        m_hood.setPosition(Degrees.of(0)), Commands.none(), m_zone::getShootingOveride);
+  public Command goUnderTrenchCommand() {
+    return Commands.runOnce(( ()-> {
+       m_hood.setPosition(Degrees.of(0));
+    }), m_hood);
   }
 }

@@ -49,6 +49,8 @@ public class Operator extends CustomXboxController implements Controller {
         .onTrue(zone.setShootingOverideCommand(true))
         .onFalse(zone.setShootingOverideCommand(false));
 
+    this.b().onTrue(commandFactory.goUnderTrenchCommand());
+
     return this;
   }
 }
