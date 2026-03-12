@@ -21,9 +21,13 @@ public class FlyWheelConstants {
       InterpolatingDoubleTreeMap.ofEntries(
           Map.entry(1.8, 42.5),
           Map.entry(2.12, 45.0),
-          
           Map.entry(2.74, 49.0),
-          Map.entry(3.12, 52.0),
-          Map.entry(3.68, 52.0),
-          Map.entry(4.32, 54.0));
+          Map.entry(3.1, 50.5),
+          Map.entry(3.46, 52.0),
+          Map.entry(4.11, 53.5),
+          Map.entry(2.41, 47.5),
+          Map.entry(4.23, 54.75),
+          Map.entry(5.6, 59.0),
+          Map.entry(5.25, 58.3),
+          Map.entry(4.925, 57.25));
 }
