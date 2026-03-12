@@ -15,8 +15,8 @@ public class HoodConstants {
       InterpolatingDoubleTreeMap.ofEntries(
           Map.entry(1.8, 0.0),
           Map.entry(2.12, 0.0),
-          Map.entry(2.74, 1.0),
-          Map.entry(3.1, 10.0),
+          Map.entry(2.74, 0.0),
+          Map.entry(3.12, 6.0),
           Map.entry(3.68, 10.0),
           Map.entry(4.32, 10.0));
 }

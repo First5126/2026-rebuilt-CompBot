@@ -9,10 +9,10 @@ import edu.wpi.first.units.measure.Angle;
 import java.util.Map;
 
 public class TurretConstants {
-  public static final Angle MIN_ANGLE = Units.Degrees.of(-165);
-  public static final Angle MAX_ANGLE = Units.Degrees.of(165);
+  public static final Angle MIN_ANGLE = Units.Degrees.of(-162);
+  public static final Angle MAX_ANGLE = Units.Degrees.of(162);
 
-  public static final double kP = 120;
+  public static final double kP = 90;
   public static final double kI = 0;
   public static final double kD = 0;
   public static final double kS = 0.32;
@@ -20,7 +20,7 @@ public class TurretConstants {
   public static final double kA = 0;
 
   public static final double CURRENT_LIMIT = 30;
-  public static final double STATOR_LIMIT = 50;
+  public static final double STATOR_LIMIT = 30;
 
   public static final Angle ENCODER_OFFSET = Units.Rotations.of(-0.433);
 
@@ -35,7 +35,7 @@ public class TurretConstants {
           Map.entry(1.8, 0.8),
           Map.entry(2.12, 1.0),
           Map.entry(2.74, 1.0),
-          Map.entry(3.1, 1.4),
+          Map.entry(3.12, 1.02),
           Map.entry(3.68, 1.0),
           Map.entry(4.32, 1.1));
 }

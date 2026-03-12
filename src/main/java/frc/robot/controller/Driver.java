@@ -1,5 +1,7 @@
 package frc.robot.controller;
 
+import static edu.wpi.first.units.Units.Volts;
+
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import frc.robot.FMS.Zones;
 import frc.robot.constants.ControllerConstants;
@@ -87,6 +89,9 @@ public class Driver extends CustomXboxController implements Controller {
     // this.a().onTrue(aprilTagLocalization.setTrust(true));
     // this.a().onFalse(aprilTagLocalization.setTrust(false));
 
+    this.povUp().onTrue(hood.setVoltage(Volts.of(0.5))).onFalse(hood.setVoltage(Volts.of(0)));
+    this.povDown().onTrue(hood.setVoltage(Volts.of(-0.5))).onFalse(hood.setVoltage(Volts.of(0)));
+
     this.a().onTrue(indexer.startIndexing()).onFalse(indexer.stopIndexing());
 
     // Reset the field-centric heading on left bumper press.
@@ -95,6 +100,9 @@ public class Driver extends CustomXboxController implements Controller {
     this.b()
         .whileTrue(flyWheel.startShootingWithInterpolation(drivetrain::getPose2d,zone::getTurretShootingPose).alongWith(hood.setPosition(shootingMechanism::getShootingSolution)))
         .onFalse(flyWheel.stopSpinning());
+
+    this.y().whileTrue(flyWheel.setSpeed(flyWheel::getDashboardSpeedRPS).alongWith(hood.setPositionToDashboard()))
+    .onFalse(flyWheel.stopSpinning());
 
     this.x().whileTrue(commandFactory.startShooting()).onFalse(commandFactory.stopShooting());
 

@@ -13,6 +13,7 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -20,6 +21,7 @@ import com.ctre.phoenix6.signals.ReverseLimitValue;
 import com.ctre.phoenix6.signals.S1CloseStateValue;
 import com.ctre.phoenix6.signals.S2CloseStateValue;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -39,6 +41,7 @@ public class Hood extends SubsystemBase {
   private Slot0Configs m_motorConfigs;
 
   private PositionVoltage m_positionVoltageRequest;
+  private VoltageOut m_voltageOut = new VoltageOut(0);
 
   public Hood() {
     m_hoodMotor = new TalonFX(CANConstants.hoodMotor, CANConstants.mechanismCanivore);
@@ -95,7 +98,7 @@ public class Hood extends SubsystemBase {
     // Initalize the PositionVoltage request
     m_positionVoltageRequest = new PositionVoltage(0).withSlot(0);
 
-    SmartDashboard.putNumber("Hood Angle (Deg)", 0);
+    SmartDashboard.putNumber("Set Hood Angle (Deg)", 0);
 
     m_zeroTrigger = new Trigger(this::getLowerLimitValue);
     m_zeroTrigger.onTrue(
@@ -118,10 +121,6 @@ public class Hood extends SubsystemBase {
     SmartDashboard.putBoolean(
         "Forward Limit",
         m_hoodMotor.getReverseLimit().getValue() == ReverseLimitValue.ClosedToGround);
-
-    m_hoodMotor.setControl(
-        m_positionVoltageRequest.withPosition(
-            Degrees.of(SmartDashboard.getNumber("Hood Angle (Deg)", 0))));
   }
 
   public Command setPosition(Angle angle) {
@@ -137,5 +136,20 @@ public class Hood extends SubsystemBase {
           m_hoodMotor.setControl(
               m_positionVoltageRequest.withPosition(shootingSolution.get().predictedHoodAngle));
         });
+  }
+
+  public Command setPositionToDashboard() {
+    return runOnce(
+        () -> {
+          Angle angle = Degrees.of(SmartDashboard.getNumber("Set Hood Angle (Deg)", 0));
+          m_hoodMotor.setControl(
+              m_positionVoltageRequest.withPosition(angle));
+        });
+  }
+
+  public Command setVoltage(Voltage voltage) {
+    return runOnce(() -> {
+        m_hoodMotor.setControl(m_voltageOut.withOutput(voltage));
+    });
   }
 }
