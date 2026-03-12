@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.FMS.Zones;
 import frc.robot.constants.AprilTagLocalizationConstants.LimelightDetails;
 import frc.robot.constants.AprilTagLocalizationConstants.PhotonDetails;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -50,6 +51,7 @@ public class AprilTagLocalization {
   private MutAngle m_OldYaw = Degrees.mutable(0); // the previous yaw
   private VisionConsumer m_VisionConsumer;
   private ResetPose m_poseReset;
+  private Zones m_zone;
 
   /**
    * Creates a new AprilTagLocalization.
@@ -68,6 +70,7 @@ public class AprilTagLocalization {
       ResetPose resetPose,
       VisionConsumer visionConsumer,
       CommandSwerveDrivetrain drivetrain,
+      Zones zone,
       PhotonDetails[] photonDetails,
       LimelightDetails... details) {
     m_LimelightDetails = details;
@@ -76,6 +79,7 @@ public class AprilTagLocalization {
     m_poseReset = resetPose;
     m_VisionConsumer = visionConsumer;
     m_drivetrain = drivetrain;
+    m_zone = zone;
     m_notifier.startPeriodic(
         LOCALIZATION_PERIOD.in(
             Seconds)); // set up a pose estimation loop with a 0.02 second period.
@@ -141,6 +145,9 @@ public class AprilTagLocalization {
    * thread once per AprilTagLocalizationConstants.LOCALIZATION_PERIOD.
    */
   public void poseEstimate() {
+    if (m_zone.onBump()) {
+      return;
+    }
     for (LimelightDetails limelightDetail : m_LimelightDetails) {
       m_yaw.mut_replace(Degrees.of(m_robotPoseSupplier.get().getRotation().getDegrees()));
       AngularVelocity yawRate = (m_yaw.minus(m_OldYaw).div(LOCALIZATION_PERIOD));
