@@ -142,14 +142,14 @@ public class Hood extends SubsystemBase {
     return runOnce(
         () -> {
           Angle angle = Degrees.of(SmartDashboard.getNumber("Set Hood Angle (Deg)", 0));
-          m_hoodMotor.setControl(
-              m_positionVoltageRequest.withPosition(angle));
+          m_hoodMotor.setControl(m_positionVoltageRequest.withPosition(angle));
         });
   }
 
   public Command setVoltage(Voltage voltage) {
-    return runOnce(() -> {
-        m_hoodMotor.setControl(m_voltageOut.withOutput(voltage));
-    });
+    return runOnce(
+        () -> {
+          m_hoodMotor.setControl(m_voltageOut.withOutput(voltage));
+        });
   }
 }

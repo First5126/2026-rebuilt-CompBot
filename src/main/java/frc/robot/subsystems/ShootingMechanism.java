@@ -107,7 +107,7 @@ public class ShootingMechanism extends SubsystemBase {
 
       // find the field relative angle from the distance
       Rotation2d fieldRelativeAngle =
-          Rotation2d.fromRadians(Math.atan2(targetDistanceY, targetDistanceX)-Math.PI);
+          Rotation2d.fromRadians(Math.atan2(targetDistanceY, targetDistanceX) - Math.PI);
 
       // find the robot realtive angle of the turret
       Angle robotRelativeAngle =
