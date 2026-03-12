@@ -152,4 +152,8 @@ public class Hood extends SubsystemBase {
           m_hoodMotor.setControl(m_voltageOut.withOutput(voltage));
         });
   }
+
+  public Angle getPosition() {
+    return m_hoodCANCoder.getPosition().getValue();
+  }
 }

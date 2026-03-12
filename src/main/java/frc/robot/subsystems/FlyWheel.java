@@ -59,13 +59,9 @@ public class FlyWheel extends SubsystemBase {
         () -> {
           double distanceToTarget =
               robotPose.get().getTranslation().getDistance(targetPose.get().getTranslation());
-          AngularVelocity rps =
-              RotationsPerSecond.of(
+
+          Supplier<AngularVelocity> rpsSupplier = () -> RotationsPerSecond.of(
                   FlyWheelConstants.DISTANCE_TO_SPEED_INTERPOLATOR.get(distanceToTarget));
-
-          SmartDashboard.putNumber("Interpolated Flywheel Speed (RPS)", rps.in(RotationsPerSecond));
-
-          Supplier<AngularVelocity> rpsSupplier = () -> rps;
           setSpeedControl(rpsSupplier);
         });
   }
@@ -80,6 +76,10 @@ public class FlyWheel extends SubsystemBase {
 
   public AngularVelocity getDashboardSpeedRPS() {
     return RotationsPerSecond.of(SmartDashboard.getNumber("Set Shooter Speed (RPS)", 0));
+  }
+
+  public AngularVelocity getCurrentSpeed() {
+    return m_shooterMotor.getVelocity().getValue();
   }
 
   /*private void setSpeedControl(Supplier<LinearVelocity> ballSpeed) {

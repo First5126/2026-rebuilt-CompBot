@@ -1,11 +1,13 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -13,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.FMS.ShiftData;
 import frc.robot.FMS.Zones;
 import frc.robot.constants.GoalPoseConstants.GoalPose;
+import frc.robot.constants.FlyWheelConstants;
 import frc.robot.constants.HoodConstants;
 import frc.robot.constants.ShootingMechanismConstants;
 import frc.robot.constants.TurretConstants;
@@ -22,27 +25,31 @@ public class ShootingMechanism extends SubsystemBase {
   public static class ShootingSolution {
     public Angle predictedHoodAngle;
     public Angle predictedTurretAngle;
+    public AngularVelocity predictedFlyWheelVelocity;
 
-    public ShootingSolution(Angle hoodAngle, Angle turretAngle) {
+    public ShootingSolution(Angle hoodAngle, Angle turretAngle, AngularVelocity flyWheelVelocity) {
       predictedHoodAngle = hoodAngle;
       predictedTurretAngle = turretAngle;
+      predictedFlyWheelVelocity = flyWheelVelocity;
     }
   }
 
   private final Trigger canShoot;
   private Turret m_turret;
   private Hood m_hood;
+  private FlyWheel m_flyWheel;
   private ShootingSolution m_currentShootingSolution =
-      new ShootingSolution(Degrees.of(0), Degrees.of(0));
+      new ShootingSolution(Degrees.of(0), Degrees.of(0), RotationsPerSecond.of(0));
   private CommandSwerveDrivetrain m_drivetrain;
   private Zones m_zone;
 
   public ShootingMechanism(
-      Turret m_turret, CommandSwerveDrivetrain m_drivetrain, Zones m_zone, Hood m_hood) {
+      Turret m_turret, CommandSwerveDrivetrain m_drivetrain, Zones m_zone, Hood m_hood, FlyWheel m_flyWheel) {
     this.m_turret = m_turret;
     this.m_drivetrain = m_drivetrain;
     this.m_zone = m_zone;
     this.m_hood = m_hood;
+    this.m_flyWheel = m_flyWheel;
 
     canShoot = new Trigger(this::canShootFuel);
   }
@@ -62,7 +69,7 @@ public class ShootingMechanism extends SubsystemBase {
    * @return A shooting soltuion {@link frc.robot.subsystems.ShootingMechanism.ShootingSolution}
    *     that contains the predicted angle for the hood and turret
    */
-  private ShootingSolution getShootingSolution(
+  private void updateShootingSolution(
       Supplier<Pose2d> robotPoseSupplier,
       Supplier<ChassisSpeeds> speed,
       Supplier<Pose2d> targetPoseSupplier) {
@@ -105,12 +112,14 @@ public class ShootingMechanism extends SubsystemBase {
       double targetDistanceX = targetPose.getX() - turretPose.getX();
       double targetDistanceY = targetPose.getY() - turretPose.getY();
 
+      double predicatedHubDistance = Math.hypot(targetDistanceX, targetDistanceY);
+
       // find the field relative angle from the distance
       Rotation2d fieldRelativeAngle =
           Rotation2d.fromRadians(Math.atan2(targetDistanceY, targetDistanceX) - Math.PI);
 
       // find the robot realtive angle of the turret
-      Angle robotRelativeAngle =
+      m_currentShootingSolution.predictedTurretAngle =
           fieldRelativeAngle
               .minus(
                   robotPose
@@ -119,22 +128,26 @@ public class ShootingMechanism extends SubsystemBase {
               .getMeasure();
 
       // find the angle of the hood from the predicted pose
-      Angle hoodAngle =
+      m_currentShootingSolution.predictedHoodAngle =
           Degrees.of(
               HoodConstants.DISTANCE_TO_ANGLE_INTERPOLATOR.get(
-                  Math.hypot(targetDistanceX, targetDistanceY)));
-      SmartDashboard.putNumber("Hood Angle Interpolated (Deg)", hoodAngle.in(Degrees));
-      return new ShootingSolution(hoodAngle, robotRelativeAngle);
+                  predicatedHubDistance));
+
+      // Find the flywheel speed
+      m_currentShootingSolution.predictedFlyWheelVelocity = RotationsPerSecond.of(FlyWheelConstants.DISTANCE_TO_SPEED_INTERPOLATOR
+      .get(predicatedHubDistance));
+
+      SmartDashboard.putNumber("Hood Angle Interpolated (Deg)", m_currentShootingSolution.predictedHoodAngle.in(Degrees));
+      SmartDashboard.putNumber("Turrent Angle Calculated (Deg)", m_currentShootingSolution.predictedTurretAngle.in(Degrees));
+      SmartDashboard.putNumber("FlyWheel Interpolated (RPS)", m_currentShootingSolution.predictedFlyWheelVelocity.in(RotationsPerSecond));
     } else {
       SmartDashboard.putBoolean("Valid Shooting Solution", false);
-      return new ShootingSolution(Degrees.of(0), Degrees.of(0));
     }
   }
 
   @Override
   public void periodic() {
-    m_currentShootingSolution =
-        getShootingSolution(
+        updateShootingSolution(
             m_drivetrain::getPose2d, m_drivetrain::getSpeeds, m_zone::getTurretShootingPose);
 
     SmartDashboard.putBoolean("Can Shoot", canShoot.getAsBoolean());
@@ -149,8 +162,14 @@ public class ShootingMechanism extends SubsystemBase {
                 .getPosition()
                 .isNear(
                     m_currentShootingSolution.predictedTurretAngle,
-                    ShootingMechanismConstants.turretMaximumError)
-            && (!goalPose.requiresShift || ShiftData.canScore() == true);
+                    ShootingMechanismConstants.turretMaximumError) &&
+        m_hood.getPosition()
+              .isNear(m_currentShootingSolution.predictedHoodAngle, 
+              ShootingMechanismConstants.hoodMaximumError) &&
+        m_flyWheel.getCurrentSpeed()
+              .isNear(m_currentShootingSolution.predictedFlyWheelVelocity, 
+              ShootingMechanismConstants.flyWheelMaximumError)
+            && (!goalPose.requiresShift || ShiftData.canScore());
 
     // TODO: add hood
     SmartDashboard.putNumber(
