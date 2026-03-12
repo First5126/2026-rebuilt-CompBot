@@ -53,6 +53,10 @@ public class FlyWheel extends SubsystemBase {
     return runOnce(() -> setSpeedControl(rps));
   }
 
+  public Command rotateFlywheel() {
+    return runOnce(() -> startMotors());
+  }
+
   public Command startShootingWithInterpolation(
       Supplier<Pose2d> robotPose, Supplier<Pose2d> targetPose) {
     return runOnce(
@@ -95,6 +99,10 @@ public class FlyWheel extends SubsystemBase {
 
     if (rotationSpeed.isEquivalent(RotationsPerSecond.of(0))) stopMotors();
     else m_shooterMotor.setControl(m_shooterSpeed.withVelocity(rps.get()));
+  }
+
+  private void startMotors() {
+    m_shooterMotor.setControl(m_dutyCycleOut.withOutput(0.60));
   }
 
   private void stopMotors() {

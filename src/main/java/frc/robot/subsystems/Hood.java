@@ -123,6 +123,13 @@ public class Hood extends SubsystemBase {
         m_hoodMotor.getReverseLimit().getValue() == ReverseLimitValue.ClosedToGround);
   }
 
+  public Command manualRotation(Angle amountOfRotation) {
+    return runOnce(
+        () -> {
+          m_hoodMotor.setControl(m_positionVoltageRequest.withPosition(m_hoodMotor.getPosition().getValue().plus(amountOfRotation)));
+        });
+  }
+
   public Command setPosition(Angle angle) {
     return runOnce(
         () -> {

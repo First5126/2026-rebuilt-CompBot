@@ -66,7 +66,7 @@ public class RobotContainer {
 
   PhotonDetails[] photonDetails = {};
   public CommandFactory m_commandFactory =
-      new CommandFactory(m_drivetrain, m_turret, m_zones, m_shootingMechanism, m_flyWheel);
+      new CommandFactory(m_drivetrain, m_turret, m_zones, m_shootingMechanism, m_flyWheel, m_hood);
 
   private AprilTagLocalization m_aprilTagLocalization =
       new AprilTagLocalization(
@@ -90,6 +90,7 @@ public class RobotContainer {
             m_drivetrain,
             m_aprilTagLocalization,
             m_commandFactory,
+            m_intake,
             m_turret,
             m_zones,
             m_indexer,
@@ -105,9 +106,6 @@ public class RobotContainer {
 
     // this.m_turret.setDefaultCommand(m_turret.rotateToPosition(() ->
     // m_shootingMechanism.getShootingSolution().predictedTurretAngle));
-
-    Driver.init(m_drivetrain, m_aprilTagLocalization, m_commandFactory, m_intake, m_turret, m_zones)
-        .configureBindings();
 
     // Idle while the robot is disabled. This ensures the configured
     // neutral mode is applied to the drive motors while disabled.
