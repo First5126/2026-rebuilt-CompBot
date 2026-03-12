@@ -14,8 +14,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.FMS.ShiftData;
 import frc.robot.FMS.Zones;
-import frc.robot.constants.GoalPoseConstants.GoalPose;
 import frc.robot.constants.FlyWheelConstants;
+import frc.robot.constants.GoalPoseConstants.GoalPose;
 import frc.robot.constants.HoodConstants;
 import frc.robot.constants.ShootingMechanismConstants;
 import frc.robot.constants.TurretConstants;
@@ -44,7 +44,11 @@ public class ShootingMechanism extends SubsystemBase {
   private Zones m_zone;
 
   public ShootingMechanism(
-      Turret m_turret, CommandSwerveDrivetrain m_drivetrain, Zones m_zone, Hood m_hood, FlyWheel m_flyWheel) {
+      Turret m_turret,
+      CommandSwerveDrivetrain m_drivetrain,
+      Zones m_zone,
+      Hood m_hood,
+      FlyWheel m_flyWheel) {
     this.m_turret = m_turret;
     this.m_drivetrain = m_drivetrain;
     this.m_zone = m_zone;
@@ -129,17 +133,22 @@ public class ShootingMechanism extends SubsystemBase {
 
       // find the angle of the hood from the predicted pose
       m_currentShootingSolution.predictedHoodAngle =
-          Degrees.of(
-              HoodConstants.DISTANCE_TO_ANGLE_INTERPOLATOR.get(
-                  predicatedHubDistance));
+          Degrees.of(HoodConstants.DISTANCE_TO_ANGLE_INTERPOLATOR.get(predicatedHubDistance));
 
       // Find the flywheel speed
-      m_currentShootingSolution.predictedFlyWheelVelocity = RotationsPerSecond.of(FlyWheelConstants.DISTANCE_TO_SPEED_INTERPOLATOR
-      .get(predicatedHubDistance));
+      m_currentShootingSolution.predictedFlyWheelVelocity =
+          RotationsPerSecond.of(
+              FlyWheelConstants.DISTANCE_TO_SPEED_INTERPOLATOR.get(predicatedHubDistance));
 
-      SmartDashboard.putNumber("Hood Angle Interpolated (Deg)", m_currentShootingSolution.predictedHoodAngle.in(Degrees));
-      SmartDashboard.putNumber("Turrent Angle Calculated (Deg)", m_currentShootingSolution.predictedTurretAngle.in(Degrees));
-      SmartDashboard.putNumber("FlyWheel Interpolated (RPS)", m_currentShootingSolution.predictedFlyWheelVelocity.in(RotationsPerSecond));
+      SmartDashboard.putNumber(
+          "Hood Angle Interpolated (Deg)",
+          m_currentShootingSolution.predictedHoodAngle.in(Degrees));
+      SmartDashboard.putNumber(
+          "Turrent Angle Calculated (Deg)",
+          m_currentShootingSolution.predictedTurretAngle.in(Degrees));
+      SmartDashboard.putNumber(
+          "FlyWheel Interpolated (RPS)",
+          m_currentShootingSolution.predictedFlyWheelVelocity.in(RotationsPerSecond));
     } else {
       SmartDashboard.putBoolean("Valid Shooting Solution", false);
     }
@@ -147,8 +156,8 @@ public class ShootingMechanism extends SubsystemBase {
 
   @Override
   public void periodic() {
-        updateShootingSolution(
-            m_drivetrain::getPose2d, m_drivetrain::getSpeeds, m_zone::getTurretShootingPose);
+    updateShootingSolution(
+        m_drivetrain::getPose2d, m_drivetrain::getSpeeds, m_zone::getTurretShootingPose);
 
     SmartDashboard.putBoolean("Can Shoot", canShoot.getAsBoolean());
   }
@@ -162,13 +171,17 @@ public class ShootingMechanism extends SubsystemBase {
                 .getPosition()
                 .isNear(
                     m_currentShootingSolution.predictedTurretAngle,
-                    ShootingMechanismConstants.turretMaximumError) &&
-        m_hood.getPosition()
-              .isNear(m_currentShootingSolution.predictedHoodAngle, 
-              ShootingMechanismConstants.hoodMaximumError) &&
-        m_flyWheel.getCurrentSpeed()
-              .isNear(m_currentShootingSolution.predictedFlyWheelVelocity, 
-              ShootingMechanismConstants.flyWheelMaximumError)
+                    ShootingMechanismConstants.turretMaximumError)
+            && m_hood
+                .getPosition()
+                .isNear(
+                    m_currentShootingSolution.predictedHoodAngle,
+                    ShootingMechanismConstants.hoodMaximumError)
+            && m_flyWheel
+                .getCurrentSpeed()
+                .isNear(
+                    m_currentShootingSolution.predictedFlyWheelVelocity,
+                    ShootingMechanismConstants.flyWheelMaximumError)
             && (!goalPose.requiresShift || ShiftData.canScore());
 
     // TODO: add hood

@@ -57,7 +57,7 @@ public class RobotContainer {
   private Hood m_hood = new Hood();
 
   private ShootingMechanism m_shootingMechanism =
-      new ShootingMechanism(m_turret, m_drivetrain, m_zones, m_hood);
+      new ShootingMechanism(m_turret, m_drivetrain, m_zones, m_hood, m_flyWheel);
 
   // End of Declaring
 
