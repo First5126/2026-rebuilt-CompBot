@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.FMS.Zones;
@@ -16,18 +18,21 @@ public class CommandFactory {
   private Zones m_zone;
   private ShootingMechanism m_shootingMechanism;
   private FlyWheel m_flyWheel;
+  private Hood m_hood;
 
   public CommandFactory(
       CommandSwerveDrivetrain drivetrain,
       Turret turret,
       Zones zone,
       ShootingMechanism m_shootingMechanism,
-      FlyWheel flyWheel) {
+      FlyWheel flyWheel,
+      Hood hood) {
     this.m_drivetrain = drivetrain;
     this.m_turret = turret;
     this.m_zone = zone;
     this.m_shootingMechanism = m_shootingMechanism;
     this.m_flyWheel = flyWheel;
+    this.m_hood = hood;
   }
 
   public Command driveCircle() {
@@ -62,6 +67,18 @@ public class CommandFactory {
             },
             Set.of(m_drivetrain))
         .repeatedly();
+  }
+
+  public Command manualTurretRotation(Angle amountOfMovement) {
+    return m_turret.manualRotation(amountOfMovement);
+  }
+
+  public Command manualHoodRotation(Angle amountOfMovement) {
+    return m_hood.manualRotation(amountOfMovement);
+  }
+
+  public Command rotateFlywheel() {
+    return m_flyWheel.rotateFlywheel();
   }
 
   public Command startShooting() {

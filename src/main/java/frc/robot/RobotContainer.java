@@ -21,6 +21,7 @@ import frc.robot.subsystems.CommandFactory;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.FlyWheel;
 import frc.robot.subsystems.Hood;
+import frc.robot.subsystems.IntakeDeployer;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.ShootingMechanism;
 import frc.robot.subsystems.Turret;
@@ -56,6 +57,8 @@ public class RobotContainer {
   private Indexer m_indexer = new Indexer();
   private Hood m_hood = new Hood();
 
+  private IntakeDeployer m_intake = new IntakeDeployer();
+
   private ShootingMechanism m_shootingMechanism =
       new ShootingMechanism(m_turret, m_drivetrain, m_zones, m_hood, m_flyWheel);
 
@@ -63,7 +66,7 @@ public class RobotContainer {
 
   PhotonDetails[] photonDetails = {};
   public CommandFactory m_commandFactory =
-      new CommandFactory(m_drivetrain, m_turret, m_zones, m_shootingMechanism, m_flyWheel);
+      new CommandFactory(m_drivetrain, m_turret, m_zones, m_shootingMechanism, m_flyWheel, m_hood);
 
   private AprilTagLocalization m_aprilTagLocalization =
       new AprilTagLocalization(
@@ -87,6 +90,7 @@ public class RobotContainer {
             m_drivetrain,
             m_aprilTagLocalization,
             m_commandFactory,
+            m_intake,
             m_turret,
             m_zones,
             m_indexer,
