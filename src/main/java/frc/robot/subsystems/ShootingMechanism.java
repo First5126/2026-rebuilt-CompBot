@@ -187,10 +187,17 @@ public class ShootingMechanism extends SubsystemBase {
                     ShootingMechanismConstants.flyWheelMaximumError)
             && (!goalPose.requiresShift || ShiftData.canScore());
 
-    // TODO: add hood
     SmartDashboard.putNumber(
-        "Turret Deviation Deg",
+        "Turret Deviation (Deg)",
         m_turret.getPosition().minus(m_currentShootingSolution.predictedTurretAngle).in(Degrees));
+    
+    SmartDashboard.putNumber(
+        "Hood Deviation (Deg)",
+        m_hood.getPosition().minus(m_currentShootingSolution.predictedHoodAngle).in(Degrees));
+
+    SmartDashboard.putNumber(
+        "FlyWheel Deviation (RPS)",
+        m_flyWheel.getCurrentSpeed().minus(m_currentShootingSolution.predictedFlyWheelVelocity).in(RotationsPerSecond));
     return check;
   }
 
