@@ -63,7 +63,7 @@ public class RobotContainer {
 
   PhotonDetails[] photonDetails = {};
   public CommandFactory m_commandFactory =
-      new CommandFactory(m_drivetrain, m_turret, m_zones, m_shootingMechanism);
+      new CommandFactory(m_drivetrain, m_turret, m_zones, m_shootingMechanism, m_hood, m_flyWheel);
 
   private AprilTagLocalization m_aprilTagLocalization =
       new AprilTagLocalization(

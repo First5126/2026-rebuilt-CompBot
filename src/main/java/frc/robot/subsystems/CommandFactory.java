@@ -14,16 +14,22 @@ public class CommandFactory {
   private Turret m_turret;
   private Zones m_zone;
   private ShootingMechanism m_shootingMechanism;
+  private Hood m_hood;
+  private FlyWheel m_flyWheel;
 
   public CommandFactory(
       CommandSwerveDrivetrain drivetrain,
       Turret turret,
       Zones zone,
-      ShootingMechanism m_shootingMechanism) {
+      ShootingMechanism m_shootingMechanism,
+      Hood m_hood,
+      FlyWheel flywheel) {
     this.m_drivetrain = drivetrain;
     this.m_turret = turret;
     this.m_zone = zone;
     this.m_shootingMechanism = m_shootingMechanism;
+    this.m_hood = m_hood;
+    this.m_flyWheel = flywheel;
   }
 
   public Command driveCircle() {
@@ -66,4 +72,30 @@ public class CommandFactory {
     });
   }
 
+  public Command moveHoodAngleUp() {
+    return Commands.run(() -> {
+      m_hood.moveAngleUpCommand();
+
+    });
+  }
+
+  public Command moveHoodAngleDown() {
+    return Commands.run(() -> {
+      m_hood.moveAngleDownCommand();
+    });
+  }
+
+  public Command moveTurretPosition() {
+    return Commands.run(() -> {
+
+    });
+  }
+
+  public Command rotateFlywheel() {
+    return m_flyWheel.rotateFlywheel();
+  }
+
+  public Command stopFlyWheel() {
+    return m_flyWheel.stopSpinning();
+  }
 }

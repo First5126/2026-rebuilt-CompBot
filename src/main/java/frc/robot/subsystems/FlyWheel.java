@@ -67,6 +67,14 @@ public class FlyWheel extends SubsystemBase {
     m_shooterMotor.setControl(m_shooterSpeed.withVelocity(motorSpeed));
   }
 
+  public Command rotateFlywheel() {
+    return runOnce(() -> startMotors());
+  }
+
+  private void startMotors() {
+    m_shooterMotor.setControl(m_dutyCycleOut.withOutput(0.60));
+  }
+
   private void stopMotors() {
     m_shooterMotor.setControl(m_dutyCycleOut.withOutput(0));
   }
