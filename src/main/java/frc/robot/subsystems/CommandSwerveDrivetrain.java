@@ -23,6 +23,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -35,6 +36,7 @@ import frc.robot.Robot;
 import frc.robot.FMS.Zones;
 import frc.robot.constants.ControllerConstants;
 import frc.robot.constants.DrivetrainConstants;
+import frc.robot.constants.WaypointConstants;
 import frc.robot.controller.CustomXboxController;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
@@ -283,6 +285,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
         }
+
+        Distance hubDistance = Meters.of(getPose2d().getTranslation().getDistance(WaypointConstants.blueHub.getTranslation()));
+
+        SmartDashboard.putNumber("Distance To Hub (M)", hubDistance.in(Meters));
     }
 
     private void startSimThread() {
