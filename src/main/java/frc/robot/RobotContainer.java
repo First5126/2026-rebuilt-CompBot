@@ -25,6 +25,7 @@ import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.ShootingMechanism;
 import frc.robot.subsystems.Turret;
 import frc.robot.vision.AprilTagLocalization;
+import com.pathplanner.lib.auto.NamedCommands;
 
 public class RobotContainer {
   private double MaxSpeed =
@@ -78,6 +79,8 @@ public class RobotContainer {
 
   /** Creates the container and configures bindings. */
   public RobotContainer() {
+    NamedCommands.registerCommand("ShootOnTheMove", m_commandFactory.startShooting().asProxy());
+    NamedCommands.registerCommand("StopShooting", m_commandFactory.stopShooting().asProxy());
     autoChooser = AutoBuilder.buildAutoChooser();
     configureBindings();
   }
