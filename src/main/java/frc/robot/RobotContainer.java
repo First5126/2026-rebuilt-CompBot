@@ -93,8 +93,7 @@ public class RobotContainer {
     Driver.init(m_drivetrain, m_aprilTagLocalization, m_commandFactory, m_turret, m_zones)
         .configureBindings();
 
-    Operator.init(m_commandFactory, m_turret, m_zones, m_flyWheel, m_hood)
-        .configureBindings();
+    Operator.init(m_commandFactory, m_turret, m_zones, m_flyWheel, m_hood).configureBindings();
 
     // Idle while the robot is disabled. This ensures the configured
     // neutral mode is applied to the drive motors while disabled.

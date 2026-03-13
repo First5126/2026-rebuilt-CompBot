@@ -14,6 +14,7 @@ public class CommandFactory {
   private Turret m_turret;
   private Zones m_zone;
   private ShootingMechanism m_shootingMechanism;
+  private FlyWheel m_flyWheel;
 
   public CommandFactory(
       CommandSwerveDrivetrain drivetrain,
@@ -61,8 +62,21 @@ public class CommandFactory {
   }
 
   public Command resetFMSTime() {
+    return Commands.runOnce(
+        () -> {
+          ShiftData.resetMatchTimeCalibration();
+        });
+  }
+
+  public Command reverseShootingCommand() {
     return Commands.runOnce(() -> {
-      ShiftData.resetMatchTimeCalibration();
+      m_flyWheel.shootInCommand();
+    });
+  }
+
+  public Command stopShootingCommand() {
+    return Commands.runOnce(() -> {
+      m_flyWheel.stopSpinning();
     });
   }
 

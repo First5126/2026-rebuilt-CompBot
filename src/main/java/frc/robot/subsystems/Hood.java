@@ -92,15 +92,22 @@ public class Hood extends SubsystemBase {
   }
 
   public Command moveAngleUpCommand() {
-    return Commands.run(() -> {
-      m_hoodMotor.setControl(m_positionVoltageRequest.withPosition(m_hoodMotor.getPosition().getValue().in(Degrees)+0.1));
-    }, this);
+    return Commands.run(
+        () -> {
+          m_hoodMotor.setControl(
+              m_positionVoltageRequest.withPosition(
+                  m_hoodMotor.getPosition().getValue().in(Degrees) + 0.1));
+        },
+        this);
   }
 
   public Command moveAngleDownCommand() {
-    return Commands.run(() -> {
-      m_hoodMotor.setControl(m_positionVoltageRequest.withPosition(m_hoodMotor.getPosition().getValue().in(Degrees)-0.1));
-    }, this);
+    return Commands.run(
+        () -> {
+          m_hoodMotor.setControl(
+              m_positionVoltageRequest.withPosition(
+                  m_hoodMotor.getPosition().getValue().in(Degrees) - 0.1));
+        },
+        this);
   }
-
 }

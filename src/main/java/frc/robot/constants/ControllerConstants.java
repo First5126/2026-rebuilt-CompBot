@@ -12,6 +12,6 @@ public class ControllerConstants {
 
   public enum OperatorState {
     NORMAL,
-    OVERIDE
+    OVERRIDE
   }
 }
