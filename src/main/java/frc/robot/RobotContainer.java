@@ -96,7 +96,7 @@ public class RobotContainer {
     // neutral mode is applied to the drive motors while disabled.
 
     Trigger trenchTrigger = new Trigger(m_zones::nearTrench);
-    trenchTrigger.onTrue(m_commandFactory.goUnderTrenchCommand());
+    trenchTrigger.whileTrue(m_commandFactory.goUnderTrenchCommand());
 
     final SwerveRequest idle = new SwerveRequest.Idle();
     RobotModeTriggers.disabled()

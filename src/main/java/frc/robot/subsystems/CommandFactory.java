@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Degrees;
-
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -64,9 +63,8 @@ public class CommandFactory {
         .repeatedly();
   }
 
-  public Command goUnderTrenchCommand() {
-    return Commands.runOnce(( ()-> {
-       m_hood.setPosition(Degrees.of(0));
-    }), m_hood);
+  public ConditionalCommand goUnderTrenchCommand() {
+    return new ConditionalCommand(
+        m_hood.setPosition(Units.Degrees.of(0)), Commands.none(), m_zone::getShootingOveride);
   }
 }
