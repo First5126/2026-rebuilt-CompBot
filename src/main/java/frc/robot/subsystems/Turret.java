@@ -103,10 +103,6 @@ public class Turret extends SubsystemBase {
     SmartDashboard.putNumber("Turret Angle (deg)", currentAngle);
   }
 
-  public double getTimeFromDistance(Supplier<Double> distance) {
-    return TurretConstants.DISTANCE_TO_TIME_INTERPOLATOR.get(distance.get());
-  }
-
   public double findTimeFromFuelShootingDistance(double distance) {
     throw new UnsupportedOperationException(
         "TODO: Implement findTimeFromFuelShootingDistance(double distance) based on shooter model\"");

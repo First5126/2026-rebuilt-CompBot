@@ -25,21 +25,6 @@ public class TurretConstants {
 
   // Meters per second at 12 volts. This is used for feedforward calculations, and should be
   // measured at the output of the turret gearbox.
-  public static final Transform2d TURRET_OFFSET = new Transform2d(0, 0, new Rotation2d());
+  public static final Transform2d TURRET_OFFSET = new Transform2d(0, -0.25, new Rotation2d()); // TODO: verify the turret offset since this is a guess
   public static final int gearRatio = 100;
-
-  // Distance first then Time
-  public static final InterpolatingDoubleTreeMap DISTANCE_TO_TIME_INTERPOLATOR =
-      InterpolatingDoubleTreeMap.ofEntries(
-          Map.entry(1.8, 0.8),
-          Map.entry(2.12, 1.0),
-          Map.entry(2.74, 1.0),
-          Map.entry(3.1, 1.01),
-          Map.entry(3.46, 1.04),
-          Map.entry(4.11, 1.05),
-          Map.entry(2.41, 0.93),
-          Map.entry(4.23, 1.09),
-          Map.entry(5.6, 1.28),
-          Map.entry(5.25, 1.22),
-          Map.entry(4.925, 1.13));
 }

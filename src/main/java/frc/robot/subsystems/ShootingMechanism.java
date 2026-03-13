@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.Seconds;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -14,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.FMS.ShiftData;
 import frc.robot.FMS.Zones;
+import frc.robot.constants.AprilTagLocalizationConstants;
 import frc.robot.constants.FlyWheelConstants;
 import frc.robot.constants.GoalPoseConstants.GoalPose;
 import frc.robot.constants.HoodConstants;
@@ -91,11 +93,12 @@ public class ShootingMechanism extends SubsystemBase {
 
       // find air time from distance
       double distanceToTarget = robotPose.getTranslation().getDistance(targetPose.getTranslation());
-      double airTime = TurretConstants.DISTANCE_TO_TIME_INTERPOLATOR.get(distanceToTarget);
+      double delayTime = ShootingMechanismConstants.DISTANCE_TO_TIME_INTERPOLATOR.get(distanceToTarget)
+      + AprilTagLocalizationConstants.LOCALIZATION_PERIOD.in(Seconds);
 
       // find how far we travel by the time the ball will reach the target
       double predicatedDistance =
-          airTime * Math.hypot(robotSpeeds.vxMetersPerSecond, robotSpeeds.vyMetersPerSecond);
+          delayTime * Math.hypot(robotSpeeds.vxMetersPerSecond, robotSpeeds.vyMetersPerSecond);
 
       // find the angle of the the speeds that are currently in robotcentric
       Rotation2d rotation =
