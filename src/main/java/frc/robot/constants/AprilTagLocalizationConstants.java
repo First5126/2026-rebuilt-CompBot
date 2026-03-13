@@ -72,14 +72,14 @@ public class AprilTagLocalizationConstants {
       new LimelightDetails(
           LIMELIGHT_NAME_RIGHT, LIMELIGHT_CLOSE_STDDEV_RIGHT, LIMELIGHT_FAR_STDDEV_RIGHT);
 
-  public static final String LIMELIGHT_NAME_RIGHTG = "limelight-rightg";
-  public static final Matrix<N3, N1> LIMELIGHT_CLOSE_STDDEV_RIGHTG =
+  public static final String LIMELIGHT_NAME_LEFT = "limelight-left";
+  public static final Matrix<N3, N1> LIMELIGHT_CLOSE_STDDEV_LEFT =
       VecBuilder.fill(0.01, 0.01, 999999999.9);
-  public static final Matrix<N3, N1> LIMELIGHT_FAR_STDDEV_RIGHTG =
+  public static final Matrix<N3, N1> LIMELIGHT_FAR_STDDEV_LEFT =
       VecBuilder.fill(0.05, 0.05, 999999999.9);
-  public static final LimelightDetails LIMELIGHT_DETAILS_RIGHTG =
+  public static final LimelightDetails LIMELIGHT_DETAILS_LEFT =
       new LimelightDetails(
-          LIMELIGHT_NAME_RIGHTG, LIMELIGHT_CLOSE_STDDEV_RIGHTG, LIMELIGHT_FAR_STDDEV_RIGHTG);
+          LIMELIGHT_NAME_LEFT, LIMELIGHT_CLOSE_STDDEV_LEFT, LIMELIGHT_FAR_STDDEV_LEFT);
 
   public static final AprilTagFieldLayout FIELD_LAYOUT =
       AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
