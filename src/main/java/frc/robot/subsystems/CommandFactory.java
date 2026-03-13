@@ -1,17 +1,13 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.geometry.Pose2d;
+import static edu.wpi.first.units.Units.Degree;
+
 import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.FMS.Zones;
 import frc.robot.constants.WaypointConstants;
-
-import static edu.wpi.first.units.Units.Degree;
-
 import java.util.Set;
-import java.util.function.Supplier;
 
 public class CommandFactory {
 
@@ -93,14 +89,12 @@ public class CommandFactory {
 
   public Command startShootingMechanism() {
     return m_flyWheel
-                .setSpeedWithSolution(m_shootingMechanism::getShootingSolution)
-                .alongWith(m_hood.setPosition(m_shootingMechanism::getShootingSolution));
+        .setSpeedWithSolution(m_shootingMechanism::getShootingSolution)
+        .alongWith(m_hood.setPosition(m_shootingMechanism::getShootingSolution));
   }
 
   public Command stopShootingMechanism() {
-    return m_flyWheel
-                .stopSpinning()
-                .alongWith(m_hood.setPosition(Degree.of(0)));
+    return m_flyWheel.stopSpinning().alongWith(m_hood.setPosition(Degree.of(0)));
   }
 
   public Command startIndexing() {

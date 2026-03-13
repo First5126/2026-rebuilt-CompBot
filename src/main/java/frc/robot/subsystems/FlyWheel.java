@@ -2,38 +2,23 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
-import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
-import static edu.wpi.first.units.Units.Volts;
-import static frc.robot.constants.AprilTagLocalizationConstants.MAX_TAG_DISTANCE;
 
-import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
-import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.LinearVelocity;
-import edu.wpi.first.units.measure.MutAngle;
-import edu.wpi.first.units.measure.MutAngularVelocity;
-import edu.wpi.first.units.measure.MutVoltage;
-import edu.wpi.first.units.measure.Voltage;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.constants.CANConstants;
 import frc.robot.constants.FlyWheelConstants;
 import frc.robot.subsystems.ShootingMechanism.ShootingSolution;
-
-import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class FlyWheel extends SubsystemBase {
@@ -65,17 +50,19 @@ public class FlyWheel extends SubsystemBase {
   }
 
   public Command setSpeed(Supplier<AngularVelocity> rps) {
-    return runOnce(() -> {
-        AngularVelocity speed = rps.get();
-        setSpeedControl(speed);
-    });
+    return runOnce(
+        () -> {
+          AngularVelocity speed = rps.get();
+          setSpeedControl(speed);
+        });
   }
 
   public Command setSpeedWithSolution(Supplier<ShootingSolution> solutionSupplier) {
-    return runOnce(() -> {
-        ShootingSolution solution = solutionSupplier.get();
-        setSpeedControl(solution.predictedFlyWheelVelocity);
-    });
+    return runOnce(
+        () -> {
+          ShootingSolution solution = solutionSupplier.get();
+          setSpeedControl(solution.predictedFlyWheelVelocity);
+        });
   }
 
   public Command rotateFlywheel() {

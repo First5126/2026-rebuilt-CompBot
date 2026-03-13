@@ -93,8 +93,9 @@ public class ShootingMechanism extends SubsystemBase {
 
       // find air time from distance
       double distanceToTarget = robotPose.getTranslation().getDistance(targetPose.getTranslation());
-      double delayTime = ShootingMechanismConstants.DISTANCE_TO_TIME_INTERPOLATOR.get(distanceToTarget)
-      + AprilTagLocalizationConstants.LOCALIZATION_PERIOD.in(Seconds);
+      double delayTime =
+          ShootingMechanismConstants.DISTANCE_TO_TIME_INTERPOLATOR.get(distanceToTarget)
+              + AprilTagLocalizationConstants.LOCALIZATION_PERIOD.in(Seconds);
 
       // find how far we travel by the time the ball will reach the target
       double predicatedDistance =
@@ -190,14 +191,17 @@ public class ShootingMechanism extends SubsystemBase {
     SmartDashboard.putNumber(
         "Turret Deviation (Deg)",
         m_turret.getPosition().minus(m_currentShootingSolution.predictedTurretAngle).in(Degrees));
-    
+
     SmartDashboard.putNumber(
         "Hood Deviation (Deg)",
         m_hood.getPosition().minus(m_currentShootingSolution.predictedHoodAngle).in(Degrees));
 
     SmartDashboard.putNumber(
         "FlyWheel Deviation (RPS)",
-        m_flyWheel.getCurrentSpeed().minus(m_currentShootingSolution.predictedFlyWheelVelocity).in(RotationsPerSecond));
+        m_flyWheel
+            .getCurrentSpeed()
+            .minus(m_currentShootingSolution.predictedFlyWheelVelocity)
+            .in(RotationsPerSecond));
     return check;
   }
 

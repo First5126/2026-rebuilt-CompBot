@@ -22,8 +22,8 @@ import frc.robot.subsystems.CommandFactory;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.FlyWheel;
 import frc.robot.subsystems.Hood;
-import frc.robot.subsystems.IntakeDeployer;
 import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.IntakeDeployer;
 import frc.robot.subsystems.ShootingMechanism;
 import frc.robot.subsystems.Turret;
 import frc.robot.vision.AprilTagLocalization;
@@ -67,7 +67,8 @@ public class RobotContainer {
 
   PhotonDetails[] photonDetails = {};
   public CommandFactory m_commandFactory =
-      new CommandFactory(m_drivetrain, m_turret, m_zones, m_shootingMechanism, m_flyWheel, m_hood, m_indexer);
+      new CommandFactory(
+          m_drivetrain, m_turret, m_zones, m_shootingMechanism, m_flyWheel, m_hood, m_indexer);
 
   private AprilTagLocalization m_aprilTagLocalization =
       new AprilTagLocalization(

@@ -3,11 +3,10 @@ package frc.robot.constants;
 import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
-import java.util.Map;
-
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import java.util.Map;
 
 public class ShootingMechanismConstants {
   public static final Angle turretMaximumError = Degree.of(5);

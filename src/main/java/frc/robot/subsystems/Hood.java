@@ -126,7 +126,9 @@ public class Hood extends SubsystemBase {
   public Command manualRotation(Angle amountOfRotation) {
     return runOnce(
         () -> {
-          m_hoodMotor.setControl(m_positionVoltageRequest.withPosition(m_hoodMotor.getPosition().getValue().plus(amountOfRotation)));
+          m_hoodMotor.setControl(
+              m_positionVoltageRequest.withPosition(
+                  m_hoodMotor.getPosition().getValue().plus(amountOfRotation)));
         });
   }
 
