@@ -65,7 +65,9 @@ public class Intake extends SubsystemBase {
   }
 
   public Command runOuttakeWheelsCommand() {
-    return runOnce(() -> runOuttakeWheels());
+    Command outtakeWheels = runOuttakeWheelsCommand();
+    outtakeWheels.addRequirements(this);
+    return outtakeWheels;
   } 
 
   public Command stopIntakeWheelsCommand() {
