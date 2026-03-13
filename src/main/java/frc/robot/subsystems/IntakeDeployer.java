@@ -96,8 +96,4 @@ public class IntakeDeployer extends SubsystemBase {
   private void rotate(Angle setpoint) {
     m_intakeDeployerMotorRight.setControl(m_request.withPosition(setpoint));
   }
-
-  private void rollIntakeWheels() {
-    
-  }
 }
