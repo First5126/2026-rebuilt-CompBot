@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.Degrees;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXSConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
@@ -38,12 +39,20 @@ public class Turret extends SubsystemBase {
     m_turretEncoder.getConfigurator().apply(canCoderConfiguration);
 
     TalonFXSConfiguration talonFXSConfiguration = new TalonFXSConfiguration();
-    talonFXSConfiguration.Commutation.MotorArrangement = MotorArrangementValue.Minion_JST;
+    talonFXSConfiguration.Commutation.MotorArrangement = MotorArrangementValue.NEO550_JST;
     talonFXSConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    talonFXSConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    talonFXSConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     talonFXSConfiguration.ExternalFeedback.withFusedCANcoder(m_turretEncoder);
     talonFXSConfiguration.ExternalFeedback.RotorToSensorRatio = 10;
     talonFXSConfiguration.ExternalFeedback.SensorToMechanismRatio = 10;
+
+    CurrentLimitsConfigs limitsConfigs = new CurrentLimitsConfigs();
+    // limitsConfigs.SupplyCurrentLimit = TurretConstants.CURRENT_LIMIT;
+    limitsConfigs.StatorCurrentLimit = TurretConstants.STATOR_LIMIT;
+    // limitsConfigs.SupplyCurrentLimitEnable = true;
+    limitsConfigs.StatorCurrentLimitEnable = true;
+
+    talonFXSConfiguration.CurrentLimits = limitsConfigs;
 
     talonFXSConfiguration.SoftwareLimitSwitch.withForwardSoftLimitThreshold(
         TurretConstants.MAX_ANGLE);
@@ -74,10 +83,10 @@ public class Turret extends SubsystemBase {
    * @param position The target angle (use WPILib Units, e.g. Units.Degrees.of(90))
    * @return a WPILib Command object to run once
    */
-  public Command rotateToPosition(Angle position) {
+  public Command manualRotation(Angle amountOfMovement) {
     return runOnce(
         () -> {
-          setPosition(position);
+          setPosition(m_turretMotor.getPosition().getValue().plus(amountOfMovement));
         });
   }
 
@@ -92,10 +101,6 @@ public class Turret extends SubsystemBase {
   public void periodic() {
     double currentAngle = m_turretMotor.getPosition().getValueAsDouble() * 360.0;
     SmartDashboard.putNumber("Turret Angle (deg)", currentAngle);
-  }
-
-  public double getTimeFromDistance(Supplier<Double> distance) {
-    return TurretConstants.DISTANCE_TO_TIME_INTERPOLATOR.get(distance.get());
   }
 
   public double findTimeFromFuelShootingDistance(double distance) {
@@ -116,8 +121,11 @@ public class Turret extends SubsystemBase {
     double minDegrees = TurretConstants.MIN_ANGLE.in(Degrees);
     double maxDegrees = TurretConstants.MAX_ANGLE.in(Degrees);
     double requestedDegrees = position.in(Degrees);
+    SmartDashboard.putNumber("Turret Wanting Position before clamp", requestedDegrees);
+    SmartDashboard.putNumber("Turret Position", getPosition().in(Degrees));
 
     double clampedDegrees = Math.max(minDegrees, Math.min(requestedDegrees, maxDegrees));
+    SmartDashboard.putNumber("Turret Wanting Position after clamp", clampedDegrees);
     // Construct the measure back in degrees
     Angle clampedPosition = Degrees.of(clampedDegrees);
 
