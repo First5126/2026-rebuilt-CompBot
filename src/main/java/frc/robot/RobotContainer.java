@@ -16,6 +16,7 @@ import frc.robot.FMS.Zones;
 import frc.robot.constants.AprilTagLocalizationConstants;
 import frc.robot.constants.AprilTagLocalizationConstants.PhotonDetails;
 import frc.robot.controller.Driver;
+import frc.robot.controller.Operator;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandFactory;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -90,6 +91,9 @@ public class RobotContainer {
     // m_shootingMechanism.getShootingSolution().predictedTurretAngle));
 
     Driver.init(m_drivetrain, m_aprilTagLocalization, m_commandFactory, m_turret, m_zones)
+        .configureBindings();
+
+    Operator.init(m_commandFactory, m_turret, m_zones, m_flyWheel, m_hood)
         .configureBindings();
 
     // Idle while the robot is disabled. This ensures the configured

@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -15,6 +17,7 @@ import com.ctre.phoenix6.signals.ReverseLimitValue;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.CANConstants;
 import frc.robot.constants.HoodConstants;
@@ -87,4 +90,17 @@ public class Hood extends SubsystemBase {
           m_hoodMotor.setControl(m_positionVoltageRequest.withPosition(angle));
         });
   }
+
+  public Command moveAngleUpCommand() {
+    return Commands.run(() -> {
+      m_hoodMotor.setControl(m_positionVoltageRequest.withPosition(m_hoodMotor.getPosition().getValue().in(Degrees)+0.1));
+    }, this);
+  }
+
+  public Command moveAngleDownCommand() {
+    return Commands.run(() -> {
+      m_hoodMotor.setControl(m_positionVoltageRequest.withPosition(m_hoodMotor.getPosition().getValue().in(Degrees)-0.1));
+    }, this);
+  }
+
 }

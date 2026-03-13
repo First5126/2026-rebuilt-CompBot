@@ -9,4 +9,9 @@ public class ControllerConstants {
   public static final double DEADBAND = 0.065;
   public static final int DRIVER_CONTROLLER_PORT = 0;
   public static final int OPERATOR_CONTROLLER_PORT = 1;
+
+  public enum OperatorState {
+    NORMAL,
+    OVERIDE
+  }
 }

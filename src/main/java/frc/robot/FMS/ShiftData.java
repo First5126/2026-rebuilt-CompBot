@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class ShiftData {
   private static DriverStation.Alliance m_firstActiveAlliance;
   private static DriverStation.Alliance m_ourAlliance;
+  private static double m_matchTimeOffsetSeconds = 0.0;
 
   /**
    * Enumeration to keep track of the shifts including the time in each shift. Shift duration is the
@@ -73,7 +74,7 @@ public class ShiftData {
     if (auto) return GameShift.Auto;
 
     // We aren't in auto, so compare the current match time to each shift's start time.
-    double currentTime = sanitizeMatchTime(DriverStation.getMatchTime());
+    double currentTime = getAdjustedMatchTime();
 
     if (currentTime <= GameShift.Endgame.getStartTime()) return GameShift.Endgame;
 
@@ -148,7 +149,7 @@ public class ShiftData {
    */
   public static double getTimeRemainingInShift() {
     GameShift currentShift = getShift();
-    double currentTime = sanitizeMatchTime(DriverStation.getMatchTime());
+    double currentTime = getAdjustedMatchTime();
 
     // Get the time elapsed in the current shift, and subtract it from the shift duration
     // to get the time remaining in the shift.
@@ -164,6 +165,36 @@ public class ShiftData {
     GameShift currentShift = getShift();
     double percentage = ShiftData.getTimeRemainingInShift() / currentShift.shiftDuration;
     return Math.max(0.0, Math.min(1.0, percentage));
+  }
+
+  /**
+   * Snaps internal match-time tracking to the nearest shift start boundary.
+   *
+   * <p>This method computes an offset from the current DriverStation match time and stores it.
+   * Future calls that depend on time (like {@link #getShift()}, {@link #canScore()}, and {@link
+   * #getTimeRemainingInShift()}) will use this calibrated time.
+   *
+   * @return the shift that was used as the calibration anchor.
+   */
+  public static GameShift zeroMatchTimeToClosestShift() {
+    double rawMatchTime = sanitizeMatchTime(DriverStation.getMatchTime());
+    GameShift closestShift = getClosestShiftByStartTime(rawMatchTime);
+    m_matchTimeOffsetSeconds = closestShift.getStartTime() - rawMatchTime;
+    return closestShift;
+  }
+
+  /** Clears match-time calibration and returns to raw DriverStation timing. */
+  public static void resetMatchTimeCalibration() {
+    m_matchTimeOffsetSeconds = 0.0;
+  }
+
+  /**
+   * Returns the currently-applied match-time calibration offset.
+   *
+   * @return offset in seconds added to DriverStation match time.
+   */
+  public static double getMatchTimeCalibrationOffsetSeconds() {
+    return m_matchTimeOffsetSeconds;
   }
 
   /**
@@ -194,8 +225,33 @@ public class ShiftData {
     return Math.max(0.0, matchTimeSeconds);
   }
 
+  private static double getAdjustedMatchTime() {
+    return sanitizeMatchTime(DriverStation.getMatchTime() + m_matchTimeOffsetSeconds);
+  }
+
+  private static GameShift getClosestShiftByStartTime(double matchTimeSeconds) {
+    GameShift closestShift = GameShift.TransitionShift;
+    double closestDifference = Double.POSITIVE_INFINITY;
+
+    for (GameShift shift : GameShift.values()) {
+      if (shift == GameShift.Auto) continue;
+
+      double difference = Math.abs(matchTimeSeconds - shift.getStartTime());
+      if (difference < closestDifference) {
+        closestDifference = difference;
+        closestShift = shift;
+      }
+    }
+
+    return closestShift;
+  }
+
   static void resetAllianceCacheForTesting() {
     m_firstActiveAlliance = null;
     m_ourAlliance = null;
+  }
+
+  static void resetMatchTimeCalibrationForTesting() {
+    m_matchTimeOffsetSeconds = 0.0;
   }
 }
