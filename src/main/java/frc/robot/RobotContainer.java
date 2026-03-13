@@ -60,7 +60,7 @@ public class RobotContainer {
 
   // End of Declaring
 
-  PhotonDetails[] photonDetails = {AprilTagLocalizationConstants.camera1Details};
+  PhotonDetails[] photonDetails = {};
   public CommandFactory m_commandFactory =
       new CommandFactory(m_drivetrain, m_turret, m_zones, m_shootingMechanism);
 
@@ -71,7 +71,8 @@ public class RobotContainer {
           m_drivetrain::addVisionMeasurement,
           m_drivetrain,
           photonDetails,
-          AprilTagLocalizationConstants.LIMELIGHT_DETAILS_RIGHT);
+          AprilTagLocalizationConstants.LIMELIGHT_DETAILS_RIGHT,
+          AprilTagLocalizationConstants.LIMELIGHT_DETAILS_LEFT);
 
   private final SendableChooser<Command> autoChooser;
 
