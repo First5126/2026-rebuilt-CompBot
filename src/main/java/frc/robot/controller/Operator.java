@@ -2,8 +2,12 @@ package frc.robot.controller;
 
 import static edu.wpi.first.units.Units.Degree;
 
+import frc.robot.FMS.Zones;
 import frc.robot.constants.ControllerConstants;
 import frc.robot.subsystems.CommandFactory;
+import frc.robot.subsystems.FlyWheel;
+import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.Hood;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +16,11 @@ public class Operator extends CustomXboxController implements Controller {
   private static Operator INSTANCE;
 
   @Getter @Setter private CommandFactory commandFactory;
+  @Getter @Setter private Turret turret;
+  @Getter @Setter private Zones zone;
+  @Getter @Setter private FlyWheel flywheel;
+  @Getter @Setter private Hood hood;
+  
 
   // Private constructor to prevent instantiation from outside
   private Operator() {
@@ -25,9 +34,8 @@ public class Operator extends CustomXboxController implements Controller {
     operator.setCommandFactory(commandFactory);
     operator.setTurret(turret);
     operator.setZone(zone);
-    operator.setFlyWheel(flyWheel);
+    operator.setFlywheel(flyWheel);
     operator.setHood(hood);
-    operator.setOperatorState(OperatorState.NORMAL);
 
     return operator;
   }
