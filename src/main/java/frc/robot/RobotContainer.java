@@ -16,6 +16,7 @@ import frc.robot.FMS.Zones;
 import frc.robot.constants.AprilTagLocalizationConstants;
 import frc.robot.constants.AprilTagLocalizationConstants.PhotonDetails;
 import frc.robot.controller.Driver;
+import frc.robot.controller.Operator;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandFactory;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -66,7 +67,7 @@ public class RobotContainer {
 
   PhotonDetails[] photonDetails = {};
   public CommandFactory m_commandFactory =
-      new CommandFactory(m_drivetrain, m_turret, m_zones, m_shootingMechanism, m_flyWheel, m_hood);
+      new CommandFactory(m_drivetrain, m_turret, m_zones, m_shootingMechanism, m_flyWheel, m_hood, m_indexer);
 
   private AprilTagLocalization m_aprilTagLocalization =
       new AprilTagLocalization(
@@ -98,6 +99,8 @@ public class RobotContainer {
             m_hood,
             m_shootingMechanism)
         .configureBindings();
+
+    Operator.init(m_commandFactory).configureBindings();
 
     // Shooting Mechanism Default Command
     m_shootingMechanism.setDefaultCommand(m_shootingMechanism.startTrackingCommand());

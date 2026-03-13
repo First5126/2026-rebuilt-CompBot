@@ -7,6 +7,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.FMS.Zones;
 import frc.robot.constants.WaypointConstants;
+
+import static edu.wpi.first.units.Units.Degree;
+
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -19,6 +22,7 @@ public class CommandFactory {
   private ShootingMechanism m_shootingMechanism;
   private FlyWheel m_flyWheel;
   private Hood m_hood;
+  private Indexer m_indexer;
 
   public CommandFactory(
       CommandSwerveDrivetrain drivetrain,
@@ -26,13 +30,15 @@ public class CommandFactory {
       Zones zone,
       ShootingMechanism m_shootingMechanism,
       FlyWheel flyWheel,
-      Hood hood) {
+      Hood hood,
+      Indexer indexer) {
     this.m_drivetrain = drivetrain;
     this.m_turret = turret;
     this.m_zone = zone;
     this.m_shootingMechanism = m_shootingMechanism;
     this.m_flyWheel = flyWheel;
     this.m_hood = hood;
+    this.m_indexer = indexer;
   }
 
   public Command driveCircle() {
@@ -83,5 +89,25 @@ public class CommandFactory {
 
   public Command stopShooting() {
     return m_flyWheel.stopSpinning();
+  }
+
+  public Command startShootingMechanism() {
+    return m_flyWheel
+                .setSpeedWithSolution(m_shootingMechanism::getShootingSolution)
+                .alongWith(m_hood.setPosition(m_shootingMechanism::getShootingSolution));
+  }
+
+  public Command stopShootingMechanism() {
+    return m_flyWheel
+                .stopSpinning()
+                .alongWith(m_hood.setPosition(Degree.of(0)));
+  }
+
+  public Command startIndexing() {
+    return m_indexer.startIndexing();
+  }
+
+  public Command stopIndexing() {
+    return m_indexer.stopIndexing();
   }
 }

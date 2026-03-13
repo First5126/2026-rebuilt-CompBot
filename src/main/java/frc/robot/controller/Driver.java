@@ -2,7 +2,11 @@ package frc.robot.controller;
 
 import static edu.wpi.first.units.Units.Volts;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.FMS.Zones;
 import frc.robot.constants.ControllerConstants;
 import frc.robot.subsystems.CommandFactory;
@@ -90,19 +94,16 @@ public class Driver extends CustomXboxController implements Controller {
     // this.a().onTrue(aprilTagLocalization.setTrust(true));
     // this.a().onFalse(aprilTagLocalization.setTrust(false));
 
-    this.povUp().onTrue(hood.setVoltage(Volts.of(0.5))).onFalse(hood.setVoltage(Volts.of(0)));
-    this.povDown().onTrue(hood.setVoltage(Volts.of(-0.5))).onFalse(hood.setVoltage(Volts.of(0)));
+    //this.povUp().onTrue(hood.setVoltage(Volts.of(0.5))).onFalse(hood.setVoltage(Volts.of(0)));
+    //this.povDown().onTrue(hood.setVoltage(Volts.of(-0.5))).onFalse(hood.setVoltage(Volts.of(0)));
 
-    this.a().onTrue(indexer.startIndexing()).onFalse(indexer.stopIndexing());
+    //this.a().onTrue(indexer.startIndexing()).onFalse(indexer.stopIndexing());
 
     // Reset the field-centric heading on left bumper press.
     this.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
-    // this.a().onTrue(indexer.startIndexing()).onFalse(indexer.stopIndexing());
+    this.a().onTrue(indexer.startIndexing()).onFalse(indexer.stopIndexing());
     this.b()
-        .whileTrue(
-            flyWheel
-                .setSpeedWithSolution(shootingMechanism::getShootingSolution)
-                .alongWith(hood.setPosition(shootingMechanism::getShootingSolution)))
+        .whileTrue(commandFactory.startShootingMechanism())
         .onFalse(flyWheel.stopSpinning());
 
     this.y()

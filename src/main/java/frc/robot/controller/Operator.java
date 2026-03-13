@@ -43,8 +43,11 @@ public class Operator extends CustomXboxController implements Controller {
     this.povUp().whileTrue(commandFactory.manualHoodRotation(Degree.of(0.5)));
     this.povDown().whileTrue(commandFactory.manualHoodRotation(Degree.of(-0.5)));
 
-    this.b().onTrue(commandFactory.rotateFlywheel());
-    this.b().onFalse(commandFactory.stopShooting());
+    this.b().whileTrue(commandFactory.startShootingMechanism());
+    this.b().onFalse(commandFactory.stopShootingMechanism());
+
+    this.a().onTrue(commandFactory.startIndexing());
+    this.a().onFalse(commandFactory.stopIndexing());
     return this;
   }
 }

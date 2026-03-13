@@ -25,6 +25,6 @@ public class TurretConstants {
 
   // Meters per second at 12 volts. This is used for feedforward calculations, and should be
   // measured at the output of the turret gearbox.
-  public static final Transform2d TURRET_OFFSET = new Transform2d(0, -0.25, new Rotation2d()); // TODO: verify the turret offset since this is a guess
+  public static final Transform2d TURRET_OFFSET = new Transform2d(-0.127, 0, new Rotation2d());
   public static final int gearRatio = 100;
 }
