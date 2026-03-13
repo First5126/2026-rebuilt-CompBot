@@ -81,12 +81,6 @@ public class CommandFactory {
     return m_flyWheel.rotateFlywheel();
   }
 
-  public Command startShooting() {
-    Supplier<Pose2d> robotPose = () -> m_drivetrain.getPose2d();
-    Supplier<Pose2d> targetPose = () -> m_zone.getTurretShootingPose();
-    return m_flyWheel.startShootingWithInterpolation(robotPose, targetPose);
-  }
-
   public Command stopShooting() {
     return m_flyWheel.stopSpinning();
   }

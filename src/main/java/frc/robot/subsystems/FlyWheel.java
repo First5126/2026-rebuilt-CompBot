@@ -19,6 +19,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.CANConstants;
 import frc.robot.constants.FlyWheelConstants;
+import frc.robot.subsystems.ShootingMechanism.ShootingSolution;
+
 import java.util.function.Supplier;
 
 public class FlyWheel extends SubsystemBase {
@@ -50,26 +52,21 @@ public class FlyWheel extends SubsystemBase {
   }
 
   public Command setSpeed(Supplier<AngularVelocity> rps) {
-    return runOnce(() -> setSpeedControl(rps));
+    return runOnce(() -> {
+        AngularVelocity speed = rps.get();
+        setSpeedControl(speed);
+    });
+  }
+
+  public Command setSpeedWithSolution(Supplier<ShootingSolution> solutionSupplier) {
+    return runOnce(() -> {
+        ShootingSolution solution = solutionSupplier.get();
+        setSpeedControl(solution.predictedFlyWheelVelocity);
+    });
   }
 
   public Command rotateFlywheel() {
     return runOnce(() -> startMotors());
-  }
-
-  public Command startShootingWithInterpolation(
-      Supplier<Pose2d> robotPose, Supplier<Pose2d> targetPose) {
-    return runOnce(
-        () -> {
-          double distanceToTarget =
-              robotPose.get().getTranslation().getDistance(targetPose.get().getTranslation());
-
-          Supplier<AngularVelocity> rpsSupplier =
-              () ->
-                  RotationsPerSecond.of(
-                      FlyWheelConstants.DISTANCE_TO_SPEED_INTERPOLATOR.get(distanceToTarget));
-          setSpeedControl(rpsSupplier);
-        });
   }
 
   public Command stopSpinning() {
@@ -95,11 +92,10 @@ public class FlyWheel extends SubsystemBase {
     m_shooterMotor.setControl(m_shooterSpeed.withVelocity(motorSpeed));
   }*/
 
-  private void setSpeedControl(Supplier<AngularVelocity> rps) {
-    AngularVelocity rotationSpeed = rps.get();
+  private void setSpeedControl(AngularVelocity rotationSpeed) {
 
     if (rotationSpeed.isEquivalent(RotationsPerSecond.of(0))) stopMotors();
-    else m_shooterMotor.setControl(m_shooterSpeed.withVelocity(rps.get()));
+    else m_shooterMotor.setControl(m_shooterSpeed.withVelocity(rotationSpeed));
   }
 
   private void startMotors() {

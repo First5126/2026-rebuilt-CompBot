@@ -101,7 +101,7 @@ public class Driver extends CustomXboxController implements Controller {
     this.b()
         .whileTrue(
             flyWheel
-                .startShootingWithInterpolation(drivetrain::getPose2d, zone::getTurretShootingPose)
+                .setSpeedWithSolution(shootingMechanism::getShootingSolution)
                 .alongWith(hood.setPosition(shootingMechanism::getShootingSolution)))
         .onFalse(flyWheel.stopSpinning());
 
@@ -111,8 +111,6 @@ public class Driver extends CustomXboxController implements Controller {
                 .setSpeed(flyWheel::getDashboardSpeedRPS)
                 .alongWith(hood.setPositionToDashboard()))
         .onFalse(flyWheel.stopSpinning());
-
-    this.x().whileTrue(commandFactory.startShooting()).onFalse(commandFactory.stopShooting());
 
     return this;
   }
