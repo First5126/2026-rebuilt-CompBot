@@ -16,6 +16,7 @@ public class CommandFactory {
   private ShootingMechanism m_shootingMechanism;
   private Hood m_hood;
   private FlyWheel m_flyWheel;
+  private Intake m_intake;
 
   public CommandFactory(
       CommandSwerveDrivetrain drivetrain,
@@ -23,48 +24,17 @@ public class CommandFactory {
       Zones zone,
       ShootingMechanism m_shootingMechanism,
       Hood m_hood,
-      FlyWheel flywheel) {
+      FlyWheel flywheel,
+      Intake intake) {
     this.m_drivetrain = drivetrain;
     this.m_turret = turret;
     this.m_zone = zone;
     this.m_shootingMechanism = m_shootingMechanism;
     this.m_hood = m_hood;
     this.m_flyWheel = flywheel;
+    this.m_intake = intake;
   }
 
-  public Command driveCircle() {
-    return Commands.defer(
-            () -> {
-              switch (m_side) {
-                case 1:
-                  System.out.println("Heading To BottomLeftCorner");
-                  return m_drivetrain
-                      .goToPose(WaypointConstants.BottomLeftCornner)
-                      .andThen(() -> m_side = 2);
-
-                case 2:
-                  System.out.println("Heading To TopLeftCorner");
-                  return m_drivetrain
-                      .goToPose(WaypointConstants.TopLeftCornner)
-                      .andThen(() -> m_side = 3);
-
-                case 3:
-                  System.out.println("Heading To TopRightCorner");
-                  return m_drivetrain
-                      .goToPose(WaypointConstants.TopRightCornner)
-                      .andThen(() -> m_side = 4);
-
-                case 4:
-                default:
-                  System.out.println("Heading To BottomRightCorner");
-                  return m_drivetrain
-                      .goToPose(WaypointConstants.BottomRightCornner)
-                      .andThen(() -> m_side = 1);
-              }
-            },
-            Set.of(m_drivetrain))
-        .repeatedly();
-  }
 
   public Command resetFMSTime() {
     return Commands.runOnce(() -> {
@@ -73,23 +43,24 @@ public class CommandFactory {
   }
 
   public Command moveHoodAngleUp() {
-    return Commands.run(() -> {
-      m_hood.moveAngleUpCommand();
-
-    });
-  }
+    return m_hood.moveAngleUpCommand();
+  };
+  
 
   public Command moveHoodAngleDown() {
-    return Commands.run(() -> {
-      m_hood.moveAngleDownCommand();
-    });
+    return m_hood.moveAngleDownCommand();
+  };
+
+  public Command runIntakeWheels() {
+    return m_intake.runIntakeWheelsCommand();
+  };
+
+  public Command runOuttakeWheels() {
+    return m_intake.runOuttakeWheelsCommand();
   }
 
-  public Command moveTurretPosition() {
-    return Commands.run(() -> {
 
-    });
-  }
+
 
   public Command rotateFlywheel() {
     return m_flyWheel.rotateFlywheel();
