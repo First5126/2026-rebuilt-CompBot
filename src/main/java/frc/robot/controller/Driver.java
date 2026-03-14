@@ -8,7 +8,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.FlyWheel;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.IntakeDeployer;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.ShootingMechanism;
 import frc.robot.subsystems.Turret;
 import frc.robot.vision.AprilTagLocalization;
@@ -22,7 +22,7 @@ public class Driver extends CustomXboxController implements Controller {
   @Getter @Setter private CommandSwerveDrivetrain drivetrain;
   @Getter @Setter private AprilTagLocalization aprilTagLocalization;
   @Getter @Setter private CommandFactory commandFactory;
-  @Getter @Setter private IntakeDeployer intake;
+  @Getter @Setter private Intake intake;
   @Getter @Setter private Turret turret;
   @Getter @Setter private Zones zone;
   @Getter @Setter private Indexer indexer;
@@ -50,7 +50,7 @@ public class Driver extends CustomXboxController implements Controller {
       CommandSwerveDrivetrain drivetrain,
       AprilTagLocalization aprilTagLocalization,
       CommandFactory commandFactory,
-      IntakeDeployer intake,
+      Intake intake,
       Turret turret,
       Zones zone,
       Indexer indexer,

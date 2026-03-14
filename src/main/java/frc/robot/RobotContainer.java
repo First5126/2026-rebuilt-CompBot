@@ -9,6 +9,8 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
@@ -24,7 +26,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.FlyWheel;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.IntakeDeployer;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.ShootingMechanism;
 import frc.robot.subsystems.Turret;
 import frc.robot.vision.AprilTagLocalization;
@@ -59,7 +61,7 @@ public class RobotContainer {
   private Indexer m_indexer = new Indexer();
   private Hood m_hood = new Hood();
 
-  private IntakeDeployer m_intake = new IntakeDeployer();
+  private Intake m_intake = new Intake();
 
   private ShootingMechanism m_shootingMechanism =
       new ShootingMechanism(m_turret, m_drivetrain, m_zones, m_hood, m_flyWheel);
@@ -69,7 +71,7 @@ public class RobotContainer {
   PhotonDetails[] photonDetails = {};
   public CommandFactory m_commandFactory =
       new CommandFactory(
-          m_drivetrain, m_turret, m_zones, m_shootingMechanism, m_flyWheel, m_hood, m_indexer);
+          m_drivetrain, m_turret, m_zones, m_shootingMechanism, m_flyWheel, m_hood, m_indexer, m_intake);
 
   private AprilTagLocalization m_aprilTagLocalization =
       new AprilTagLocalization(
@@ -85,6 +87,8 @@ public class RobotContainer {
 
   /** Creates the container and configures bindings. */
   public RobotContainer() {
+    NamedCommands.registerCommand("Intake", m_commandFactory.intake());
+    NamedCommands.registerCommand("StopIntake", m_commandFactory.stopIntake());
     autoChooser = AutoBuilder.buildAutoChooser();
     configureBindings();
   }
