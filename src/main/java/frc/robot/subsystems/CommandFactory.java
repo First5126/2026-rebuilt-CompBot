@@ -1,6 +1,10 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.units.Units;
+import static edu.wpi.first.units.Units.Degree;
+import static edu.wpi.first.units.Units.Degrees;
+
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -14,19 +18,27 @@ public class CommandFactory {
   private int m_side = 1;
   private Turret m_turret;
   private Zones m_zone;
-  private Hood m_hood;
   private ShootingMechanism m_shootingMechanism;
+  private FlyWheel m_flyWheel;
+  private Hood m_hood;
+  private Indexer m_indexer;
 
   public CommandFactory(
       CommandSwerveDrivetrain drivetrain,
       Turret turret,
       Zones zone,
-      ShootingMechanism m_shootingMechanism) {
+      ShootingMechanism m_shootingMechanism,
+      FlyWheel flyWheel,
+      Hood hood,
+      Indexer indexer) {
     this.m_drivetrain = drivetrain;
     this.m_turret = turret;
     this.m_zone = zone;
     this.m_zone = zone;
     this.m_shootingMechanism = m_shootingMechanism;
+    this.m_flyWheel = flyWheel;
+    this.m_hood = hood;
+    this.m_indexer = indexer;
   }
 
   public Command driveCircle() {
@@ -65,6 +77,40 @@ public class CommandFactory {
 
   public ConditionalCommand goUnderTrenchCommand() {
     return new ConditionalCommand(
-        m_hood.setPosition(Units.Degrees.of(0)), Commands.none(), m_zone::getShootingOveride);
+        m_hood.setPosition(Degrees.of(0)), Commands.none(), m_zone::getShootingOveride);
+  }
+
+  public Command manualTurretRotation(Angle amountOfMovement) {
+    return m_turret.manualRotation(amountOfMovement);
+  }
+
+  public Command manualHoodRotation(Angle amountOfMovement) {
+    return m_hood.manualRotation(amountOfMovement);
+  }
+
+  public Command rotateFlywheel() {
+    return m_flyWheel.rotateFlywheel();
+  }
+
+  public Command stopShooting() {
+    return m_flyWheel.stopSpinning();
+  }
+
+  public Command startShootingMechanism() {
+    return m_flyWheel
+        .setSpeedWithSolution(m_shootingMechanism::getShootingSolution)
+        .alongWith(m_hood.setPosition(m_shootingMechanism::getShootingSolution));
+  }
+
+  public Command stopShootingMechanism() {
+    return m_flyWheel.stopSpinning().alongWith(m_hood.setPosition(Degree.of(0)));
+  }
+
+  public Command startIndexing() {
+    return m_indexer.startIndexing();
+  }
+
+  public Command stopIndexing() {
+    return m_indexer.stopIndexing();
   }
 }
