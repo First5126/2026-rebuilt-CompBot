@@ -20,6 +20,7 @@ public class CommandFactory {
   private FlyWheel m_flyWheel;
   private Hood m_hood;
   private Indexer m_indexer;
+  private Intake m_intake;
 
   public CommandFactory(
       CommandSwerveDrivetrain drivetrain,
@@ -28,7 +29,8 @@ public class CommandFactory {
       ShootingMechanism m_shootingMechanism,
       FlyWheel flyWheel,
       Hood hood,
-      Indexer indexer) {
+      Indexer indexer,
+      Intake intake) {
     this.m_drivetrain = drivetrain;
     this.m_turret = turret;
     this.m_zone = zone;
@@ -36,6 +38,7 @@ public class CommandFactory {
     this.m_flyWheel = flyWheel;
     this.m_hood = hood;
     this.m_indexer = indexer;
+    this.m_intake = intake;
   }
 
   public Command driveCircle() {
@@ -78,6 +81,14 @@ public class CommandFactory {
 
   public Command manualHoodRotation(Angle amountOfMovement) {
     return m_hood.manualRotation(amountOfMovement);
+  }
+
+  public Command intakeAndShoot() {
+    Command intake = m_intake.runIntakeWheelsCommand();
+    Command turretMovement = m_shootingMechanism.startTrackingCommand();
+    Command shoot = m_flyWheel.setSpeedWithSolution(m_shootingMechanism::getShootingSolution).alongWith(m_hood.setPosition(m_shootingMechanism::getShootingSolution));
+
+    return intake.alongWith(turretMovement).andThen(shoot);
   }
 
   public Command rotateFlywheel() {

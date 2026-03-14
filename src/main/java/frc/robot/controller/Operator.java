@@ -67,6 +67,8 @@ public class Operator extends CustomXboxController implements Controller {
 
     this.a().onTrue(commandFactory.startIndexing());
     this.a().onFalse(commandFactory.stopIndexing());
+
+    this.x().onTrue(commandFactory.intakeAndShoot());
     return this;
   }
 }
