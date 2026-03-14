@@ -34,13 +34,14 @@ public class Operator extends CustomXboxController implements Controller {
     return INSTANCE;
   }
 
-  public static Operator init(Zones zone, CommandFactory commandFactory, Hood hood) {
+  public static Operator init(Zones zone, CommandFactory commandFactory, Hood hood, Intake intake) {
 
     Operator operator = getInstance();
 
     operator.setZone(zone);
     operator.setCommandFactory(commandFactory);
     operator.setHood(hood);
+    operator.setIntake(intake);
 
     return operator;
   }
@@ -51,6 +52,9 @@ public class Operator extends CustomXboxController implements Controller {
 
     this.leftBumper().onTrue(commandFactory.raiseIntake());
     this.rightBumper().onTrue(commandFactory.lowerIntake());
+
+    this.rightTrigger().whileTrue(intake.runIntakeCommand());
+    this.leftTrigger().whileTrue(intake.runOuttakeCommand());
 
     return this;
   }

@@ -24,6 +24,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.FlyWheel;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.IntakeDeployer;
 import frc.robot.subsystems.ShootingMechanism;
 import frc.robot.subsystems.Turret;
@@ -58,6 +59,8 @@ public class RobotContainer {
   private Indexer m_indexer = new Indexer();
   private Hood m_hood = new Hood();
   private IntakeDeployer m_intakeDeployer = new IntakeDeployer();
+
+  private Intake m_intake = new Intake();
 
   private ShootingMechanism m_shootingMechanism =
       new ShootingMechanism(m_turret, m_drivetrain, m_zones, m_hood, m_flyWheel);
@@ -108,7 +111,7 @@ public class RobotContainer {
             m_shootingMechanism)
         .configureBindings();
 
-    Operator.init(m_zones, m_commandFactory, m_hood).configureBindings();
+    Operator.init(m_zones, m_commandFactory, m_hood, m_intake).configureBindings();
 
     // Shooting Mechanism Default Command
     m_shootingMechanism.setDefaultCommand(m_shootingMechanism.startTrackingCommand());

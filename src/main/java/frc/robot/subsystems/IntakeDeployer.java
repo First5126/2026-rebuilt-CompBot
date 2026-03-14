@@ -22,7 +22,6 @@ public class IntakeDeployer extends SubsystemBase {
   private TalonFX m_intakeDeployerMotorLeft =
       new TalonFX(CANConstants.intakePivotLeftMotor, CANConstants.mechanismCanivore);
   final MotionMagicExpoVoltage m_request = new MotionMagicExpoVoltage(0);
-  private final VelocityVoltage m_VelocityVoltage = new VelocityVoltage(0).withSlot(0);
 
   public IntakeDeployer() {
     TalonFXConfiguration m_intakeDeployerConfiguration = new TalonFXConfiguration();
