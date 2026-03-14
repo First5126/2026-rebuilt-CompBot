@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.597084078711986,
+        "y": 0.7980322003577818
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.271714360402127,
+        "y": 0.6702857214845426
+      },
+      "isLocked": false,
+      "linkedName": "Trench - Outpost Side"
+    },
+    {
+      "anchor": {
+        "x": 0.3976232394309551,
+        "y": 0.6816549295786183
+      },
+      "prevControl": {
+        "x": 1.3976232394309553,
+        "y": 0.6816549295786182
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Pickup - Outpost"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": "Outpost Side",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": true
+}

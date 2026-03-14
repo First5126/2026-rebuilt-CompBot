@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.6884615384615382,
+        "y": 2.761305903398926
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.7798389982050913,
+        "y": 1.593076923070421
+      },
+      "isLocked": false,
+      "linkedName": "Alliance Zone - Outpost Side"
+    },
+    {
+      "anchor": {
+        "x": 0.3976232394309551,
+        "y": 0.6816549295786183
+      },
+      "prevControl": {
+        "x": 1.926381806030311,
+        "y": 1.0573815477786705
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Pickup - Outpost"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": "Outpost Side",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -141.00900595749454
+  },
+  "useDefaultConstraints": true
+}

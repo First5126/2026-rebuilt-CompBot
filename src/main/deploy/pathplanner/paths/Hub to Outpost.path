@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.6782110912343464,
+        "y": 2.99705985915493
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.824806338022504,
+        "y": 1.3363556338039702
+      },
+      "isLocked": false,
+      "linkedName": "Hub Bump - Outpost Side"
+    },
+    {
+      "anchor": {
+        "x": 0.3976232394309551,
+        "y": 0.6816549295786183
+      },
+      "prevControl": {
+        "x": 2.5852816901295155,
+        "y": 1.2245774647910388
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Pickup - Outpost"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": "Outpost Side",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": true
+}
