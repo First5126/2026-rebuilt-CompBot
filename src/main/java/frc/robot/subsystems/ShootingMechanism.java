@@ -93,7 +93,7 @@ public class ShootingMechanism extends SubsystemBase {
 
       // retreive the value of all the suppliers
       Pose2d robotPose = robotPoseSupplier.get();
-      ChassisSpeeds robotSpeeds = speed.get();
+      ChassisSpeeds robotSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(speed.get(), robotPose.getRotation());
       Pose2d targetPose = targetPoseSupplier.get();
 
       // find air time from distance
@@ -117,8 +117,8 @@ public class ShootingMechanism extends SubsystemBase {
       rotation = rotation.plus(robotPose.getRotation());
 
       // find the predicated x and y of our robot pose
-      double predictedX = robotPose.getX() + predicatedDistance * Math.cos(rotation.getRadians());
-      double predictedY = robotPose.getY() +  predicatedDistance * Math.sin(rotation.getRadians());
+      double predictedX = robotPose.getX() + robotSpeeds.vxMetersPerSecond * delayTime;
+      double predictedY = robotPose.getY() +  robotSpeeds.vyMetersPerSecond  * delayTime;
 
       // get the turret pose
       Pose2d turretPose =

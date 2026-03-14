@@ -15,8 +15,8 @@ public class ShootingMechanismConstants {
   public static final Angle turretMaximumError = Degree.of(5);
   public static final Angle hoodMaximumError = Degree.of(2);
   public static final AngularVelocity flyWheelMaximumError = RotationsPerSecond.of(2);
-  //public static final Time mechanismDelay = Milliseconds.of(52.647);
-  public static final Time mechanismDelay = Milliseconds.of(0);
+  public static final Time mechanismDelay = Milliseconds.of(52.647);
+  //public static final Time mechanismDelay = Milliseconds.of(1000);
 
   // Distance first then Time
   public static final InterpolatingDoubleTreeMap DISTANCE_TO_TIME_INTERPOLATOR =
