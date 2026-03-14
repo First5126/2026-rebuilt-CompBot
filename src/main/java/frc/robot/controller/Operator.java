@@ -37,6 +37,7 @@ public class Operator extends CustomXboxController implements Controller {
   public Operator configureBindings() {
     // TODO: add methods to bind controller
 
+<<<<<<< HEAD
     this.leftBumper().onTrue(commandFactory.raiseIntake());
     this.rightBumper().onTrue(commandFactory.lowerIntake());
 
@@ -48,6 +49,20 @@ public class Operator extends CustomXboxController implements Controller {
         .onFalse(commandFactory.stopShootingMechanism());
     this.a().onTrue(commandFactory.startIndexing()).onFalse(commandFactory.stopIndexing());
 
+=======
+    this.povRight().onTrue(commandFactory.manualTurretRotation(Degree.of(45)));
+    this.povLeft().onTrue(commandFactory.manualTurretRotation(Degree.of(-45)));
+    this.povUp().whileTrue(commandFactory.manualHoodRotation(Degree.of(0.5)));
+    this.povDown().whileTrue(commandFactory.manualHoodRotation(Degree.of(-0.5)));
+
+    this.b().whileTrue(commandFactory.startShootingMechanism());
+    this.b().onFalse(commandFactory.stopShootingMechanism());
+
+    this.a().onTrue(commandFactory.startIndexing());
+    this.a().onFalse(commandFactory.stopIndexing());
+
+    this.x().onTrue(commandFactory.rotateFlywheel()).onFalse(commandFactory.stopShooting());
+>>>>>>> 3f2a817 (Configured flywheel)
     return this;
   }
 }

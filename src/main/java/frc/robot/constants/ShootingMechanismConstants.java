@@ -1,17 +1,22 @@
 package frc.robot.constants;
 
 import static edu.wpi.first.units.Units.Degree;
+import static edu.wpi.first.units.Units.Milliseconds;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Time;
+
 import java.util.Map;
 
 public class ShootingMechanismConstants {
   public static final Angle turretMaximumError = Degree.of(5);
   public static final Angle hoodMaximumError = Degree.of(2);
   public static final AngularVelocity flyWheelMaximumError = RotationsPerSecond.of(2);
+  //public static final Time mechanismDelay = Milliseconds.of(52.647);
+  public static final Time mechanismDelay = Milliseconds.of(0);
 
   // Distance first then Time
   public static final InterpolatingDoubleTreeMap DISTANCE_TO_TIME_INTERPOLATOR =
