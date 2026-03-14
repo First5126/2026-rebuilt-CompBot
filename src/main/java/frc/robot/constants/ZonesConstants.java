@@ -62,6 +62,27 @@ public class ZonesConstants {
     }
   }
 
+  public static enum HubDeadZone implements RectangularRegion {
+    BLUE_HUB_DEADZONE(new Translation2d(5.203, 4.595), new Translation2d(6.258, 3.556)),
+    RED_HUB_DEADZONE(new Translation2d(10.379, 4.595), new Translation2d(11.223, 3.459));
+
+    private final Translation2d topLeftTranslation;
+    private final Translation2d bottomRightTranslation;
+
+    HubDeadZone(Translation2d topLeftTranslation, Translation2d bottomRightTranslation) {
+      this.topLeftTranslation = topLeftTranslation;
+      this.bottomRightTranslation = bottomRightTranslation;
+    }
+
+    public Translation2d getTopLeftTranslation() {
+      return topLeftTranslation;
+    }
+
+    public Translation2d getBottomRightTranslation() {
+      return bottomRightTranslation;
+    }
+  }
+
   public static boolean contains(Translation2d position, RectangularRegion region) {
     if (position == null || region == null) {
       return false;
@@ -114,24 +135,5 @@ public class ZonesConstants {
       }
     }
     return defaultValue;
-public static enum HubDeadZone {
-    BLUE_HUB_DEADZONE(new Translation2d(5.203, 4.595), new Translation2d(6.258, 3.556)),
-    RED_HUB_DEADZONE(new Translation2d(10.379, 4.595), new Translation2d(11.223, 3.459));
-
-    private final Translation2d topLeftTranslation;
-    private final Translation2d bottomRightTranslation;
-
-    HubDeadZone(Translation2d topLeftTranslation, Translation2d bottomRightTranslation) {
-      this.topLeftTranslation = topLeftTranslation;
-      this.bottomRightTranslation = bottomRightTranslation;
-    }
-
-    public Translation2d getTopLeftTranslation() {
-      return topLeftTranslation;
-    }
-
-    public Translation2d getBottomRightTranslation() {
-      return bottomRightTranslation;
-    }
   }
 }

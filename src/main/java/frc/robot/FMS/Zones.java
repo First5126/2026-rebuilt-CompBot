@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.GoalPoseConstants;
-import frc.robot.constants.ZonesConstants;
 import frc.robot.constants.GoalPoseConstants.GoalPose;
 import frc.robot.constants.ZonesConstants;
 import frc.robot.constants.ZonesConstants.Trench;
@@ -72,11 +71,14 @@ public class Zones {
 
   public boolean isInDeadZone() {
     Translation2d robotTranslation = m_pose.get().getTranslation();
-    // TODO: need to check if in red aliance that the deadzone for shoowing is
-    // behind the red alliance wall and vice versa for blue
-    // SmartDashboard.putBoolean("Drive/IsInDeadZone", isInDeadZone);
-    // return isInDeadZone;
-    return false;
+    boolean isInDeadZone = false;
+
+    if (m_team.isPresent()) {
+      if (m_team.get() == Alliance.Blue) isInDeadZone = ZonesConstants.contains(robotTranslation, ZonesConstants.HubDeadZone.BLUE_HUB_DEADZONE);
+      else if (m_team.get() == Alliance.Red) isInDeadZone = ZonesConstants.contains(robotTranslation, ZonesConstants.HubDeadZone.RED_HUB_DEADZONE);
+    }
+    SmartDashboard.putBoolean("Drive/IsInDeadZone", isInDeadZone);
+    return isInDeadZone;
   }
 
   public Pose2d getTurretShootingPose() {
