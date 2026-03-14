@@ -73,7 +73,8 @@ public class CommandFactory {
         .repeatedly();
   }
 
-  public Command goUnderTrenchCommand() {
+  /* tells the hood to duck for going under the trench */
+  public Command duckHood() {
     return m_hood.holdCertainPosition(Degrees.of(0));
   }
 
