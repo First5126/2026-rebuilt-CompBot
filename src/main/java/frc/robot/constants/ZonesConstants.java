@@ -1,6 +1,9 @@
 package frc.robot.constants;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.measure.Angle;
 
 public class ZonesConstants {
   public interface RectangularRegion {
@@ -33,28 +36,7 @@ public class ZonesConstants {
     }
   }
 
-  public enum Bump implements RectangularRegion {
-    BLUE_OUTPOST_SIDE(new Translation2d(4.07, 3.43), new Translation2d(5.19, 1.58)),
-    BLUE_DEPOT_SIDE(new Translation2d(4.07, 6.47), new Translation2d(5.19, 4.62)),
-    RED_OUTPOST_SIDE(new Translation2d(11.35, 3.43), new Translation2d(12.47, 1.58)),
-    RED_DEPOT_SIDE(new Translation2d(11.35, 6.47), new Translation2d(12.47, 4.62));
-
-    private final Translation2d topLeftTranslation;
-    private final Translation2d bottomRightTranslation;
-
-    Bump(Translation2d topLeftTranslation, Translation2d bottomRightTranslation) {
-      this.topLeftTranslation = topLeftTranslation;
-      this.bottomRightTranslation = bottomRightTranslation;
-    }
-
-    public Translation2d getTopLeftTranslation() {
-      return topLeftTranslation;
-    }
-
-    public Translation2d getBottomRightTranslation() {
-      return bottomRightTranslation;
-    }
-  }
+  public static final Angle BUMP_ANGLE = Degrees.of(5.0);
 
   public enum Trench implements RectangularRegion {
     BLUE_OUTPOST_SIDE(new Translation2d(4, 1.25), new Translation2d(5.25, 0)),

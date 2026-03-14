@@ -4,15 +4,17 @@
 
 package frc.robot.FMS;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.GoalPoseConstants;
 import frc.robot.constants.GoalPoseConstants.GoalPose;
 import frc.robot.constants.ZonesConstants;
-import frc.robot.constants.ZonesConstants.Bump;
 import frc.robot.constants.ZonesConstants.Trench;
 import frc.robot.constants.ZonesConstants.Zone;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -22,6 +24,8 @@ import java.util.function.Supplier;
 /** Add your docs here. */
 public class Zones {
   private static Supplier<Pose2d> m_pose;
+  private static Supplier<Angle> m_pitch;
+  private static Supplier<Angle> m_roll;
 
   private Optional<Alliance> m_team;
   private CommandSwerveDrivetrain m_commandSwerveDrivetrain;
@@ -29,6 +33,8 @@ public class Zones {
   public Zones(CommandSwerveDrivetrain commandSwerveDrivetrain) {
     m_team = DriverStation.getAlliance();
     m_pose = () -> commandSwerveDrivetrain.getPose2d();
+    m_pitch = () -> m_commandSwerveDrivetrain.getPigeon2().getPitch().getValue();
+    m_roll = () -> m_commandSwerveDrivetrain.getPigeon2().getRoll().getValue();
     m_commandSwerveDrivetrain = commandSwerveDrivetrain;
   }
 
@@ -41,10 +47,18 @@ public class Zones {
   }
 
   public boolean isNearBump() {
-    Translation2d robotTranslation = m_pose.get().getTranslation();
-    boolean isNearBump = ZonesConstants.containsAny(robotTranslation, Bump.class);
-    SmartDashboard.putBoolean("Zones/IsNearBump", isNearBump);
-    return isNearBump;
+    double pitch = m_pitch.get().in(Degrees);
+    double roll = 180 - Math.abs(m_roll.get().in(Degrees));
+
+    boolean onBump =
+        Math.abs(pitch) > ZonesConstants.BUMP_ANGLE.in(Degrees)
+            || Math.abs(roll) > ZonesConstants.BUMP_ANGLE.in(Degrees);
+
+    SmartDashboard.putNumber("Pitch", pitch);
+    SmartDashboard.putNumber("Roll", roll);
+    SmartDashboard.putBoolean("On Bump", onBump);
+
+    return onBump;
   }
 
   public boolean isNearTrench() {
