@@ -12,9 +12,10 @@ public class IntakeDeployerConstants {
   public static Angle INTAKE_UP = Degrees.of(0);
   public static Angle INTAKE_DOWN = Degrees.of(90);
 
-
-  public static final AngularVelocity INTAKE_SPEED = RevolutionsPerSecond.of(20); // 1 revolution per second
-  public static final AngularVelocity OUTTAKE_SPEED = RevolutionsPerSecond.of(-20); // -60 revolution per second 
+  public static final AngularVelocity INTAKE_SPEED =
+      RevolutionsPerSecond.of(20); // 1 revolution per second
+  public static final AngularVelocity OUTTAKE_SPEED =
+      RevolutionsPerSecond.of(-20); // -60 revolution per second
 
   public static int CRUISE_VELOCITY = 2; // Target cruise velocity of 80 rps
   public static int ACCELERATION = 4; // Target acceleration of 160 rps/s (0.5 seconds)

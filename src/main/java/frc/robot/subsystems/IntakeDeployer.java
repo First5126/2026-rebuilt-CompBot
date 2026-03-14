@@ -24,7 +24,7 @@ public class IntakeDeployer extends SubsystemBase {
   private TalonFX m_intakeRollerMotor =
       new TalonFX(CANConstants.intakeWheelsMotor, CANConstants.mechanismCanivore);
   final MotionMagicExpoVoltage m_request = new MotionMagicExpoVoltage(0);
-  private final VelocityVoltage m_VelocityVoltage =  new VelocityVoltage(0).withSlot(0);
+  private final VelocityVoltage m_VelocityVoltage = new VelocityVoltage(0).withSlot(0);
 
   public IntakeDeployer() {
     TalonFXConfiguration m_intakeDeployerConfiguration = new TalonFXConfiguration();
@@ -45,11 +45,15 @@ public class IntakeDeployer extends SubsystemBase {
 
     m_intakeDeployerMotorLeft.setControl(new Follower(6, MotorAlignmentValue.Aligned));
 
-    m_intakeRollerMotor.getConfigurator().apply(new TalonFXConfiguration() {{
-            MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-            Slot0.kP = 0.3;
-          }
-        });
+    m_intakeRollerMotor
+        .getConfigurator()
+        .apply(
+            new TalonFXConfiguration() {
+              {
+                MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+                Slot0.kP = 0.3;
+              }
+            });
   }
 
   public Command raiseIntakeUpCommand() {
@@ -66,7 +70,7 @@ public class IntakeDeployer extends SubsystemBase {
 
   public Command runOuttakeWheelsCommand() {
     return runOnce(() -> runOuttakeWheels());
-  } 
+  }
 
   public Command stopIntakeWheelsCommand() {
     return runOnce(() -> stopIntakeWheels());
@@ -81,12 +85,13 @@ public class IntakeDeployer extends SubsystemBase {
   }
 
   private void runIntakeWheels() {
-    m_intakeRollerMotor.setControl(m_VelocityVoltage.withVelocity(IntakeDeployerConstants.INTAKE_SPEED));  
+    m_intakeRollerMotor.setControl(
+        m_VelocityVoltage.withVelocity(IntakeDeployerConstants.INTAKE_SPEED));
   }
 
   private void runOuttakeWheels() {
-    m_intakeRollerMotor.setControl(m_VelocityVoltage.withVelocity(IntakeDeployerConstants.OUTTAKE_SPEED));
-    
+    m_intakeRollerMotor.setControl(
+        m_VelocityVoltage.withVelocity(IntakeDeployerConstants.OUTTAKE_SPEED));
   }
 
   private void stopIntakeWheels() {
@@ -95,9 +100,5 @@ public class IntakeDeployer extends SubsystemBase {
 
   private void rotate(Angle setpoint) {
     m_intakeDeployerMotorRight.setControl(m_request.withPosition(setpoint));
-  }
-
-  private void rollIntakeWheels() {
-    
   }
 }

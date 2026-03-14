@@ -1,16 +1,13 @@
 package frc.robot.constants;
 
-import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.Volts;
 
-import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Voltage;
 
 public class IndexerConstants {
   public static double indexerKP = 5;
   public static double spindexerKP = 5;
 
-  public static AngularVelocity indexerSpeed = RotationsPerSecond.of(3);
-  public static AngularVelocity spindexerSpeed = RotationsPerSecond.of(3);
-
-  public static AngularVelocity clearIndexerSpeed = RotationsPerSecond.of(-1);
-  public static AngularVelocity clearSpindexerSpeed = RotationsPerSecond.of(-1);
+  public static final Voltage indexerSpeed = Volts.of(8);
+  public static final Voltage spindexerSpeed = Volts.of(6);
 }
