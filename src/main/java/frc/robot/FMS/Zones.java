@@ -77,12 +77,18 @@ public class Zones {
     }
   }
 
-  public boolean onBump() {
-    Angle pitch = m_pitch.get();
-    Angle roll = m_roll.get();
+  public boolean isNearBump() {
+    double pitch = m_pitch.get().in(Degrees);
+    double roll = 180 - Math.abs(m_roll.get().in(Degrees));
 
-    return Math.abs(pitch.in(Degrees)) > ZonesConstants.BUMP_ANGLE.in(Degrees)
-        || Math.abs(roll.in(Degrees)) > ZonesConstants.BUMP_ANGLE.in(Degrees);
+    boolean onBump = Math.abs(pitch) > ZonesConstants.BUMP_ANGLE.in(Degrees)
+        || Math.abs(roll) > ZonesConstants.BUMP_ANGLE.in(Degrees);
+
+    SmartDashboard.putNumber("Pitch", pitch);
+    SmartDashboard.putNumber("Roll", roll);
+    SmartDashboard.putBoolean("On Bump", onBump);
+
+    return onBump;
   }
 
   public boolean isNearTrench() {
