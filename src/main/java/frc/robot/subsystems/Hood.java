@@ -151,7 +151,7 @@ public class Hood extends SubsystemBase {
   }
 
   public Command setPosition(Supplier<ShootingSolution> shootingSolution) {
-    return runOnce(
+    return run(
         () -> {
           m_hoodMotor.setControl(
               m_positionVoltageRequest.withPosition(shootingSolution.get().predictedHoodAngle));

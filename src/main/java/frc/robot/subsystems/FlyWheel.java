@@ -58,7 +58,7 @@ public class FlyWheel extends SubsystemBase {
   }
 
   public Command setSpeedWithSolution(Supplier<ShootingSolution> solutionSupplier) {
-    return runOnce(
+    return run(
         () -> {
           ShootingSolution solution = solutionSupplier.get();
           setSpeedControl(solution.predictedFlyWheelVelocity);
