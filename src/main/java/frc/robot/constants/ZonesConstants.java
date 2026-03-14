@@ -44,6 +44,7 @@ public class ZonesConstants {
     RED_OUTPOST_SIDE(new Translation2d(11.5, 1.25), new Translation2d(12.5, 0)),
     RED_DEPOT_SIDE(new Translation2d(11.5, 6.5), new Translation2d(12.5, 8));
 
+
     private final Translation2d topLeftTranslation;
     private final Translation2d bottomRightTranslation;
 
@@ -113,5 +114,24 @@ public class ZonesConstants {
       }
     }
     return defaultValue;
+public static enum HubDeadZone {
+    BLUE_HUB_DEADZONE(new Translation2d(5.203, 4.595), new Translation2d(6.258, 3.556)),
+    RED_HUB_DEADZONE(new Translation2d(10.379, 4.595), new Translation2d(11.223, 3.459));
+
+    private final Translation2d topLeftTranslation;
+    private final Translation2d bottomRightTranslation;
+
+    HubDeadZone(Translation2d topLeftTranslation, Translation2d bottomRightTranslation) {
+      this.topLeftTranslation = topLeftTranslation;
+      this.bottomRightTranslation = bottomRightTranslation;
+    }
+
+    public Translation2d getTopLeftTranslation() {
+      return topLeftTranslation;
+    }
+
+    public Translation2d getBottomRightTranslation() {
+      return bottomRightTranslation;
+    }
   }
 }

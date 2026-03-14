@@ -1,8 +1,5 @@
 package frc.robot.constants;
 
-import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
-import java.util.Map;
-
 public class HoodConstants {
   public static double kP = 135.0;
   public static double kI = 0.0;
