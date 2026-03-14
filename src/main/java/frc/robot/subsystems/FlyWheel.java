@@ -87,7 +87,8 @@ public class FlyWheel extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Real FlyWheel RPS", m_shooterMotor.getVelocity().getValue().in(RotationsPerSecond));
+    SmartDashboard.putNumber(
+        "Real FlyWheel RPS", m_shooterMotor.getVelocity().getValue().in(RotationsPerSecond));
   }
 
   /*private void setSpeedControl(Supplier<LinearVelocity> ballSpeed) {

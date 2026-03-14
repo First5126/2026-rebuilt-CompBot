@@ -106,7 +106,7 @@ public class RobotContainer {
     Operator.init(m_zones, m_commandFactory, m_hood).configureBindings();
 
     // Shooting Mechanism Default Command
-    m_shootingMechanism.setDefaultCommand(m_shootingMechanism.startTrackingCommand());
+    // m_shootingMechanism.setDefaultCommand(m_shootingMechanism.startTrackingCommand());
 
     // Turret Default Command
 

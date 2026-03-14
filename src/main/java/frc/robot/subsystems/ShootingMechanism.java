@@ -17,13 +17,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.FMS.ShiftData;
 import frc.robot.FMS.Zones;
 import frc.robot.constants.AprilTagLocalizationConstants;
-import frc.robot.constants.FlyWheelConstants;
 import frc.robot.constants.GoalPoseConstants.GoalPose;
-import frc.robot.constants.HoodConstants;
 import frc.robot.constants.ShootingMechanismConstants;
 import frc.robot.constants.TurretConstants;
-
-import java.lang.reflect.Field;
 import java.util.function.Supplier;
 
 public class ShootingMechanism extends SubsystemBase {
@@ -82,24 +78,23 @@ public class ShootingMechanism extends SubsystemBase {
   private void updateShootingSolution(
       Supplier<Pose2d> robotPoseSupplier,
       Supplier<ChassisSpeeds> speed,
-      Supplier<Pose2d> targetPoseSupplier) {
-    boolean override = false;
+      Supplier<GoalPose> goalPoseSupplier) {
 
     // check to see if our suppliers are valid
-    if (robotPoseSupplier.get() != null
-        && targetPoseSupplier.get() != null
-        && speed.get() != null) {
+    if (robotPoseSupplier.get() != null && goalPoseSupplier.get() != null && speed.get() != null) {
       SmartDashboard.putBoolean("Valid Shooting Solution", true);
 
       // retreive the value of all the suppliers
       Pose2d robotPose = robotPoseSupplier.get();
-      ChassisSpeeds robotSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(speed.get(), robotPose.getRotation());
-      Pose2d targetPose = targetPoseSupplier.get();
+      ChassisSpeeds robotSpeeds =
+          ChassisSpeeds.fromRobotRelativeSpeeds(speed.get(), robotPose.getRotation());
+      GoalPose goalPose = goalPoseSupplier.get();
+      Pose2d targetPose = goalPose.pose;
 
       // find air time from distance
       double distanceToTarget = robotPose.getTranslation().getDistance(targetPose.getTranslation());
       double delayTime =
-          ShootingMechanismConstants.DISTANCE_TO_TIME_INTERPOLATOR.get(distanceToTarget)
+          goalPose.interpolationSet.distanceToTimeOfFlight.get(distanceToTarget)
               + AprilTagLocalizationConstants.LOCALIZATION_PERIOD.in(Seconds)
               + ShootingMechanismConstants.mechanismDelay.in(Seconds);
 
@@ -118,7 +113,7 @@ public class ShootingMechanism extends SubsystemBase {
 
       // find the predicated x and y of our robot pose
       double predictedX = robotPose.getX() + robotSpeeds.vxMetersPerSecond * delayTime;
-      double predictedY = robotPose.getY() +  robotSpeeds.vyMetersPerSecond  * delayTime;
+      double predictedY = robotPose.getY() + robotSpeeds.vyMetersPerSecond * delayTime;
 
       // get the turret pose
       Pose2d turretPose =
@@ -140,17 +135,18 @@ public class ShootingMechanism extends SubsystemBase {
               .minus(
                   robotPose
                       .getRotation()
-                      .plus(new Rotation2d(robotSpeeds.omegaRadiansPerSecond * 0))) // TODO: fix this 
+                      .plus(
+                          new Rotation2d(robotSpeeds.omegaRadiansPerSecond * 0))) // TODO: fix this
               .getMeasure();
 
       // find the angle of the hood from the predicted pose
       m_currentShootingSolution.predictedHoodAngle =
-          Degrees.of(HoodConstants.DISTANCE_TO_ANGLE_INTERPOLATOR.get(predicatedHubDistance));
+          Degrees.of(goalPose.interpolationSet.distanceToHoodAngle.get(predicatedHubDistance));
 
       // Find the flywheel speed
       m_currentShootingSolution.predictedFlyWheelVelocity =
           RotationsPerSecond.of(
-              FlyWheelConstants.DISTANCE_TO_SPEED_INTERPOLATOR.get(predicatedHubDistance));
+              goalPose.interpolationSet.distanceToFlyWheelSpeed.get(predicatedHubDistance));
 
       SmartDashboard.putNumber(
           "Hood Angle Interpolated (Deg)",
@@ -162,9 +158,10 @@ public class ShootingMechanism extends SubsystemBase {
           "FlyWheel Interpolated (RPS)",
           m_currentShootingSolution.predictedFlyWheelVelocity.in(RotationsPerSecond));
 
-      
       m_field.setRobotPose(robotPose);
-      m_field.getObject("Predicted Pose").setPose(new Pose2d(predictedX, predictedY,new Rotation2d()));
+      m_field
+          .getObject("Predicted Pose")
+          .setPose(new Pose2d(predictedX, predictedY, new Rotation2d()));
       SmartDashboard.putData("Field", m_field);
     } else {
       SmartDashboard.putBoolean("Valid Shooting Solution", false);
@@ -173,8 +170,7 @@ public class ShootingMechanism extends SubsystemBase {
 
   @Override
   public void periodic() {
-    updateShootingSolution(
-        m_drivetrain::getPose2d, m_drivetrain::getSpeeds, m_zone::getTurretShootingPose);
+    updateShootingSolution(m_drivetrain::getPose2d, m_drivetrain::getSpeeds, m_zone::getGoalPose);
 
     SmartDashboard.putBoolean("Can Shoot", canShoot.getAsBoolean());
   }

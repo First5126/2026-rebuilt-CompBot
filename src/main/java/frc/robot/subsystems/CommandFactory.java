@@ -111,5 +111,4 @@ public class CommandFactory {
   public Command stopIndexing() {
     return m_indexer.stopIndexing();
   }
-  
 }
