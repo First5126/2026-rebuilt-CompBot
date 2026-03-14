@@ -49,4 +49,27 @@ public class ZonesConstants {
       return bottomRightTranslation;
     }
   }
+
+  public static enum Trench {
+    BLUE_OUTPOST_SIDE(new Translation2d(4, 1.25), new Translation2d(5.25, 0)),
+    BLUE_DEPOT_SIDE(new Translation2d(4, 6.75), new Translation2d(5.25, 8)),
+    RED_OUTPOST_SIDE(new Translation2d(11.5, 1.25), new Translation2d(12.5, 0)),
+    RED_DEPOT_SIDE(new Translation2d(11.5, 6.5), new Translation2d(12.5, 8));
+
+    private final Translation2d topLeftTranslation;
+    private final Translation2d bottomRightTranslation;
+
+    Trench(Translation2d topLeftTranslation, Translation2d bottomRightTranslation) {
+      this.topLeftTranslation = topLeftTranslation;
+      this.bottomRightTranslation = bottomRightTranslation;
+    }
+
+    public Translation2d getTopLeftTranslation() {
+      return topLeftTranslation;
+    }
+
+    public Translation2d getBottomRightTranslation() {
+      return bottomRightTranslation;
+    }
+  }
 }

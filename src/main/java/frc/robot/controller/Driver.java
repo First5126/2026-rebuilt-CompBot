@@ -94,15 +94,6 @@ public class Driver extends CustomXboxController implements Controller {
 
     // Reset the field-centric heading on left bumper press.
     this.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
-    this.a().onTrue(indexer.startIndexing()).onFalse(indexer.stopIndexing());
-    this.b().whileTrue(commandFactory.startShootingMechanism()).onFalse(flyWheel.stopSpinning());
-
-    this.y()
-        .whileTrue(
-            flyWheel
-                .setSpeed(flyWheel::getDashboardSpeedRPS)
-                .alongWith(hood.setPositionToDashboard()))
-        .onFalse(flyWheel.stopSpinning());
 
     return this;
   }

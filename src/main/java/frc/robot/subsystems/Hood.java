@@ -139,6 +139,17 @@ public class Hood extends SubsystemBase {
         });
   }
 
+  public Command holdCertainPosition(Angle angle) {
+    return run(
+        () -> {
+          m_hoodMotor.setControl(m_positionVoltageRequest.withPosition(angle));
+        })
+    // Will take any incomming requests and if it does see one then it will cancel itself and run
+    // that insted.
+    // .withInterruptBehavior(InterruptionBehavior.kCancelSelf)
+    ;
+  }
+
   public Command setPosition(Supplier<ShootingSolution> shootingSolution) {
     return runOnce(
         () -> {

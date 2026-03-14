@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degree;
+import static edu.wpi.first.units.Units.Degrees;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -30,6 +31,7 @@ public class CommandFactory {
       Indexer indexer) {
     this.m_drivetrain = drivetrain;
     this.m_turret = turret;
+    this.m_zone = zone;
     this.m_zone = zone;
     this.m_shootingMechanism = m_shootingMechanism;
     this.m_flyWheel = flyWheel;
@@ -69,6 +71,11 @@ public class CommandFactory {
             },
             Set.of(m_drivetrain))
         .repeatedly();
+  }
+
+  /* tells the hood to duck for going under the trench */
+  public Command duckHood() {
+    return m_hood.holdCertainPosition(Degrees.of(0));
   }
 
   public Command manualTurretRotation(Angle amountOfMovement) {
