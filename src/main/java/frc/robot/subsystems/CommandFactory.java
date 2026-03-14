@@ -20,6 +20,7 @@ public class CommandFactory {
   private FlyWheel m_flyWheel;
   private Hood m_hood;
   private Indexer m_indexer;
+  private IntakeDeployer m_intakeDeployer;
 
   public CommandFactory(
       CommandSwerveDrivetrain drivetrain,
@@ -28,7 +29,8 @@ public class CommandFactory {
       ShootingMechanism m_shootingMechanism,
       FlyWheel flyWheel,
       Hood hood,
-      Indexer indexer) {
+      Indexer indexer,
+      IntakeDeployer intakeDeployer) {
     this.m_drivetrain = drivetrain;
     this.m_turret = turret;
     this.m_zone = zone;
@@ -37,6 +39,7 @@ public class CommandFactory {
     this.m_flyWheel = flyWheel;
     this.m_hood = hood;
     this.m_indexer = indexer;
+    this.m_intakeDeployer = intakeDeployer;
   }
 
   public Command driveCircle() {
@@ -110,5 +113,13 @@ public class CommandFactory {
 
   public Command stopIndexing() {
     return m_indexer.stopIndexing();
+  }
+
+  public Command raiseIntake() {
+    return m_intakeDeployer.raiseIntakeUpCommand();
+  }
+
+  public Command lowerIntake() {
+    return m_intakeDeployer.lowerIntakeDownCommand();
   }
 }
