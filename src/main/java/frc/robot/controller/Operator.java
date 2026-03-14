@@ -1,5 +1,7 @@
 package frc.robot.controller;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -11,6 +13,7 @@ import frc.robot.constants.ControllerConstants.OperatorState;
 import frc.robot.subsystems.CommandFactory;
 import frc.robot.subsystems.FlyWheel;
 import frc.robot.subsystems.Hood;
+import frc.robot.subsystems.ShootingMechanism;
 import frc.robot.subsystems.Turret;
 import java.util.Map;
 import lombok.Getter;
@@ -20,12 +23,16 @@ public class Operator extends CustomXboxController implements Controller {
   // Singleton instance
   private static Operator INSTANCE;
 
+  @Getter @Setter public OperatorState operatorState;
+
   @Getter @Setter private CommandFactory commandFactory;
   @Getter @Setter private Turret turret;
   @Getter @Setter private Zones zone;
-  @Getter @Setter private OperatorState operatorState;
   @Getter @Setter private FlyWheel flyWheel;
   @Getter @Setter private Hood hood;
+  @Getter @Setter private ShootingMechanism shootingMechanism;
+  @Getter @Setter private Command turretDefaultCommand;
+  @Getter @Setter private Command hoodDefaultCommand;
 
   private Operator() {
     super(ControllerConstants.OPERATOR_CONTROLLER_PORT);
@@ -33,7 +40,13 @@ public class Operator extends CustomXboxController implements Controller {
 
   // Private constructor to prevent instantiation from outside
   public static Operator init(
-      CommandFactory commandFactory, Turret turret, Zones zone, FlyWheel flyWheel, Hood hood) {
+      CommandFactory commandFactory,
+      Turret turret,
+      Zones zone,
+      FlyWheel flyWheel,
+      Hood hood,
+      ShootingMechanism shootingMechanism,
+      OperatorState operatorState) {
     Operator operator = getInstance();
     operator.setCommandFactory(commandFactory);
     operator.setTurret(turret);
@@ -41,6 +54,7 @@ public class Operator extends CustomXboxController implements Controller {
     operator.setFlyWheel(flyWheel);
     operator.setHood(hood);
     operator.setOperatorState(OperatorState.NORMAL);
+    operator.setShootingMechanism(shootingMechanism);
 
     return operator;
   }
@@ -62,28 +76,33 @@ public class Operator extends CustomXboxController implements Controller {
   @Override
   public Operator configureBindings() {
 
-    /*this.a()
+    this.a()
         .onTrue(
             new SelectCommand<OperatorState>(
                 Map.of(
                     OperatorState.NORMAL, Commands.none(),
-                    OperatorState.OVERRIDE, Commands.none()),
+                    OperatorState.OVERRIDE, commandFactory.startIndexing()),
+                () -> operatorState))
+        .onFalse(
+            new SelectCommand<OperatorState>(
+                Map.of(
+                    OperatorState.NORMAL, Commands.none(),
+                    OperatorState.OVERRIDE, commandFactory.stopIndexing()),
                 () -> operatorState));
-    */
-
-    //this.a().onTrue(changeOperatorStateCommand());
 
     this.b()
         .onTrue(
             new SelectCommand<OperatorState>(
                 Map.of(
-                    OperatorState.NORMAL, flyWheel.shootOutWithInterpoltationCommand(),
-                    OperatorState.OVERRIDE, flyWheel.shootOutWithInterpoltationCommand()),
+                    OperatorState.NORMAL,
+                        commandFactory.shootCommand(),
+                    OperatorState.OVERRIDE,
+                        flyWheel.setSpeedWithSolution(shootingMechanism::getShootingSolution)),
                 () -> operatorState))
         .onFalse(
             new SelectCommand<OperatorState>(
                 Map.of(
-                    OperatorState.NORMAL, flyWheel.stopSpinning(),
+                    OperatorState.NORMAL, commandFactory.stopShootCommand(),
                     OperatorState.OVERRIDE, flyWheel.stopSpinning()),
                 () -> operatorState));
 
@@ -92,13 +111,13 @@ public class Operator extends CustomXboxController implements Controller {
             new SelectCommand<OperatorState>(
                 Map.of(
                     OperatorState.NORMAL, Commands.none(),
-                    OperatorState.OVERRIDE, flyWheel.shootInCommand()),
+                    OperatorState.OVERRIDE, commandFactory.reverseShootingCommand()),
                 () -> operatorState))
         .onFalse(
             new SelectCommand<OperatorState>(
                 Map.of(
                     OperatorState.NORMAL, Commands.none(),
-                    OperatorState.OVERRIDE, flyWheel.stopSpinning()),
+                    OperatorState.OVERRIDE, commandFactory.stopShootingCommand()),
                 () -> operatorState));
 
     this.y()
@@ -130,7 +149,7 @@ public class Operator extends CustomXboxController implements Controller {
             new SelectCommand<OperatorState>(
                 Map.of(
                     OperatorState.NORMAL, Commands.none(),
-                    OperatorState.OVERRIDE, Commands.none()),
+                    OperatorState.OVERRIDE, turret.manualRotation(Degrees.of(0.1))),
                 () -> operatorState));
 
     this.povRight()
@@ -138,10 +157,8 @@ public class Operator extends CustomXboxController implements Controller {
             new SelectCommand<OperatorState>(
                 Map.of(
                     OperatorState.NORMAL, Commands.none(),
-                    OperatorState.OVERRIDE, Commands.none()),
+                    OperatorState.OVERRIDE, turret.manualRotation(Degrees.of(-0.1))),
                 () -> operatorState));
-
-    
 
     this.start().onTrue(Commands.runOnce(() -> ShiftData.resetMatchTimeCalibration()));
 
@@ -153,13 +170,22 @@ public class Operator extends CustomXboxController implements Controller {
   private Command changeOperatorStateCommand() {
     return Commands.runOnce(
         () -> {
-          System.out.println("Opertor state button presseds");
           if (operatorState == OperatorState.NORMAL) {
             this.setOperatorState(OperatorState.OVERRIDE);
             SmartDashboard.putBoolean("Operator OVERRIDE Active", true);
+
+            this.setHoodDefaultCommand(hood.getDefaultCommand());
+            this.setTurretDefaultCommand(turret.getDefaultCommand());
+
+            hood.setDefaultCommand(Commands.run(() -> {}, hood));
+            turret.setDefaultCommand(Commands.run(() -> {}, turret));
+
           } else {
             this.setOperatorState(OperatorState.NORMAL);
             SmartDashboard.putBoolean("Operator OVERRIDE Active", false);
+
+            hood.setDefaultCommand(hoodDefaultCommand);
+            turret.setDefaultCommand(turretDefaultCommand);
           }
         });
   }

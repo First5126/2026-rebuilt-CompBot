@@ -15,8 +15,8 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.FMS.Zones;
 import frc.robot.constants.AprilTagLocalizationConstants;
 import frc.robot.constants.AprilTagLocalizationConstants.PhotonDetails;
+import frc.robot.constants.ControllerConstants.OperatorState;
 import frc.robot.controller.Driver;
-import frc.robot.controller.Operator;
 import frc.robot.controller.Operator;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandFactory;
@@ -66,10 +66,19 @@ public class RobotContainer {
 
   // End of Declaring
 
+  private OperatorState operatorState;
+
   PhotonDetails[] photonDetails = {};
   public CommandFactory m_commandFactory =
       new CommandFactory(
-          m_drivetrain, m_turret, m_zones, m_shootingMechanism, m_flyWheel, m_hood, m_indexer);
+          m_drivetrain,
+          m_turret,
+          m_zones,
+          m_shootingMechanism,
+          m_flyWheel,
+          m_hood,
+          m_indexer,
+          operatorState);
 
   private AprilTagLocalization m_aprilTagLocalization =
       new AprilTagLocalization(
@@ -103,11 +112,18 @@ public class RobotContainer {
             m_shootingMechanism)
         .configureBindings();
 
-
-    Operator.init(m_commandFactory, m_turret, m_zones, m_flyWheel, m_hood).configureBindings();
+    Operator.init(
+            m_commandFactory,
+            m_turret,
+            m_zones,
+            m_flyWheel,
+            m_hood,
+            m_shootingMechanism,
+            operatorState)
+        .configureBindings();
 
     // Shooting Mechanism Default Command
-    m_shootingMechanism.setDefaultCommand(m_shootingMechanism.startTrackingCommand());
+    m_shootingMechanism.setDefaultCommand(m_commandFactory.startTurretTracking());
 
     // Turret Default Command
 

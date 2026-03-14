@@ -1,12 +1,15 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degree;
+import static edu.wpi.first.units.Units.Milliseconds;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import frc.robot.FMS.ShiftData;
 import frc.robot.FMS.Zones;
+import frc.robot.constants.ControllerConstants.OperatorState;
 import frc.robot.constants.WaypointConstants;
 import java.util.Set;
 
@@ -20,6 +23,7 @@ public class CommandFactory {
   private FlyWheel m_flyWheel;
   private Hood m_hood;
   private Indexer m_indexer;
+  private OperatorState operatorState;
 
   public CommandFactory(
       CommandSwerveDrivetrain drivetrain,
@@ -28,7 +32,8 @@ public class CommandFactory {
       ShootingMechanism m_shootingMechanism,
       FlyWheel flyWheel,
       Hood hood,
-      Indexer indexer) {
+      Indexer indexer,
+      OperatorState operatorState) {
     this.m_drivetrain = drivetrain;
     this.m_turret = turret;
     this.m_zone = zone;
@@ -36,6 +41,7 @@ public class CommandFactory {
     this.m_flyWheel = flyWheel;
     this.m_hood = hood;
     this.m_indexer = indexer;
+    this.operatorState = operatorState;
   }
 
   public Command driveCircle() {
@@ -80,17 +86,12 @@ public class CommandFactory {
   }
 
   public Command reverseShootingCommand() {
-    return Commands.runOnce(() -> {
-      m_flyWheel.shootInCommand();
-    });
+    return m_flyWheel.shootInCommand().alongWith(m_indexer.reverseIndexing());
   }
 
   public Command stopShootingCommand() {
-    return Commands.runOnce(() -> {
-      m_flyWheel.stopSpinning();
-    });
+    return m_flyWheel.stopSpinning().alongWith(m_indexer.stopIndexing());
   }
-
 
   public Command manualTurretRotation(Angle amountOfMovement) {
     return m_turret.manualRotation(amountOfMovement);
@@ -125,4 +126,18 @@ public class CommandFactory {
   public Command stopIndexing() {
     return m_indexer.stopIndexing();
   }
+
+  private boolean checkIfNotOverride() {
+    return operatorState == OperatorState.NORMAL;
+  }
+
+  public ConditionalCommand startTurretTracking() {
+    return new ConditionalCommand(
+        m_shootingMechanism.startTrackingCommand(), Commands.none(), this::checkIfNotOverride);
+  }
+
+  public Command shootCommand() {
+    return startIndexing().withTimeout(Milliseconds.of(350)).alongWith(startShootingMechanism());
+  }
+
 }

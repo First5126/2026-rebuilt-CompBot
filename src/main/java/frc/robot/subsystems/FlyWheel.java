@@ -117,17 +117,10 @@ public class FlyWheel extends SubsystemBase {
             * FlyWheelConstants.gearRatio);
   }
 
-  public Command shootOutWithInterpoltationCommand() {
-    return runOnce(
-        () -> {
-          setSpeed(RotationsPerSecond.of(50));
-        });
-  }
-
   public Command shootInCommand() {
     return runOnce(
         () -> {
-          setSpeed(RotationsPerSecond.of(-20));
+          m_shooterMotor.setControl(m_dutyCycleOut.withOutput(-0.30));
         });
   }
 }
