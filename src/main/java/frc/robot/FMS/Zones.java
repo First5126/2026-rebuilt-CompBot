@@ -81,8 +81,9 @@ public class Zones {
     double pitch = m_pitch.get().in(Degrees);
     double roll = 180 - Math.abs(m_roll.get().in(Degrees));
 
-    boolean onBump = Math.abs(pitch) > ZonesConstants.BUMP_ANGLE.in(Degrees)
-        || Math.abs(roll) > ZonesConstants.BUMP_ANGLE.in(Degrees);
+    boolean onBump =
+        Math.abs(pitch) > ZonesConstants.BUMP_ANGLE.in(Degrees)
+            || Math.abs(roll) > ZonesConstants.BUMP_ANGLE.in(Degrees);
 
     SmartDashboard.putNumber("Pitch", pitch);
     SmartDashboard.putNumber("Roll", roll);
