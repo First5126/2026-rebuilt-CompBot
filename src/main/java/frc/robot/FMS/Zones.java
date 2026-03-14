@@ -83,7 +83,7 @@ public class Zones {
     return false;
   }
 
-  public boolean nearTrench() {
+  public boolean isNearTrench() {
     Pose2d robotPose = m_commandSwerveDrivetrain.getPredictedPose2d(0.25);
     double x = robotPose.getX();
     double y = robotPose.getY();
