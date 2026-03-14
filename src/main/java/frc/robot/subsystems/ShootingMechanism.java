@@ -173,7 +173,7 @@ public class ShootingMechanism extends SubsystemBase {
     updateShootingSolution(m_drivetrain::getPose2d, m_drivetrain::getSpeeds, m_zone::getGoalPose);
 
     SmartDashboard.putBoolean("Can Shoot", canShoot.getAsBoolean());
-    SmartDashboard.putBoolean("Hub Deadzone", m_zone.inHubDeadZone());
+  
   }
 
   private boolean canShootFuel() {
@@ -196,7 +196,7 @@ public class ShootingMechanism extends SubsystemBase {
                 .isNear(
                     m_currentShootingSolution.predictedFlyWheelVelocity,
                     ShootingMechanismConstants.flyWheelMaximumError)
-            && (!goalPose.requiresShift && !m_zone.inHubDeadZone() || goalPose.requiresShift) && 
+            && (!goalPose.requiresShift && !m_zone.isInDeadZone() || goalPose.requiresShift) && 
             (!goalPose.requiresShift || ShiftData.canScore());
 
     SmartDashboard.putNumber(
