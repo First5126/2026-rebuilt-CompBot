@@ -116,7 +116,7 @@ public class RobotContainer {
     Operator.init(m_commandFactory).configureBindings();
 
     // Shooting Mechanism Default Command
-    // m_shootingMechanism.setDefaultCommand(m_shootingMechanism.startTrackingCommand());
+     m_shootingMechanism.setDefaultCommand(m_shootingMechanism.startTrackingCommand());
 
     // Idle while the robot is disabled. This ensures the configured
     // neutral mode is applied to the drive motors while disabled.

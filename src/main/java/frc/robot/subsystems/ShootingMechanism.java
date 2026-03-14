@@ -195,7 +195,8 @@ public class ShootingMechanism extends SubsystemBase {
                 .isNear(
                     m_currentShootingSolution.predictedFlyWheelVelocity,
                     ShootingMechanismConstants.flyWheelMaximumError)
-            && (!goalPose.requiresShift || ShiftData.canScore());
+            && (!goalPose.requiresShift && !m_zone.inHubDeadZone() || goalPose.requiresShift) && 
+            (!goalPose.requiresShift || ShiftData.canScore());
 
     SmartDashboard.putNumber(
         "Turret Deviation (Deg)",
