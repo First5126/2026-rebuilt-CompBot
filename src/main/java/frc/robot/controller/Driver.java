@@ -1,6 +1,9 @@
 package frc.robot.controller;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.FMS.Zones;
 import frc.robot.constants.ControllerConstants;
 import frc.robot.subsystems.CommandFactory;
@@ -75,6 +78,9 @@ public class Driver extends CustomXboxController implements Controller {
   @Override
   public Driver configureBindings() {
 
+    this.a().onTrue(Commands.run(() -> {SignalLogger.start();}));
+    this.b().onTrue(Commands.run(() -> {SignalLogger.stop();}));
+
     drivetrain.setDefaultCommand(
         drivetrain.gasPedalCommand(
             this::getRightTriggerAxis,
@@ -83,6 +89,9 @@ public class Driver extends CustomXboxController implements Controller {
             this::getLeftY,
             this::getLeftX,
             zone));
+
+
+    this.povUp().onTrue().onFalse();
 
     // this.a().onTrue(aprilTagLocalization.setTrust(true));
     // this.a().onFalse(aprilTagLocalization.setTrust(false));
