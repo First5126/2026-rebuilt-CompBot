@@ -30,5 +30,4 @@ public class FlyWheelConstants {
           Map.entry(5.6, 59.0),
           Map.entry(5.25, 58.3),
           Map.entry(4.925, 57.25));
-
 }

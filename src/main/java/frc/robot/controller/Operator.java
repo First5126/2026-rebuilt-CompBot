@@ -1,7 +1,5 @@
 package frc.robot.controller;
 
-import static edu.wpi.first.units.Units.Degrees;
-
 import frc.robot.FMS.Zones;
 import frc.robot.constants.ControllerConstants;
 import frc.robot.subsystems.CommandFactory;
@@ -50,7 +48,6 @@ public class Operator extends CustomXboxController implements Controller {
   @Override
   public Operator configureBindings() {
     // TODO: add methods to bind controller
-
 
     return this;
   }
