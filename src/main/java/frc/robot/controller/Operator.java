@@ -67,9 +67,14 @@ public class Operator extends CustomXboxController implements Controller {
     return INSTANCE;
   }
 
-  public static Operator init(CommandFactory commandFactory) {
+  public static Operator init(Zones zone, CommandFactory commandFactory, Hood hood) {
+
     Operator operator = getInstance();
+
+    operator.setZone(zone);
     operator.setCommandFactory(commandFactory);
+    operator.setHood(hood);
+
     return operator;
   }
 

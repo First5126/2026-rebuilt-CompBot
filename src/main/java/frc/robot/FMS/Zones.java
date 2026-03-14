@@ -12,7 +12,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.GoalPoseConstants;
 import frc.robot.constants.GoalPoseConstants.GoalPose;
 import frc.robot.constants.ZonesConstants.Bump;
+import frc.robot.constants.ZonesConstants.Trench;
 import frc.robot.constants.ZonesConstants.Zone;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -21,10 +23,12 @@ public class Zones {
   private static Supplier<Pose2d> m_pose;
 
   private Optional<Alliance> m_team;
+  private CommandSwerveDrivetrain m_commandSwerveDrivetrain;
 
-  public Zones(Supplier<Pose2d> robotPoseSupplier) {
+  public Zones(CommandSwerveDrivetrain commandSwerveDrivetrain) {
     m_team = DriverStation.getAlliance();
-    m_pose = robotPoseSupplier;
+    m_pose = () -> commandSwerveDrivetrain.getPose2d();
+    m_commandSwerveDrivetrain = commandSwerveDrivetrain;
   }
 
   public Zone getZone() {
@@ -72,6 +76,20 @@ public class Zones {
 
     for (Bump bump : Bump.values()) {
       if (isWithin(x, y, bump.getTopLeftTranslation(), bump.getBottomRightTranslation())) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  public boolean isNearTrench() {
+    Pose2d robotPose = m_commandSwerveDrivetrain.getPredictedPose2d(0.25);
+    double x = robotPose.getX();
+    double y = robotPose.getY();
+
+    for (Trench tench : Trench.values()) {
+      if (isWithin(x, y, tench.getTopLeftTranslation(), tench.getBottomRightTranslation())) {
         return true;
       }
     }

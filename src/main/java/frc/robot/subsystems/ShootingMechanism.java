@@ -79,6 +79,7 @@ public class ShootingMechanism extends SubsystemBase {
       Supplier<Pose2d> robotPoseSupplier,
       Supplier<ChassisSpeeds> speed,
       Supplier<Pose2d> targetPoseSupplier) {
+    boolean override = false;
 
     // check to see if our suppliers are valid
     if (robotPoseSupplier.get() != null
@@ -97,24 +98,9 @@ public class ShootingMechanism extends SubsystemBase {
           ShootingMechanismConstants.DISTANCE_TO_TIME_INTERPOLATOR.get(distanceToTarget)
               + AprilTagLocalizationConstants.LOCALIZATION_PERIOD.in(Seconds);
 
-      // find how far we travel by the time the ball will reach the target
-      double predicatedDistance =
-          delayTime * Math.hypot(robotSpeeds.vxMetersPerSecond, robotSpeeds.vyMetersPerSecond);
-
-      // find the angle of the the speeds that are currently in robotcentric
-      Rotation2d rotation =
-          new Rotation2d(Math.atan2(robotSpeeds.vyMetersPerSecond, robotSpeeds.vxMetersPerSecond));
-
-      // add the angle of the speeds to get the field centric velocity angle
-      rotation = rotation.plus(robotPose.getRotation());
-
-      // find the predicated x and y of our robot pose
-      double predictedX = robotPose.getX() + predicatedDistance * Math.cos(rotation.getRadians());
-      double predictedY = robotPose.getY() + predicatedDistance * Math.sin(rotation.getRadians());
-
       // get the turret pose
       Pose2d turretPose =
-          new Pose2d(predictedX, predictedY, new Rotation2d()).plus(TurretConstants.TURRET_OFFSET);
+          m_drivetrain.getPredictedPose2d(delayTime).plus(TurretConstants.TURRET_OFFSET);
 
       // find the distance to target from predicted pose
       double targetDistanceX = targetPose.getX() - turretPose.getX();
