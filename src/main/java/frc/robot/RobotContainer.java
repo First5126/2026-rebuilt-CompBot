@@ -57,9 +57,7 @@ public class RobotContainer {
   private FlyWheel m_flyWheel = new FlyWheel();
   private Indexer m_indexer = new Indexer();
   private Hood m_hood = new Hood();
-  private IntakeDeployer m_IntakeDeployer = new IntakeDeployer();
-
-  private IntakeDeployer m_intake = new IntakeDeployer();
+  private IntakeDeployer m_intakeDeployer = new IntakeDeployer();
 
   private ShootingMechanism m_shootingMechanism =
       new ShootingMechanism(m_turret, m_drivetrain, m_zones, m_hood, m_flyWheel);
@@ -69,7 +67,14 @@ public class RobotContainer {
   PhotonDetails[] photonDetails = {};
   public CommandFactory m_commandFactory =
       new CommandFactory(
-          m_drivetrain, m_turret, m_zones, m_shootingMechanism, m_flyWheel, m_hood, m_indexer, m_IntakeDeployer);
+          m_drivetrain,
+          m_turret,
+          m_zones,
+          m_shootingMechanism,
+          m_flyWheel,
+          m_hood,
+          m_indexer,
+          m_intakeDeployer);
 
   private AprilTagLocalization m_aprilTagLocalization =
       new AprilTagLocalization(
@@ -95,7 +100,7 @@ public class RobotContainer {
             m_drivetrain,
             m_aprilTagLocalization,
             m_commandFactory,
-            m_intake,
+            m_intakeDeployer,
             m_turret,
             m_zones,
             m_indexer,

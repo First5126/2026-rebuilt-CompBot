@@ -7,7 +7,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 
 public class IntakeDeployerConstants {
-  public static double intakeKP = 0.2;
+  public static double intakeKP = 40;
 
   public static Angle INTAKE_UP = Degrees.of(0);
   public static Angle INTAKE_DOWN = Degrees.of(90);
@@ -18,5 +18,5 @@ public class IntakeDeployerConstants {
       RevolutionsPerSecond.of(-20); // -60 revolution per second
 
   public static int CRUISE_VELOCITY = 2; // Target cruise velocity of 80 rps
-  public static int ACCELERATION = 4; // Target acceleration of 160 rps/s (0.5 seconds)
+  public static int ACCELERATION = 8; // Target acceleration of 160 rps/s (0.5 seconds)
 }
