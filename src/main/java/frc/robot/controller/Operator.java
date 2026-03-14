@@ -94,8 +94,7 @@ public class Operator extends CustomXboxController implements Controller {
         .onTrue(
             new SelectCommand<OperatorState>(
                 Map.of(
-                    OperatorState.NORMAL,
-                        commandFactory.shootCommand(),
+                    OperatorState.NORMAL, commandFactory.shootCommand(),
                     OperatorState.OVERRIDE,
                         flyWheel.setSpeedWithSolution(shootingMechanism::getShootingSolution)),
                 () -> operatorState))

@@ -140,4 +140,7 @@ public class CommandFactory {
     return startIndexing().withTimeout(Milliseconds.of(350)).alongWith(startShootingMechanism());
   }
 
+  public Command stopShootCommand() {
+    return stopIndexing().alongWith(stopShootingMechanism());
+  }
 }
