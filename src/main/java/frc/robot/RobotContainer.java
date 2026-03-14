@@ -89,6 +89,8 @@ public class RobotContainer {
   public RobotContainer() {
     NamedCommands.registerCommand("Intake", m_commandFactory.intake());
     NamedCommands.registerCommand("StopIntake", m_commandFactory.stopIntake());
+    NamedCommands.registerCommand("Turret Default", m_shootingMechanism.startTrackingCommand());
+    NamedCommands.registerCommand("IntakeandShoot", m_commandFactory.intakeAndShoot());
     autoChooser = AutoBuilder.buildAutoChooser();
     configureBindings();
   }
