@@ -1,28 +1,66 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.RevolutionsPerSecond;
+
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.hardware.TalonFX;
+
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.IntakeConstants;
+import frc.robot.constants.CANConstants;
 
 public class Intake extends SubsystemBase {
-  /*
-  private SparkMax m_intakeMotor;
+    private TalonFX m_intakeWheelsMotor = new TalonFX(CANConstants.intakeWheelsMotor, CANConstants.mechanismCanivore);
+    private final VelocityVoltage m_VelocityVoltage = new VelocityVoltage(0).withSlot(0);
 
-  public Intake() {
-      m_intakeMotor = new SparkMax(3, MotorType.kBrushless);
+public Intake() {
+    TalonFXConfiguration m_intakeWheelsConfiguration = new TalonFXConfiguration();
+
+    Slot0Configs m_intakeWheelsSlot0Configs = new Slot0Configs();
+
+    m_intakeWheelsSlot0Configs.kP = IntakeConstants.kP;
+    m_intakeWheelsSlot0Configs.kI = IntakeConstants.kI;
+    m_intakeWheelsSlot0Configs.kD = IntakeConstants.kD;
+    m_intakeWheelsSlot0Configs.kS = IntakeConstants.kS;
+    m_intakeWheelsSlot0Configs.kV = IntakeConstants.kV;
+    m_intakeWheelsSlot0Configs.kA = IntakeConstants.kA;
+
+    m_intakeWheelsConfiguration.Slot0 = m_intakeWheelsSlot0Configs;
+
+    m_intakeWheelsMotor.getConfigurator().apply(m_intakeWheelsConfiguration);
+
+    }
+
+    public Command runIntakeCommand() {
+        return runOnce(() -> runIntake());
+    }
+
+    public Command runOuttakeCommand() {
+        return runOnce(() -> runOuttake());
+    }
+
+    public Command stopIntakeCommand() {
+        return runOnce(() -> stopIntake());
+    }
+
+
+    public void runIntake() {
+        rollIntake(IntakeConstants.INTAKE_SPEED);
+    }
+
+    public void stopIntake() {
+       m_VelocityVoltage.withVelocity(RevolutionsPerSecond.of(0));
+    }
+
+    public void runOuttake() {
+        rollIntake(IntakeConstants.OUTTAKE_SPEED);
+    }
+
+    private void rollIntake(AngularVelocity speed) {
+        m_intakeWheelsMotor.setControl(m_VelocityVoltage.withVelocity(speed));
   }
-
-  public Command startIntake() {
-      return run(
-          () -> {
-              m_intakeMotor.set(0.6);
-      });
-  }
-
-  public Command stopIntake() {
-      return run(
-          () -> {
-              m_intakeMotor.set(0);
-      });
-  }
-      */
-
 }
