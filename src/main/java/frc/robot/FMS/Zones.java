@@ -4,14 +4,17 @@
 
 package frc.robot.FMS;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.GoalPoseConstants;
 import frc.robot.constants.GoalPoseConstants.GoalPose;
-import frc.robot.constants.ZonesConstants.Bump;
+import frc.robot.constants.ZonesConstants;
 import frc.robot.constants.ZonesConstants.Trench;
 import frc.robot.constants.ZonesConstants.Zone;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -21,6 +24,8 @@ import java.util.function.Supplier;
 /** Add your docs here. */
 public class Zones {
   private static Supplier<Pose2d> m_pose;
+  private static Supplier<Angle> m_pitch;
+  private static Supplier<Angle> m_roll;
 
   private Optional<Alliance> m_team;
   private CommandSwerveDrivetrain m_commandSwerveDrivetrain;
@@ -28,6 +33,8 @@ public class Zones {
   public Zones(CommandSwerveDrivetrain commandSwerveDrivetrain) {
     m_team = DriverStation.getAlliance();
     m_pose = () -> commandSwerveDrivetrain.getPose2d();
+    m_pitch = () -> m_commandSwerveDrivetrain.getPigeon2().getPitch().getValue();
+    m_roll = () -> m_commandSwerveDrivetrain.getPigeon2().getRoll().getValue();
     m_commandSwerveDrivetrain = commandSwerveDrivetrain;
   }
 
@@ -71,16 +78,11 @@ public class Zones {
   }
 
   public boolean onBump() {
-    double x = m_pose.get().getX();
-    double y = m_pose.get().getY();
+    Angle pitch = m_pitch.get();
+    Angle roll = m_roll.get();
 
-    for (Bump bump : Bump.values()) {
-      if (isWithin(x, y, bump.getTopLeftTranslation(), bump.getBottomRightTranslation())) {
-        return true;
-      }
-    }
-
-    return false;
+    return Math.abs(pitch.in(Degrees)) > ZonesConstants.BUMP_ANGLE.in(Degrees)
+        || Math.abs(roll.in(Degrees)) > ZonesConstants.BUMP_ANGLE.in(Degrees);
   }
 
   public boolean isNearTrench() {
