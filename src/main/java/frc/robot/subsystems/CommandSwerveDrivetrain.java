@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.*;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Second;
+import static edu.wpi.first.units.Units.Volts;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -8,13 +10,13 @@ import java.util.function.Supplier;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -26,15 +28,13 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Robot;
 import frc.robot.FMS.Zones;
-import frc.robot.constants.ControllerConstants;
 import frc.robot.constants.DrivetrainConstants;
 import frc.robot.constants.WaypointConstants;
 import frc.robot.controller.CustomXboxController;
@@ -358,8 +358,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     private void brake() {
-    setControl(m_brake);
-  }
+        setControl(m_brake);
+    }
 
     public Command gasPedalCommand(
       Supplier<Double> fieldCentricthrottleSupplier,
@@ -397,14 +397,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 x = Math.cos(angle) * activeThrottle;
                 y = Math.sin(angle) * activeThrottle;
             } else if (x == 0 && y == 0 && rotation == 0) {
-                // robot is not receiving input
-                ChassisSpeeds speeds = getSpeeds();
-
-                // are we near stop within a tolarance
-                //if (MathUtil.isNear(0, speeds.vxMetersPerSecond, 0.01) && MathUtil.isNear(0, speeds.vyMetersPerSecond, 0.01) && MathUtil.isNear(0, speeds.omegaRadiansPerSecond, 0.01)) {
-                //isBraking = true;
-                //brake();
-                //}
+                isBraking = true;
             }
 
             // Apply max speed when on bump
@@ -423,7 +416,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 }
             }
 
-            if (!isBraking) {
+            if (isBraking) {
+                brake();
+            } else {
                 if (activeThrottle == robotCentricThrottle) {
                 setControl(
                     m_RobotCentricdrive
