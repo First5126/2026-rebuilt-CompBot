@@ -23,7 +23,6 @@ public class Operator extends CustomXboxController implements Controller {
   @Getter @Setter private Zones zone;
   @Getter @Setter private Hood hood;
 
-
   // Private constructor to prevent instantiation from outside
   private Operator() {
     super(ControllerConstants.OPERATOR_CONTROLLER_PORT);
@@ -37,12 +36,13 @@ public class Operator extends CustomXboxController implements Controller {
     return INSTANCE;
   }
 
-  public static Operator init(Zones zone, CommandFactory commandFactory) {
+  public static Operator init(Zones zone, CommandFactory commandFactory, Hood hood) {
 
     Operator operator = getInstance();
 
     operator.setZone(zone);
     operator.setCommandFactory(commandFactory);
+    operator.setHood(hood);
 
     return operator;
   }
@@ -51,13 +51,6 @@ public class Operator extends CustomXboxController implements Controller {
   public Operator configureBindings() {
     // TODO: add methods to bind controller
 
-    this.a()
-        .onTrue(zone.setShootingOverideCommand(true))
-        .onFalse(zone.setShootingOverideCommand(false));
-
-    this.b().onTrue(commandFactory.goUnderTrenchCommand());
-
-    this.x().onTrue(hood.setPosition(Degrees.of(20)));
 
     return this;
   }

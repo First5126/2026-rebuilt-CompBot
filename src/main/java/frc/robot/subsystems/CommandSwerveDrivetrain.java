@@ -244,6 +244,29 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return goToPose(pose.get());
     }
 
+    public Pose2d getPredictedPose2d(double delayTime) {
+
+        ChassisSpeeds robotSpeeds = this.getSpeeds();
+        Pose2d robotPose = this.getPose2d();
+
+        // find how far we travel by the time the ball will reach the target
+        double predicatedDistance =
+            delayTime * Math.hypot(robotSpeeds.vxMetersPerSecond, robotSpeeds.vyMetersPerSecond);
+
+        // find the angle of the the speeds that are currently in robotcentric
+        Rotation2d rotation =
+            new Rotation2d(Math.atan2(robotSpeeds.vyMetersPerSecond, robotSpeeds.vxMetersPerSecond));
+
+        // add the angle of the speeds to get the field centric velocity angle
+        rotation = rotation.plus(robotPose.getRotation());
+
+        double predictedX = robotPose.getX() + predicatedDistance * Math.cos(rotation.getRadians());
+        double predictedY = robotPose.getY() + predicatedDistance * Math.sin(rotation.getRadians());
+
+        Pose2d predictedPose = new Pose2d(predictedX, predictedY, rotation);
+        return predictedPose;
+    }
+
     /**
      * Runs the SysId Quasistatic test in the given direction for the routine
      * specified by {@link #m_sysIdRoutineToApply}.

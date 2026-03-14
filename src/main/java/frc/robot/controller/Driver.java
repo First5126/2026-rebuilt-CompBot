@@ -97,13 +97,6 @@ public class Driver extends CustomXboxController implements Controller {
 
     // Reset the field-centric heading on left bumper press.
     this.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
-    this.a()
-        .onTrue(
-            Commands.runOnce(
-                () -> {
-                  Supplier<Boolean> nearTrench = () -> zone.nearTrench();
-                  SmartDashboard.putBoolean("Near Trench", nearTrench.get());
-                }));
 
     return this;
   }

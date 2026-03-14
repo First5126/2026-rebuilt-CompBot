@@ -9,13 +9,12 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.constants.GoalPoseConstants;
 import frc.robot.constants.GoalPoseConstants.GoalPose;
 import frc.robot.constants.ZonesConstants.Bump;
 import frc.robot.constants.ZonesConstants.Trench;
 import frc.robot.constants.ZonesConstants.Zone;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -24,12 +23,12 @@ public class Zones {
   private static Supplier<Pose2d> m_pose;
 
   private Optional<Alliance> m_team;
+  private CommandSwerveDrivetrain m_commandSwerveDrivetrain;
 
-  private boolean shootingOveride = false;
-
-  public Zones(Supplier<Pose2d> robotPoseSupplier) {
+  public Zones(CommandSwerveDrivetrain commandSwerveDrivetrain) {
     m_team = DriverStation.getAlliance();
-    m_pose = robotPoseSupplier;
+    m_pose = () -> commandSwerveDrivetrain.getPose2d();
+    m_commandSwerveDrivetrain = commandSwerveDrivetrain;
   }
 
   public Zone getZone() {
@@ -85,8 +84,9 @@ public class Zones {
   }
 
   public boolean nearTrench() {
-    double x = m_pose.get().getX();
-    double y = m_pose.get().getY();
+    Pose2d robotPose = m_commandSwerveDrivetrain.getPredictedPose2d(0.25);
+    double x = robotPose.getX();
+    double y = robotPose.getY();
 
     for (Trench tench : Trench.values()) {
       if (isWithin(x, y, tench.getTopLeftTranslation(), tench.getBottomRightTranslation())) {
@@ -95,18 +95,6 @@ public class Zones {
     }
 
     return false;
-  }
-
-  public Command setShootingOverideCommand(Boolean state) {
-    return Commands.runOnce(
-        () -> {
-          shootingOveride = state;
-          SmartDashboard.putBoolean("Shooting Overide", shootingOveride);
-        });
-  }
-
-  public boolean getShootingOveride() {
-    return shootingOveride;
   }
 
   public Pose2d getTurretShootingPose() {
