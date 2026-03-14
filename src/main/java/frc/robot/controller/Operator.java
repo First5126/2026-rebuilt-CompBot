@@ -49,6 +49,9 @@ public class Operator extends CustomXboxController implements Controller {
   public Operator configureBindings() {
     // TODO: add methods to bind controller
 
+    this.leftBumper().onTrue(commandFactory.raiseIntake());
+    this.rightBumper().onTrue(commandFactory.lowerIntake());
+
     return this;
   }
 }
