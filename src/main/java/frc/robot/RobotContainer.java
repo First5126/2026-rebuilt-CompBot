@@ -103,7 +103,7 @@ public class RobotContainer {
             m_shootingMechanism)
         .configureBindings();
 
-    Operator.init(m_zones).configureBindings();
+    Operator.init(m_zones, m_commandFactory).configureBindings();
 
     // Shooting Mechanism Default Command
     m_shootingMechanism.setDefaultCommand(m_shootingMechanism.startTrackingCommand());

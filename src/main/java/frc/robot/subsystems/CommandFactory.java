@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.Degrees;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -77,7 +76,7 @@ public class CommandFactory {
 
   public ConditionalCommand goUnderTrenchCommand() {
     return new ConditionalCommand(
-        m_hood.setPosition(Degrees.of(0)), Commands.none(), m_zone::getShootingOveride);
+        Commands.none(), m_hood.setPosition(Degrees.of(0)), m_zone::getShootingOveride);
   }
 
   public Command manualTurretRotation(Angle amountOfMovement) {

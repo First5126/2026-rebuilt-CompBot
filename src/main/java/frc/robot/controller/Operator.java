@@ -1,7 +1,5 @@
 package frc.robot.controller;
 
-import static edu.wpi.first.units.Units.Degree;
-
 import frc.robot.FMS.Zones;
 import frc.robot.constants.ControllerConstants;
 import frc.robot.subsystems.CommandFactory;
@@ -34,11 +32,12 @@ public class Operator extends CustomXboxController implements Controller {
     return INSTANCE;
   }
 
-  public static Operator init(Zones zone) {
+  public static Operator init(Zones zone, CommandFactory commandFactory) {
 
     Operator operator = getInstance();
 
     operator.setZone(zone);
+    operator.setCommandFactory(commandFactory);
 
     return operator;
   }

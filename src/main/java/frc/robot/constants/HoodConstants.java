@@ -24,4 +24,18 @@ public class HoodConstants {
           Map.entry(5.6, 5.5),
           Map.entry(5.25, 5.5),
           Map.entry(5.75, 4.925));
+
+  public static final InterpolatingDoubleTreeMap MIDDLE_DISTANCE_TO_ANGLE_INTERPOLATOR =
+      InterpolatingDoubleTreeMap.ofEntries(
+          Map.entry(1.8, 0.0),
+          Map.entry(2.12, 0.0),
+          Map.entry(2.74, 0.0),
+          Map.entry(3.1, 1.5),
+          Map.entry(3.46, 4.0),
+          Map.entry(4.11, 6.0),
+          Map.entry(2.41, 0.0),
+          Map.entry(4.23, 6.5),
+          Map.entry(5.6, 5.5),
+          Map.entry(5.25, 5.5),
+          Map.entry(5.75, 4.925));
 }
