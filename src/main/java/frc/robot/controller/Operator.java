@@ -11,10 +11,7 @@ import frc.robot.FMS.Zones;
 import frc.robot.constants.ControllerConstants;
 import frc.robot.constants.ControllerConstants.OperatorState;
 import frc.robot.subsystems.CommandFactory;
-import frc.robot.subsystems.FlyWheel;
-import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.ShootingMechanism;
-import frc.robot.subsystems.Turret;
 import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,13 +23,8 @@ public class Operator extends CustomXboxController implements Controller {
   @Getter @Setter public OperatorState operatorState;
 
   @Getter @Setter private CommandFactory commandFactory;
-  @Getter @Setter private Turret turret;
   @Getter @Setter private Zones zone;
-  @Getter @Setter private FlyWheel flyWheel;
-  @Getter @Setter private Hood hood;
   @Getter @Setter private ShootingMechanism shootingMechanism;
-  @Getter @Setter private Command turretDefaultCommand;
-  @Getter @Setter private Command hoodDefaultCommand;
 
   private Operator() {
     super(ControllerConstants.OPERATOR_CONTROLLER_PORT);
@@ -41,18 +33,12 @@ public class Operator extends CustomXboxController implements Controller {
   // Private constructor to prevent instantiation from outside
   public static Operator init(
       CommandFactory commandFactory,
-      Turret turret,
       Zones zone,
-      FlyWheel flyWheel,
-      Hood hood,
       ShootingMechanism shootingMechanism,
       OperatorState operatorState) {
     Operator operator = getInstance();
     operator.setCommandFactory(commandFactory);
-    operator.setTurret(turret);
     operator.setZone(zone);
-    operator.setFlyWheel(flyWheel);
-    operator.setHood(hood);
     operator.setOperatorState(OperatorState.NORMAL);
     operator.setShootingMechanism(shootingMechanism);
 
@@ -67,17 +53,6 @@ public class Operator extends CustomXboxController implements Controller {
     return INSTANCE;
   }
 
-  public static Operator init(Zones zone, CommandFactory commandFactory, Hood hood) {
-
-    Operator operator = getInstance();
-
-    operator.setZone(zone);
-    operator.setCommandFactory(commandFactory);
-    operator.setHood(hood);
-
-    return operator;
-  }
-
   @Override
   public Operator configureBindings() {
 
@@ -85,7 +60,7 @@ public class Operator extends CustomXboxController implements Controller {
         .onTrue(
             new SelectCommand<OperatorState>(
                 Map.of(
-                    OperatorState.NORMAL, Commands.none(),
+                    OperatorState.NORMAL, commandFactory.duckHood(),
                     OperatorState.OVERRIDE, commandFactory.startIndexing()),
                 () -> operatorState))
         .onFalse(
@@ -101,13 +76,14 @@ public class Operator extends CustomXboxController implements Controller {
                 Map.of(
                     OperatorState.NORMAL, commandFactory.shootCommand(),
                     OperatorState.OVERRIDE,
-                        flyWheel.setSpeedWithSolution(shootingMechanism::getShootingSolution)),
+                        commandFactory.startFlywheelsWithSolution(
+                            shootingMechanism::getShootingSolution)),
                 () -> operatorState))
         .onFalse(
             new SelectCommand<OperatorState>(
                 Map.of(
                     OperatorState.NORMAL, commandFactory.stopShootCommand(),
-                    OperatorState.OVERRIDE, flyWheel.stopSpinning()),
+                    OperatorState.OVERRIDE, commandFactory.stopShooting()),
                 () -> operatorState));
 
     this.x()
@@ -137,7 +113,7 @@ public class Operator extends CustomXboxController implements Controller {
             new SelectCommand<OperatorState>(
                 Map.of(
                     OperatorState.NORMAL, Commands.none(),
-                    OperatorState.OVERRIDE, hood.moveAngleUpCommand()),
+                    OperatorState.OVERRIDE, commandFactory.slowlyMoveHoodUp()),
                 () -> operatorState));
 
     this.povDown()
@@ -145,7 +121,7 @@ public class Operator extends CustomXboxController implements Controller {
             new SelectCommand<OperatorState>(
                 Map.of(
                     OperatorState.NORMAL, Commands.none(),
-                    OperatorState.OVERRIDE, hood.moveAngleDownCommand()),
+                    OperatorState.OVERRIDE, commandFactory.slowlyMoveHoodUp()),
                 () -> operatorState));
 
     this.povLeft()
@@ -153,7 +129,7 @@ public class Operator extends CustomXboxController implements Controller {
             new SelectCommand<OperatorState>(
                 Map.of(
                     OperatorState.NORMAL, Commands.none(),
-                    OperatorState.OVERRIDE, turret.manualRotation(Degrees.of(0.1))),
+                    OperatorState.OVERRIDE, commandFactory.moveTurretManualy(Degrees.of(0.1))),
                 () -> operatorState));
 
     this.povRight()
@@ -161,7 +137,7 @@ public class Operator extends CustomXboxController implements Controller {
             new SelectCommand<OperatorState>(
                 Map.of(
                     OperatorState.NORMAL, Commands.none(),
-                    OperatorState.OVERRIDE, turret.manualRotation(Degrees.of(-0.1))),
+                    OperatorState.OVERRIDE, commandFactory.moveTurretManualy(Degrees.of(0.1))),
                 () -> operatorState));
 
     this.start().onTrue(Commands.runOnce(() -> ShiftData.resetMatchTimeCalibration()));
@@ -181,7 +157,6 @@ public class Operator extends CustomXboxController implements Controller {
           } else {
             this.setOperatorState(OperatorState.NORMAL);
             SmartDashboard.putBoolean("Operator OVERRIDE Active", false);
-
           }
         });
   }

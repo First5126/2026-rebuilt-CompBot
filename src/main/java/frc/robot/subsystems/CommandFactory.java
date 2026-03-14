@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degree;
-import static edu.wpi.first.units.Units.Milliseconds;
 import static edu.wpi.first.units.Units.Degrees;
 
 import edu.wpi.first.units.measure.Angle;
@@ -12,7 +11,9 @@ import frc.robot.FMS.ShiftData;
 import frc.robot.FMS.Zones;
 import frc.robot.constants.ControllerConstants.OperatorState;
 import frc.robot.constants.WaypointConstants;
+import frc.robot.subsystems.ShootingMechanism.ShootingSolution;
 import java.util.Set;
+import java.util.function.Supplier;
 
 public class CommandFactory {
 
@@ -116,10 +117,13 @@ public class CommandFactory {
     return m_flyWheel.stopSpinning();
   }
 
-  public Command startShootingMechanism() {
-    return m_flyWheel
-        .setSpeedWithSolution(m_shootingMechanism::getShootingSolution)
-        .alongWith(m_hood.setPosition(m_shootingMechanism::getShootingSolution));
+  public ConditionalCommand startShootingMechanism() {
+    return new ConditionalCommand(
+        m_flyWheel
+            .setSpeedWithSolution(m_shootingMechanism::getShootingSolution)
+            .alongWith(m_hood.setPosition(m_shootingMechanism::getShootingSolution)),
+        Commands.none(),
+        this::checkIfNotOverride);
   }
 
   public Command stopShootingMechanism() {
@@ -144,10 +148,26 @@ public class CommandFactory {
   }
 
   public Command shootCommand() {
-    return startIndexing().withTimeout(Milliseconds.of(350)).alongWith(startShootingMechanism());
+    return startIndexing();
   }
 
   public Command stopShootCommand() {
-    return stopIndexing().alongWith(stopShootingMechanism());
+    return stopIndexing();
+  }
+
+  public Command startFlywheelsWithSolution(Supplier<ShootingSolution> solution) {
+    return m_flyWheel.setSpeedWithSolution(solution);
+  }
+
+  public Command slowlyMoveHoodDown() {
+    return m_hood.moveAngleDownCommand();
+  }
+
+  public Command slowlyMoveHoodUp() {
+    return m_hood.moveAngleUpCommand();
+  }
+
+  public Command moveTurretManualy(Angle angle) {
+    return m_turret.manualRotation(angle);
   }
 }
