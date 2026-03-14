@@ -255,7 +255,7 @@ public class AprilTagLocalization extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		if (m_zone.onBump()) {
+		if (m_zone.isNearBump()) {
 			return;
 		}
 		poseEstimate();
