@@ -1,0 +1,89 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.718336314847942,
+        "y": 4.561954225352113
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.160697674413448,
+        "y": 7.434221824679297
+      },
+      "isLocked": false,
+      "linkedName": "Neutral Zone - Depot Side Post-pickup"
+    },
+    {
+      "anchor": {
+        "x": 4.635509838993054,
+        "y": 7.417996422174825
+      },
+      "prevControl": {
+        "x": 6.095796064395558,
+        "y": 7.385545617165881
+      },
+      "nextControl": {
+        "x": 3.2933434074753722,
+        "y": 7.447822342875218
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.0643309859154937,
+        "y": 5.488116197183099
+      },
+      "prevControl": {
+        "x": 1.747388193200879,
+        "y": 7.66137745974212
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Alliance Zone - Depot Side"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 180.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Bump Zone",
+      "minWaypointRelativePos": 1.2,
+      "maxWaypointRelativePos": 1.8,
+      "constraints": {
+        "maxVelocity": 2.88,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 131.30861401354872
+  },
+  "reversed": false,
+  "folder": "Depot Side",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -90.0
+  },
+  "useDefaultConstraints": true
+}
