@@ -390,7 +390,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 activeThrottle = robotCentricThrottle;
             }
 
-            // boolean isBraking = activeThrottle == 0 && rotation == 0;
             boolean isBraking = false;
 
             if (!(x == 0 && y == 0)) {
