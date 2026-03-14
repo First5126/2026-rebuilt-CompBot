@@ -141,9 +141,6 @@ public class AprilTagLocalization extends SubsystemBase {
 	 * thread once per AprilTagLocalizationConstants.LOCALIZATION_PERIOD.
 	 */
 	public void poseEstimate() {
-		if (m_zone.onBump()) {
-		return;
-		}
 		for (LimelightDetails limelightDetail : m_LimelightDetails) {
 		m_yaw.mut_replace(Degrees.of(m_robotPoseSupplier.get().getRotation().getDegrees()));
 		AngularVelocity yawRate = (m_yaw.minus(m_OldYaw).div(LOCALIZATION_PERIOD));
@@ -258,6 +255,9 @@ public class AprilTagLocalization extends SubsystemBase {
 
 	@Override
 	public void periodic() {
+		if (m_zone.onBump()) {
+			return;
+		}
 		poseEstimate();
 	}
 }
