@@ -10,6 +10,7 @@ public class HoodConstants {
   public static double kS = 0.35;
   public static double kV = 13.84;
 
+  // Time it takes for the hood to reach 0
   public static double DUCK_SPEED = 0.25;
 
   // TODO: Very important to fix this so we dont rip the hood off
