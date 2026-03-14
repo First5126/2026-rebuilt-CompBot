@@ -91,6 +91,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("StopIntake", m_commandFactory.stopIntake());
     NamedCommands.registerCommand("Turret Default", m_shootingMechanism.startTrackingCommand());
     NamedCommands.registerCommand("IntakeandShoot", m_commandFactory.intakeAndShoot());
+    
     autoChooser = AutoBuilder.buildAutoChooser();
     configureBindings();
   }

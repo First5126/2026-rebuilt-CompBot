@@ -5,51 +5,71 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Depot Side Bump to Neutral Zone"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Neutral Zone Depot Side Pickup"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Stop Intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Neutral Zone Depot Side Post-pickup to Alliance Zone"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Alliance Zone Depot Side to Depot"
+            "commands": [
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Depot Side Bump to Neutral Zone"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Intake"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Neutral Zone Depot Side Pickup"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "StopIntake"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Neutral Zone Depot Side Post-pickup to Alliance Zone"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Shoot"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Intake"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Alliance Zone Depot Side to Depot"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Turret Default"
+                }
+              }
+            ]
           }
         }
       ]
