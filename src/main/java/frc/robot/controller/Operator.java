@@ -173,18 +173,10 @@ public class Operator extends CustomXboxController implements Controller {
             this.setOperatorState(OperatorState.OVERRIDE);
             SmartDashboard.putBoolean("Operator OVERRIDE Active", true);
 
-            this.setHoodDefaultCommand(hood.getDefaultCommand());
-            this.setTurretDefaultCommand(turret.getDefaultCommand());
-
-            hood.setDefaultCommand(Commands.run(() -> {}, hood));
-            turret.setDefaultCommand(Commands.run(() -> {}, turret));
-
           } else {
             this.setOperatorState(OperatorState.NORMAL);
             SmartDashboard.putBoolean("Operator OVERRIDE Active", false);
 
-            hood.setDefaultCommand(hoodDefaultCommand);
-            turret.setDefaultCommand(turretDefaultCommand);
           }
         });
   }
