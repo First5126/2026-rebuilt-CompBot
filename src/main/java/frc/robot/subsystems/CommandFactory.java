@@ -170,4 +170,12 @@ public class CommandFactory {
   public Command moveTurretManualy(Angle angle) {
     return m_turret.manualRotation(angle);
   }
+
+  public Command moveTurretManualyWithSticks(Supplier<Double> stick) {
+    return m_turret.manualRotationWithSticks(stick);
+  }
+
+  public Command moveHoodManualyWithSticks(Supplier<Double> stick) {
+    return m_hood.manualRotationWithSticks(stick);
+  }
 }

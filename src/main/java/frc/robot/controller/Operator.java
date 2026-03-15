@@ -6,11 +6,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.FMS.ShiftData;
 import frc.robot.FMS.Zones;
 import frc.robot.constants.ControllerConstants;
 import frc.robot.constants.ControllerConstants.OperatorState;
 import frc.robot.subsystems.CommandFactory;
+import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.ShootingMechanism;
 import java.util.Map;
 import lombok.Getter;
@@ -55,6 +57,14 @@ public class Operator extends CustomXboxController implements Controller {
 
   @Override
   public Operator configureBindings() {
+
+    // 0.10 deadband
+    Trigger rightJoystickX = new Trigger(() -> this.getRightX() > 0.10);
+    Trigger rightJoystickY = new Trigger(() -> this.getRightY() > 0.10);
+
+    //0.10 deadband
+    Trigger leftJoystickX = new Trigger(() -> this.getLeftX() > 0.10);
+    Trigger leftJoystickY = new Trigger(() -> this.getLeftY() > 0.10);
 
     this.a()
         .onTrue(
@@ -139,6 +149,9 @@ public class Operator extends CustomXboxController implements Controller {
                     OperatorState.NORMAL, Commands.none(),
                     OperatorState.OVERRIDE, commandFactory.moveTurretManualy(Degrees.of(0.1))),
                 () -> operatorState));
+
+    leftJoystickX.whileTrue(commandFactory.moveTurretManualyWithSticks(this::getLeftX));
+    rightJoystickY.whileTrue(commandFactory.moveHoodManualyWithSticks(this::getRightY));
 
     this.start().onTrue(Commands.runOnce(() -> ShiftData.resetMatchTimeCalibration()));
 

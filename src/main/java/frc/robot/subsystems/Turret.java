@@ -93,9 +93,9 @@ public class Turret extends SubsystemBase {
         });
   }
 
-  public Command manualRotationWithSticks(double controlerX) {
+  public Command manualRotationWithSticks(Supplier<Double> controlerX) {
     return run(() -> {
-      m_turretMotor.setControl(m_voltageControl.withOutput(TurretConstants.MAX_VOLTAGE_MANUAL * controlerX));
+      m_turretMotor.setControl(m_voltageControl.withOutput(TurretConstants.MAX_VOLTAGE_MANUAL * (controlerX.get() - 0.1)));
     });
   }
 
