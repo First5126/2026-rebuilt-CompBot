@@ -35,14 +35,9 @@ public class Operator extends CustomXboxController implements Controller {
   // Private constructor to prevent instantiation from outside
   public static Operator init(
       CommandFactory commandFactory,
-      Zones zone,
-      ShootingMechanism shootingMechanism,
       OperatorState operatorState) {
     Operator operator = getInstance();
     operator.setCommandFactory(commandFactory);
-    operator.setZone(zone);
-    operator.setOperatorState(OperatorState.NORMAL);
-    operator.setShootingMechanism(shootingMechanism);
 
     return operator;
   }

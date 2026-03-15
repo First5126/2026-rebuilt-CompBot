@@ -102,18 +102,10 @@ public class RobotContainer {
   private void configureBindings() {
     Driver.init(
             m_drivetrain,
-            m_aprilTagLocalization,
-            m_commandFactory,
-            m_intake,
-            m_turret,
-            m_zones,
-            m_indexer,
-            m_flyWheel,
-            m_hood,
-            m_shootingMechanism)
+            m_commandFactory)
         .configureBindings();
 
-    Operator.init(m_commandFactory, m_zones, m_shootingMechanism, operatorState)
+    Operator.init(m_commandFactory, operatorState)
         .configureBindings();
 
     // Shooting Mechanism Default Command
