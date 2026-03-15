@@ -24,6 +24,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.FlyWheel;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.IntakeDeployer;
 import frc.robot.subsystems.ShootingMechanism;
 import frc.robot.subsystems.Turret;
@@ -54,12 +55,11 @@ public class RobotContainer {
 
   private Turret m_turret = new Turret();
   private Zones m_zones = new Zones(m_drivetrain);
-
   private FlyWheel m_flyWheel = new FlyWheel();
   private Indexer m_indexer = new Indexer();
   private Hood m_hood = new Hood();
-
-  private IntakeDeployer m_intake = new IntakeDeployer();
+  private IntakeDeployer m_intakeDeployer = new IntakeDeployer();
+  private Intake m_intake = new Intake();
 
   private ShootingMechanism m_shootingMechanism =
       new ShootingMechanism(m_turret, m_drivetrain, m_zones, m_hood, m_flyWheel);
@@ -69,7 +69,15 @@ public class RobotContainer {
   PhotonDetails[] photonDetails = {};
   public CommandFactory m_commandFactory =
       new CommandFactory(
-          m_drivetrain, m_turret, m_zones, m_shootingMechanism, m_flyWheel, m_hood, m_indexer);
+          m_drivetrain,
+          m_turret,
+          m_zones,
+          m_shootingMechanism,
+          m_flyWheel,
+          m_hood,
+          m_indexer,
+          m_intakeDeployer,
+          m_intake);
 
   private AprilTagLocalization m_aprilTagLocalization =
       new AprilTagLocalization(
@@ -95,24 +103,20 @@ public class RobotContainer {
             m_drivetrain,
             m_aprilTagLocalization,
             m_commandFactory,
-            m_intake,
+            m_intakeDeployer,
             m_turret,
             m_zones,
             m_indexer,
             m_flyWheel,
             m_hood,
-            m_shootingMechanism)
+            m_shootingMechanism,
+            m_intake)
         .configureBindings();
 
-    Operator.init(m_zones, m_commandFactory, m_hood).configureBindings();
+    Operator.init(m_commandFactory).configureBindings();
 
     // Shooting Mechanism Default Command
     m_shootingMechanism.setDefaultCommand(m_shootingMechanism.startTrackingCommand());
-
-    // Turret Default Command
-
-    // this.m_turret.setDefaultCommand(m_turret.rotateToPosition(() ->
-    // m_shootingMechanism.getShootingSolution().predictedTurretAngle));
 
     // Idle while the robot is disabled. This ensures the configured
     // neutral mode is applied to the drive motors while disabled.
