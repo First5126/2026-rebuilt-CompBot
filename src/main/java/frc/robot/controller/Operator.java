@@ -58,7 +58,7 @@ public class Operator extends CustomXboxController implements Controller {
 
     this.b()
         .whileTrue(commandFactory.startShootingMechanism())
-        .onTrue(commandFactory.stopShootingMechanism());
+        .onFalse(commandFactory.stopShootingMechanism());
     this.a().onTrue(commandFactory.startIndexing()).onFalse(commandFactory.stopIndexing());
 
     return this;
