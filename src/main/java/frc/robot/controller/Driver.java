@@ -4,6 +4,7 @@ import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.FMS.Zones;
 import frc.robot.constants.ControllerConstants;
 import frc.robot.subsystems.CommandFactory;
@@ -11,6 +12,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.FlyWheel;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.IntakeDeployer;
 import frc.robot.subsystems.ShootingMechanism;
 import frc.robot.subsystems.Turret;
@@ -32,6 +34,7 @@ public class Driver extends CustomXboxController implements Controller {
   @Getter @Setter private FlyWheel flyWheel;
   @Getter @Setter private ShootingMechanism shootingMechanism;
   @Getter @Setter private Hood hood;
+  @Getter @Setter private Intake intakeRoller;
 
   private final SwerveRequest.SwerveDriveBrake BRAKE = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt POINT = new SwerveRequest.PointWheelsAt();
@@ -59,7 +62,8 @@ public class Driver extends CustomXboxController implements Controller {
       Indexer indexer,
       FlyWheel flyWheel,
       Hood hood,
-      ShootingMechanism shootingMechanism) {
+      ShootingMechanism shootingMechanism,
+      Intake intakeRoller) {
     Driver driver = getInstance();
     driver.setDrivetrain(drivetrain);
     driver.setAprilTagLocalization(aprilTagLocalization);
@@ -71,6 +75,7 @@ public class Driver extends CustomXboxController implements Controller {
     driver.setFlyWheel(flyWheel);
     driver.setHood(hood);
     driver.setShootingMechanism(shootingMechanism);
+    driver.setIntakeRoller(intakeRoller);
 
     return driver;
   }
@@ -78,8 +83,8 @@ public class Driver extends CustomXboxController implements Controller {
   @Override
   public Driver configureBindings() {
 
-    this.a().onTrue(Commands.run(() -> {SignalLogger.start();}));
-    this.b().onTrue(Commands.run(() -> {SignalLogger.stop();}));
+    //this.a().onTrue(Commands.runOnce(SignalLogger::start));
+    //this.b().onTrue(Commands.runOnce(SignalLogger::stop));
 
     drivetrain.setDefaultCommand(
         drivetrain.gasPedalCommand(
@@ -91,7 +96,10 @@ public class Driver extends CustomXboxController implements Controller {
             zone));
 
 
-    this.povUp().onTrue().onFalse();
+    /*this.povUp().whileTrue(intakeRoller.sysIdDynamic(Direction.kForward));
+    this.povDown().whileTrue(intakeRoller.sysIdDynamic(Direction.kReverse));
+    this.povLeft().whileTrue(intakeRoller.sysIdQuasistatic(Direction.kForward));
+    this.povRight().whileTrue(intakeRoller.sysIdQuasistatic(Direction.kReverse));*/
 
     // this.a().onTrue(aprilTagLocalization.setTrust(true));
     // this.a().onFalse(aprilTagLocalization.setTrust(false));
