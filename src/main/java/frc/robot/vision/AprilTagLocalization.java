@@ -7,7 +7,6 @@ package frc.robot.vision;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.Seconds;
 import static frc.robot.constants.AprilTagLocalizationConstants.FIELD_LAYOUT;
 import static frc.robot.constants.AprilTagLocalizationConstants.LOCALIZATION_PERIOD;
 import static frc.robot.constants.AprilTagLocalizationConstants.MAX_TAG_DISTANCE;
@@ -21,10 +20,11 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.MutAngle;
-import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.FMS.Zones;
 import frc.robot.constants.AprilTagLocalizationConstants.LimelightDetails;
 import frc.robot.constants.AprilTagLocalizationConstants.PhotonDetails;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -38,9 +38,7 @@ import org.photonvision.targeting.PhotonPipelineResult;
  * A class that uses the limelight to localize the robot using AprilTags. it runs in a background
  * thread instead of the main robot loop.
  */
-public class AprilTagLocalization {
-  private Notifier m_notifier =
-      new Notifier(this::poseEstimate); // calls pose estimate on the the period
+public class AprilTagLocalization extends SubsystemBase {
   private LimelightDetails[] m_LimelightDetails; // list of limelights that can provide updates
   private PhotonDetails[] m_PhotonVisionCameras; // list of limelights that can provide updates
   private Supplier<Pose2d> m_robotPoseSupplier; // supplies the pose of the robot
@@ -50,6 +48,7 @@ public class AprilTagLocalization {
   private MutAngle m_OldYaw = Degrees.mutable(0); // the previous yaw
   private VisionConsumer m_VisionConsumer;
   private ResetPose m_poseReset;
+  private Zones m_zone;
 
   /**
    * Creates a new AprilTagLocalization.
@@ -68,6 +67,7 @@ public class AprilTagLocalization {
       ResetPose resetPose,
       VisionConsumer visionConsumer,
       CommandSwerveDrivetrain drivetrain,
+      Zones zone,
       PhotonDetails[] photonDetails,
       LimelightDetails... details) {
     m_LimelightDetails = details;
@@ -76,9 +76,7 @@ public class AprilTagLocalization {
     m_poseReset = resetPose;
     m_VisionConsumer = visionConsumer;
     m_drivetrain = drivetrain;
-    m_notifier.startPeriodic(
-        LOCALIZATION_PERIOD.in(
-            Seconds)); // set up a pose estimation loop with a 0.02 second period.
+    m_zone = zone;
   }
 
   /**
@@ -154,6 +152,12 @@ public class AprilTagLocalization {
           0,
           0); // Set Orientation using LimelightHelpers.SetRobotOrientation and the
       // m_robotPoseSupplier
+
+      // Check if we have at least two tags
+      // if (LimelightHelpers.getTargetCount(limelightDetail.name) < 2) {
+      //   continue;
+      // }
+
       // Get the pose from the Limelight
       PoseEstimate poseEstimate =
           LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(
@@ -169,10 +173,10 @@ public class AprilTagLocalization {
         // remove the offset of the camera
         /*poseEstimate.pose =
         poseEstimate.pose.transformBy(
-            new Transform2d(
-                limelightDetail.inverseOffset.get(0, 0),
-                limelightDetail.inverseOffset.get(1, 0),
-                Rotation2d.fromDegrees(limelightDetail.inverseOffset.get(2, 0))));*/
+        	new Transform2d(
+        		limelightDetail.inverseOffset.get(0, 0),
+        		limelightDetail.inverseOffset.get(1, 0),
+        		Rotation2d.fromDegrees(limelightDetail.inverseOffset.get(2, 0))));*/
 
         double scale =
             poseEstimate.avgTagDist
@@ -245,5 +249,13 @@ public class AprilTagLocalization {
   @FunctionalInterface
   public interface ResetPose {
     void accept(Pose2d pose2d);
+  }
+
+  @Override
+  public void periodic() {
+    if (m_zone.isNearBump()) {
+      return;
+    }
+    poseEstimate();
   }
 }
