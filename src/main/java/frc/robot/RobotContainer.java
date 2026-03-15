@@ -77,6 +77,7 @@ public class RobotContainer {
           m_drivetrain::resetPose,
           m_drivetrain::addVisionMeasurement,
           m_drivetrain,
+          m_zones,
           photonDetails,
           AprilTagLocalizationConstants.LIMELIGHT_DETAILS_RIGHT,
           AprilTagLocalizationConstants.LIMELIGHT_DETAILS_LEFT);
