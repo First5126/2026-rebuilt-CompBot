@@ -27,11 +27,11 @@ public class IntakeDeployer extends SubsystemBase {
     TalonFXConfiguration m_intakeDeployerConfiguration = new TalonFXConfiguration();
 
     Slot0Configs m_intakeDeployerSlot0Configs = new Slot0Configs();
-    m_intakeDeployerSlot0Configs.kP = IntakeDeployerConstants.intakeKP;
+    m_intakeDeployerSlot0Configs.kP = IntakeDeployerConstants.INTAKE_KP;
 
     m_intakeDeployerConfiguration.Slot0 = m_intakeDeployerSlot0Configs;
     m_intakeDeployerConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-    m_intakeDeployerConfiguration.Feedback.SensorToMechanismRatio = 18;
+    m_intakeDeployerConfiguration.Feedback.SensorToMechanismRatio = IntakeDeployerConstants.GEAR_RATIO;
 
     MotionMagicConfigs motionMagic = m_intakeDeployerConfiguration.MotionMagic;
 
