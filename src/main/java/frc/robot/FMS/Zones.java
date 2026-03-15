@@ -4,78 +4,77 @@
 
 package frc.robot.FMS;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.GoalPoseConstants;
 import frc.robot.constants.GoalPoseConstants.GoalPose;
-import frc.robot.constants.ZonesConstants.Bump;
+import frc.robot.constants.ZonesConstants;
+import frc.robot.constants.ZonesConstants.Trench;
 import frc.robot.constants.ZonesConstants.Zone;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 /** Add your docs here. */
 public class Zones {
   private static Supplier<Pose2d> m_pose;
+  private static Supplier<Angle> m_pitch;
+  private static Supplier<Angle> m_roll;
 
   private Optional<Alliance> m_team;
+  private CommandSwerveDrivetrain m_commandSwerveDrivetrain;
 
-  public Zones(Supplier<Pose2d> robotPoseSupplier) {
+  public Zones(CommandSwerveDrivetrain commandSwerveDrivetrain) {
     m_team = DriverStation.getAlliance();
-    m_pose = robotPoseSupplier;
+    m_pose = () -> commandSwerveDrivetrain.getPose2d();
+    m_pitch = () -> m_commandSwerveDrivetrain.getPigeon2().getPitch().getValue();
+    m_roll = () -> m_commandSwerveDrivetrain.getPigeon2().getRoll().getValue();
+    m_commandSwerveDrivetrain = commandSwerveDrivetrain;
   }
 
   public Zone getZone() {
-    double x = m_pose.get().getX();
-    double y = m_pose.get().getY();
-
-    if (isWithin(
-        x,
-        y,
-        Zone.ALLIANCE_ZONE.getTopLeftTranslation(),
-        Zone.ALLIANCE_ZONE.getBottomRightTranslation())) {
-      SmartDashboard.putString("CurrentZone", Zone.ALLIANCE_ZONE.name());
-      return Zone.ALLIANCE_ZONE;
-    } else if (isWithin(
-        x,
-        y,
-        Zone.NEUTRAL_ZONE_RIGHT.getTopLeftTranslation(),
-        Zone.NEUTRAL_ZONE_RIGHT.getBottomRightTranslation())) {
-      SmartDashboard.putString("CurrentZone", Zone.NEUTRAL_ZONE_RIGHT.name());
-      return Zone.NEUTRAL_ZONE_RIGHT;
-    } else if (isWithin(
-        x,
-        y,
-        Zone.NEUTRAL_ZONE_LEFT.getTopLeftTranslation(),
-        Zone.NEUTRAL_ZONE_LEFT.getBottomRightTranslation())) {
-      SmartDashboard.putString("CurrentZone", Zone.NEUTRAL_ZONE_LEFT.name());
-      return Zone.NEUTRAL_ZONE_LEFT;
-    } else if (isWithin(
-        x,
-        y,
-        Zone.OPPONENT_ZONE.getTopLeftTranslation(),
-        Zone.OPPONENT_ZONE.getBottomRightTranslation())) {
-      SmartDashboard.putString("CurrentZone", Zone.OPPONENT_ZONE.name());
-      return Zone.OPPONENT_ZONE;
-    } else {
-      // Outside defined zones, handle as needed
-      SmartDashboard.putString("CurrentZone", Zone.OUT_OF_BOUNDS.name());
-      return Zone.OUT_OF_BOUNDS;
-    }
+    Translation2d robotTranslation = m_pose.get().getTranslation();
+    Zone zone =
+        ZonesConstants.firstContainingOrDefault(robotTranslation, Zone.class, Zone.OUT_OF_BOUNDS);
+    SmartDashboard.putString("CurrentZone", zone.name());
+    return zone;
   }
 
-  public boolean onBump() {
-    double x = m_pose.get().getX();
-    double y = m_pose.get().getY();
+  public boolean isNearBump() {
+    double pitch = m_pitch.get().in(Degrees);
+    double roll = 180 - Math.abs(m_roll.get().in(Degrees));
 
-    for (Bump bump : Bump.values()) {
-      if (isWithin(x, y, bump.getTopLeftTranslation(), bump.getBottomRightTranslation())) {
-        return true;
-      }
-    }
+    boolean onBump =
+        Math.abs(pitch) > ZonesConstants.BUMP_ANGLE.in(Degrees)
+            || Math.abs(roll) > ZonesConstants.BUMP_ANGLE.in(Degrees);
 
+    SmartDashboard.putNumber("Pitch", pitch);
+    SmartDashboard.putNumber("Roll", roll);
+    SmartDashboard.putBoolean("On Bump", onBump);
+
+    return onBump;
+  }
+
+  public boolean isNearTrench() {
+    Pose2d robotPose = m_commandSwerveDrivetrain.getPredictedPose2d(0.25);
+    Translation2d robotTranslation = robotPose.getTranslation();
+    boolean isNearTrench = ZonesConstants.containsAny(robotTranslation, Trench.class);
+    SmartDashboard.putBoolean("Zones/IsNearTrench", isNearTrench);
+    return isNearTrench;
+  }
+
+  public boolean isInDeadZone() {
+    Translation2d robotTranslation = m_pose.get().getTranslation();
+    // TODO: need to check if in red aliance that the deadzone for shoowing is
+    // behind the red alliance wall and vice versa for blue
+    // SmartDashboard.putBoolean("Drive/IsInDeadZone", isInDeadZone);
+    // return isInDeadZone;
     return false;
   }
 
@@ -108,14 +107,5 @@ public class Zones {
         break;
     }
     return m_team.get() == Alliance.Blue ? GoalPoseConstants.BLUE_HUB : GoalPoseConstants.RED_HUB;
-  }
-
-  private boolean isWithin(double x, double y, Translation2d corner1, Translation2d corner2) {
-    double minX = Math.min(corner1.getX(), corner2.getX());
-    double maxX = Math.max(corner1.getX(), corner2.getX());
-    double minY = Math.min(corner1.getY(), corner2.getY());
-    double maxY = Math.max(corner1.getY(), corner2.getY());
-
-    return (x >= minX && x <= maxX) && (y >= minY && y <= maxY);
   }
 }
