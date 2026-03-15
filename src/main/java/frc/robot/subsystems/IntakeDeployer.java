@@ -5,7 +5,6 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
-import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
@@ -31,7 +30,8 @@ public class IntakeDeployer extends SubsystemBase {
 
     m_intakeDeployerConfiguration.Slot0 = m_intakeDeployerSlot0Configs;
     m_intakeDeployerConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-    m_intakeDeployerConfiguration.Feedback.SensorToMechanismRatio = IntakeDeployerConstants.GEAR_RATIO;
+    m_intakeDeployerConfiguration.Feedback.SensorToMechanismRatio =
+        IntakeDeployerConstants.GEAR_RATIO;
 
     MotionMagicConfigs motionMagic = m_intakeDeployerConfiguration.MotionMagic;
 
@@ -41,8 +41,8 @@ public class IntakeDeployer extends SubsystemBase {
     m_intakeDeployerMotorRight.getConfigurator().apply(m_intakeDeployerConfiguration);
     m_intakeDeployerMotorLeft.getConfigurator().apply(m_intakeDeployerConfiguration);
 
-    m_intakeDeployerMotorLeft.setControl(new Follower(m_intakeDeployerMotorRight.getDeviceID(), MotorAlignmentValue.Aligned));
-
+    m_intakeDeployerMotorLeft.setControl(
+        new Follower(m_intakeDeployerMotorRight.getDeviceID(), MotorAlignmentValue.Aligned));
   }
 
   public Command raiseIntakeUpCommand() {
