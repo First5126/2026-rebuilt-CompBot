@@ -116,12 +116,7 @@ public class RobotContainer {
     Operator.init(m_zones, m_commandFactory, m_hood, m_intake).configureBindings();
 
     // Shooting Mechanism Default Command
-    //m_shootingMechanism.setDefaultCommand(m_shootingMechanism.startTrackingCommand());
-
-    // Turret Default Command
-
-    // this.m_turret.setDefaultCommand(m_turret.rotateToPosition(() ->
-    // m_shootingMechanism.getShootingSolution().predictedTurretAngle));
+    m_shootingMechanism.setDefaultCommand(m_shootingMechanism.startTrackingCommand());
 
     // Idle while the robot is disabled. This ensures the configured
     // neutral mode is applied to the drive motors while disabled.

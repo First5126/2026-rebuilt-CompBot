@@ -53,8 +53,13 @@ public class Operator extends CustomXboxController implements Controller {
     this.leftBumper().onTrue(commandFactory.raiseIntake());
     this.rightBumper().onTrue(commandFactory.lowerIntake());
 
-    this.rightTrigger().whileTrue(intake.runIntakeCommand());
-    this.leftTrigger().whileTrue(intake.runOuttakeCommand());
+    this.rightTrigger().whileTrue(intake.runIntakeCommand()).onFalse(intake.stopIntakeCommand());
+    this.leftTrigger().whileTrue(intake.runOuttakeCommand()).onFalse(intake.stopIntakeCommand());
+
+    this.b()
+        .whileTrue(commandFactory.startShootingMechanism())
+        .onTrue(commandFactory.stopShootingMechanism());
+    this.a().onTrue(commandFactory.startIndexing()).onFalse(commandFactory.stopIndexing());
 
     return this;
   }

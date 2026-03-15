@@ -1,10 +1,6 @@
 package frc.robot.controller;
 
-import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.FMS.Zones;
 import frc.robot.constants.ControllerConstants;
 import frc.robot.subsystems.CommandFactory;
@@ -83,9 +79,6 @@ public class Driver extends CustomXboxController implements Controller {
   @Override
   public Driver configureBindings() {
 
-    //this.a().onTrue(Commands.runOnce(SignalLogger::start));
-    //this.b().onTrue(Commands.runOnce(SignalLogger::stop));
-
     drivetrain.setDefaultCommand(
         drivetrain.gasPedalCommand(
             this::getRightTriggerAxis,
@@ -95,19 +88,8 @@ public class Driver extends CustomXboxController implements Controller {
             this::getLeftX,
             zone));
 
-
-    /*this.povUp().whileTrue(intakeRoller.sysIdDynamic(Direction.kForward));
-    this.povDown().whileTrue(intakeRoller.sysIdDynamic(Direction.kReverse));
-    this.povLeft().whileTrue(intakeRoller.sysIdQuasistatic(Direction.kForward));
-    this.povRight().whileTrue(intakeRoller.sysIdQuasistatic(Direction.kReverse));*/
-
     // this.a().onTrue(aprilTagLocalization.setTrust(true));
     // this.a().onFalse(aprilTagLocalization.setTrust(false));
-
-    // this.povUp().onTrue(hood.setVoltage(Volts.of(0.5))).onFalse(hood.setVoltage(Volts.of(0)));
-    // this.povDown().onTrue(hood.setVoltage(Volts.of(-0.5))).onFalse(hood.setVoltage(Volts.of(0)));
-
-    // this.a().onTrue(indexer.startIndexing()).onFalse(indexer.stopIndexing());
 
     // Reset the field-centric heading on left bumper press.
     this.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
