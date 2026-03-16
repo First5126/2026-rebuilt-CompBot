@@ -17,12 +17,6 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "Outpost to Alliance Shoot Zone"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Shoot"

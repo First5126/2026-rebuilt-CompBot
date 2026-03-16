@@ -9,18 +9,18 @@
       "prevControl": null,
       "nextControl": {
         "x": 2.824806338022504,
-        "y": 1.3363556338039702
+        "y": 1.3363556338039704
       },
       "isLocked": false,
       "linkedName": "Hub Bump - Outpost Side"
     },
     {
       "anchor": {
-        "x": 0.3976232394309551,
+        "x": 0.6116100178890873,
         "y": 0.6816549295786183
       },
       "prevControl": {
-        "x": 2.5852816901295155,
+        "x": 2.7992684685876474,
         "y": 1.2245774647910388
       },
       "nextControl": null,
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": "Outpost Side",

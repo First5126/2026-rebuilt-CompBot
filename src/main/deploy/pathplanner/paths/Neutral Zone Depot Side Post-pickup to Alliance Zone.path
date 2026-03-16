@@ -32,16 +32,16 @@
     },
     {
       "anchor": {
-        "x": 3.0643309859154937,
-        "y": 5.488116197183099
+        "x": 0.6602862254025041,
+        "y": 5.973935599284436
       },
       "prevControl": {
-        "x": 1.747388193200879,
-        "y": 7.66137745974212
+        "x": 2.1205724508050086,
+        "y": 6.022611806797853
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Alliance Zone - Depot Side"
+      "linkedName": "Pickup - Depot"
     }
   ],
   "rotationTargets": [
@@ -66,7 +66,14 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Shoot",
+      "waypointRelativePos": 1.4,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -77,7 +84,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 131.30861401354872
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": "Depot Side",

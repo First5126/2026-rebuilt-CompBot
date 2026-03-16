@@ -16,11 +16,11 @@
     },
     {
       "anchor": {
-        "x": 0.3976232394309551,
+        "x": 0.6116100178890873,
         "y": 0.6816549295786183
       },
       "prevControl": {
-        "x": 1.3976232394309553,
+        "x": 1.6116100178890875,
         "y": 0.6816549295786182
       },
       "nextControl": null,
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": "Outpost Side",
