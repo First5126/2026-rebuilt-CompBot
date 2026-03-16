@@ -1,5 +1,7 @@
 package frc.robot.controller;
 
+import static edu.wpi.first.units.Units.Degree;
+
 import frc.robot.constants.ControllerConstants;
 import frc.robot.subsystems.CommandFactory;
 import lombok.Getter;
@@ -37,17 +39,18 @@ public class Operator extends CustomXboxController implements Controller {
   public Operator configureBindings() {
     // TODO: add methods to bind controller
 
-    this.leftBumper().onTrue(commandFactory.raiseIntake());
-    this.rightBumper().onTrue(commandFactory.lowerIntake());
+    this.povRight().onTrue(commandFactory.manualTurretRotation(Degree.of(45)));
+    this.povLeft().onTrue(commandFactory.manualTurretRotation(Degree.of(-45)));
+    this.povUp().whileTrue(commandFactory.manualHoodRotation(Degree.of(0.5)));
+    this.povDown().whileTrue(commandFactory.manualHoodRotation(Degree.of(-0.5)));
 
-    this.rightTrigger().onTrue(commandFactory.startIntake()).onFalse(commandFactory.stopIntake());
-    this.leftTrigger().onTrue(commandFactory.reverseIntake()).onFalse(commandFactory.stopIntake());
+    this.b().whileTrue(commandFactory.startShootingMechanism());
+    this.b().onFalse(commandFactory.stopShootingMechanism());
 
-    this.b()
-        .whileTrue(commandFactory.startShootingMechanism())
-        .onFalse(commandFactory.stopShootingMechanism());
-    this.a().onTrue(commandFactory.startIndexing()).onFalse(commandFactory.stopIndexing());
+    this.a().onTrue(commandFactory.startIndexing());
+    this.a().onFalse(commandFactory.stopIndexing());
 
+    this.x().onTrue(commandFactory.rotateFlywheel()).onFalse(commandFactory.stopShooting());
     return this;
   }
 }

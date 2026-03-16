@@ -85,6 +85,12 @@ public class FlyWheel extends SubsystemBase {
     return m_shooterMotor.getVelocity().getValue();
   }
 
+  @Override
+  public void periodic() {
+    SmartDashboard.putNumber(
+        "Real FlyWheel RPS", m_shooterMotor.getVelocity().getValue().in(RotationsPerSecond));
+  }
+
   /*private void setSpeedControl(Supplier<LinearVelocity> ballSpeed) {
     AngularVelocity motorSpeed = calculateAngularVelocity(ballSpeed.get());
 
