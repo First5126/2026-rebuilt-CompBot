@@ -44,7 +44,6 @@ public class ZonesConstants {
     RED_OUTPOST_SIDE(new Translation2d(11.5, 1.25), new Translation2d(12.5, 0)),
     RED_DEPOT_SIDE(new Translation2d(11.5, 6.5), new Translation2d(12.5, 8));
 
-
     private final Translation2d topLeftTranslation;
     private final Translation2d bottomRightTranslation;
 

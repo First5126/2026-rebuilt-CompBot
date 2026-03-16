@@ -74,8 +74,12 @@ public class Zones {
     boolean isInDeadZone = false;
 
     if (m_team.isPresent()) {
-      if (m_team.get() == Alliance.Blue) isInDeadZone = ZonesConstants.contains(robotTranslation, ZonesConstants.HubDeadZone.BLUE_HUB_DEADZONE);
-      else if (m_team.get() == Alliance.Red) isInDeadZone = ZonesConstants.contains(robotTranslation, ZonesConstants.HubDeadZone.RED_HUB_DEADZONE);
+      if (m_team.get() == Alliance.Blue)
+        isInDeadZone =
+            ZonesConstants.contains(robotTranslation, ZonesConstants.HubDeadZone.BLUE_HUB_DEADZONE);
+      else if (m_team.get() == Alliance.Red)
+        isInDeadZone =
+            ZonesConstants.contains(robotTranslation, ZonesConstants.HubDeadZone.RED_HUB_DEADZONE);
     }
     SmartDashboard.putBoolean("Drive/IsInDeadZone", isInDeadZone);
     return isInDeadZone;

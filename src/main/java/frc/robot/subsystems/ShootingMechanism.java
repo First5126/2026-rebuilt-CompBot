@@ -173,7 +173,6 @@ public class ShootingMechanism extends SubsystemBase {
     updateShootingSolution(m_drivetrain::getPose2d, m_drivetrain::getSpeeds, m_zone::getGoalPose);
 
     SmartDashboard.putBoolean("Can Shoot", canShoot.getAsBoolean());
-  
   }
 
   private boolean canShootFuel() {
@@ -196,8 +195,8 @@ public class ShootingMechanism extends SubsystemBase {
                 .isNear(
                     m_currentShootingSolution.predictedFlyWheelVelocity,
                     ShootingMechanismConstants.flyWheelMaximumError)
-            && (!goalPose.requiresShift && !m_zone.isInDeadZone() || goalPose.requiresShift) && 
-            (!goalPose.requiresShift || ShiftData.canScore());
+            && (!goalPose.requiresShift && !m_zone.isInDeadZone() || goalPose.requiresShift)
+            && (!goalPose.requiresShift || ShiftData.canScore());
 
     SmartDashboard.putNumber(
         "Turret Deviation (Deg)",

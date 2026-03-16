@@ -11,5 +11,5 @@ public class HoodConstants {
   public static double DUCK_SPEED = 0.25;
 
   // TODO: Very important to fix this so we dont rip the hood off
-  
+
 }

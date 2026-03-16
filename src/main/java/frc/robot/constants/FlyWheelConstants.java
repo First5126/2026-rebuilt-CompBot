@@ -2,9 +2,7 @@ package frc.robot.constants;
 
 import static edu.wpi.first.units.Units.Meters;
 
-import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.units.measure.Distance;
-import java.util.Map;
 
 public class FlyWheelConstants {
   public static double kP = 0.048188;
@@ -16,6 +14,4 @@ public class FlyWheelConstants {
 
   public static final int gearRatio = 2;
   public static final Distance radius = Meters.of(0.0508);
-
-  
 }
