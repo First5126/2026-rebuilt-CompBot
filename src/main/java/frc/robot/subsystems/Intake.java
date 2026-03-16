@@ -1,64 +1,65 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.RevolutionsPerSecond;
-
+import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.CANConstants;
 import frc.robot.constants.IntakeConstants;
+import frc.robot.constants.CANConstants;
+import frc.robot.constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
-  private TalonFX m_intakeWheelsMotor =
+  private final TalonFX m_intakeWheelsMotor =
       new TalonFX(CANConstants.intakeWheelsMotor, CANConstants.mechanismCanivore);
-  private final VelocityVoltage m_VelocityVoltage = new VelocityVoltage(0).withSlot(0);
+  private final VelocityVoltage m_velocityVoltage = new VelocityVoltage(0).withSlot(0);
+  private final DutyCycleOut m_dutyCycleOut = new DutyCycleOut(0);
 
   public Intake() {
-    TalonFXConfiguration m_intakeWheelsConfiguration = new TalonFXConfiguration();
+    TalonFXConfiguration intakeWheelsConfiguration = new TalonFXConfiguration();
 
-    Slot0Configs m_intakeWheelsSlot0Configs = new Slot0Configs();
+    Slot0Configs intakeWheelsSlot0Configs = new Slot0Configs();
 
-    m_intakeWheelsSlot0Configs.kP = IntakeConstants.kP;
-    m_intakeWheelsSlot0Configs.kI = IntakeConstants.kI;
-    m_intakeWheelsSlot0Configs.kD = IntakeConstants.kD;
-    m_intakeWheelsSlot0Configs.kS = IntakeConstants.kS;
-    m_intakeWheelsSlot0Configs.kV = IntakeConstants.kV;
-    m_intakeWheelsSlot0Configs.kA = IntakeConstants.kA;
+    intakeWheelsSlot0Configs.kP = IntakeConstants.kP;
+    intakeWheelsSlot0Configs.kI = IntakeConstants.kI;
+    intakeWheelsSlot0Configs.kD = IntakeConstants.kD;
+    intakeWheelsSlot0Configs.kS = IntakeConstants.kS;
+    intakeWheelsSlot0Configs.kV = IntakeConstants.kV;
+    intakeWheelsSlot0Configs.kA = IntakeConstants.kA;
 
-    m_intakeWheelsConfiguration.Slot0 = m_intakeWheelsSlot0Configs;
+    intakeWheelsConfiguration.Slot0 = intakeWheelsSlot0Configs;
 
-    m_intakeWheelsMotor.getConfigurator().apply(m_intakeWheelsConfiguration);
+    m_intakeWheelsMotor.getConfigurator().apply(intakeWheelsConfiguration);
+
+    StatusCode status = m_intakeWheelsMotor.getConfigurator().apply(intakeWheelsConfiguration);
+    if (!status.isOK()) {
+      DriverStation.reportError("Failed to apply Intake TalonFX config: " + status, false);
+    }
   }
 
-  public Command runIntakeCommand() {
-    return runOnce(() -> runIntake());
+  protected Command runIntake() {
+    return runOnce(() -> setIntakeSpeed(IntakeConstants.INTAKE_SPEED));
   }
 
-  public Command runOuttakeCommand() {
-    return runOnce(() -> runOuttake());
+  protected Command runOuttake() {
+    return runOnce(() -> setIntakeSpeed(IntakeConstants.OUTTAKE_SPEED));
   }
 
-  public Command stopIntakeCommand() {
-    return runOnce(() -> stopIntake());
+  protected Command stopIntake() {
+    return runOnce(() -> setPowerZero());
   }
 
-  public void runIntake() {
-    rollIntake(IntakeConstants.INTAKE_SPEED);
+  private void setPowerZero() {
+    m_intakeWheelsMotor.setControl(m_dutyCycleOut.withOutput(0));
   }
 
-  public void stopIntake() {
-    m_VelocityVoltage.withVelocity(RevolutionsPerSecond.of(0));
-  }
-
-  public void runOuttake() {
-    rollIntake(IntakeConstants.OUTTAKE_SPEED);
-  }
-
-  private void rollIntake(AngularVelocity speed) {
-    m_intakeWheelsMotor.setControl(m_VelocityVoltage.withVelocity(speed));
+  private void setIntakeSpeed(AngularVelocity speed) {
+    m_intakeWheelsMotor.setControl(m_velocityVoltage.withVelocity(speed));
   }
 }

@@ -25,6 +25,7 @@ import frc.robot.subsystems.FlyWheel;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.IntakeDeployer;
 import frc.robot.subsystems.ShootingMechanism;
 import frc.robot.subsystems.Turret;
@@ -71,12 +72,20 @@ public class RobotContainer {
   public CommandFactory m_commandFactory =
       new CommandFactory(
           m_drivetrain,
+         
           m_turret,
+         
           m_zones,
+         
           m_shootingMechanism,
+         
           m_flyWheel,
+         
           m_hood,
+         
           m_indexer,
+          m_intakeDeployer,
+          m_intake,
           m_intakeDeployer);
 
   private AprilTagLocalization m_aprilTagLocalization =
@@ -85,6 +94,7 @@ public class RobotContainer {
           m_drivetrain::resetPose,
           m_drivetrain::addVisionMeasurement,
           m_drivetrain,
+          m_zones,
           photonDetails,
           AprilTagLocalizationConstants.LIMELIGHT_DETAILS_RIGHT,
           AprilTagLocalizationConstants.LIMELIGHT_DETAILS_LEFT);
@@ -103,23 +113,20 @@ public class RobotContainer {
             m_aprilTagLocalization,
             m_commandFactory,
             m_intakeDeployer,
+            m_intakeDeployer,
             m_turret,
             m_zones,
             m_indexer,
             m_flyWheel,
             m_hood,
-            m_shootingMechanism)
+            m_shootingMechanism,
+            m_intake)
         .configureBindings();
 
-    Operator.init(m_zones, m_commandFactory, m_hood, m_intake).configureBindings();
+    Operator.init(m_commandFactory).configureBindings();
 
     // Shooting Mechanism Default Command
     m_shootingMechanism.setDefaultCommand(m_shootingMechanism.startTrackingCommand());
-
-    // Turret Default Command
-
-    // this.m_turret.setDefaultCommand(m_turret.rotateToPosition(() ->
-    // m_shootingMechanism.getShootingSolution().predictedTurretAngle));
 
     // Idle while the robot is disabled. This ensures the configured
     // neutral mode is applied to the drive motors while disabled.
