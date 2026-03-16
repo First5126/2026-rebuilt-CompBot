@@ -58,7 +58,7 @@ public class FlyWheel extends SubsystemBase {
   }
 
   public Command setSpeedWithSolution(Supplier<ShootingSolution> solutionSupplier) {
-    return runOnce(
+    return run(
         () -> {
           ShootingSolution solution = solutionSupplier.get();
           setSpeedControl(solution.predictedFlyWheelVelocity);
@@ -83,6 +83,12 @@ public class FlyWheel extends SubsystemBase {
 
   public AngularVelocity getCurrentSpeed() {
     return m_shooterMotor.getVelocity().getValue();
+  }
+
+  @Override
+  public void periodic() {
+    SmartDashboard.putNumber(
+        "Real FlyWheel RPS", m_shooterMotor.getVelocity().getValue().in(RotationsPerSecond));
   }
 
   /*private void setSpeedControl(Supplier<LinearVelocity> ballSpeed) {
