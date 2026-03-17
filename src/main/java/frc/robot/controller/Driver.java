@@ -48,10 +48,12 @@ public class Driver extends CustomXboxController implements Controller {
     return INSTANCE;
   }
 
-  public static Driver init(CommandSwerveDrivetrain drivetrain, CommandFactory commandFactory) {
+  public static Driver init(
+      CommandSwerveDrivetrain drivetrain, CommandFactory commandFactory, Zones zone) {
     Driver driver = getInstance();
     driver.setDrivetrain(drivetrain);
     driver.setCommandFactory(commandFactory);
+    driver.setZone(zone);
 
     return driver;
   }

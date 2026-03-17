@@ -67,7 +67,7 @@ public class RobotContainer {
 
   // End of Declaring
 
-  private OperatorState operatorState;
+  private OperatorState operatorState = OperatorState.NORMAL;
 
   PhotonDetails[] photonDetails = {};
   public CommandFactory m_commandFactory =
@@ -103,7 +103,7 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    Driver.init(m_drivetrain, m_commandFactory).configureBindings();
+    Driver.init(m_drivetrain, m_commandFactory, m_zones).configureBindings();
 
     Operator.init(m_commandFactory, operatorState).configureBindings();
 

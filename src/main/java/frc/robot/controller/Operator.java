@@ -1,7 +1,5 @@
 package frc.robot.controller;
 
-import static edu.wpi.first.units.Units.Degrees;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -69,6 +67,7 @@ public class Operator extends CustomXboxController implements Controller {
   public static Operator init(CommandFactory commandFactory, OperatorState operatorState) {
     Operator operator = getInstance();
     operator.setCommandFactory(commandFactory);
+    operator.setOperatorState(operatorState);
 
     return operator;
   }
@@ -181,6 +180,7 @@ public class Operator extends CustomXboxController implements Controller {
                     OperatorState.OVERRIDE, Commands.none()),
                 () -> operatorState));
 
+    /*
     this.povUp()
         .whileTrue(
             new SelectCommand<OperatorState>(
@@ -211,7 +211,8 @@ public class Operator extends CustomXboxController implements Controller {
                 Map.of(
                     OperatorState.NORMAL, Commands.none(),
                     OperatorState.OVERRIDE, commandFactory.moveTurretManualy(Degrees.of(0.1))),
-                () -> operatorState));
+                () -> operatorState));\
+    */
 
     this.leftBumper()
         .onTrue(
@@ -233,13 +234,13 @@ public class Operator extends CustomXboxController implements Controller {
         .onTrue(
             new SelectCommand<OperatorState>(
                 Map.of(
-                    OperatorState.NORMAL, Commands.none(),
+                    OperatorState.NORMAL, commandFactory.startIntake(),
                     OperatorState.OVERRIDE, commandFactory.reverseIntake()),
                 () -> operatorState))
         .onFalse(
             new SelectCommand<OperatorState>(
                 Map.of(
-                    OperatorState.NORMAL, Commands.none(),
+                    OperatorState.NORMAL, commandFactory.stopIntake(),
                     OperatorState.OVERRIDE, commandFactory.stopIntake()),
                 () -> operatorState));
 
@@ -257,8 +258,8 @@ public class Operator extends CustomXboxController implements Controller {
                     OperatorState.OVERRIDE, commandFactory.stopIntake()),
                 () -> operatorState));
 
-    leftJoystickX.whileTrue(commandFactory.moveTurretManualyWithSticks(this::getLeftX));
-    rightJoystickY.whileTrue(commandFactory.moveHoodManualyWithSticks(this::getRightY));
+    // leftJoystickX.whileTrue(commandFactory.moveTurretManualyWithSticks(this::getLeftX));
+    // rightJoystickY.whileTrue(commandFactory.moveHoodManualyWithSticks(this::getRightY));
 
     this.start().onTrue(Commands.runOnce(() -> ShiftData.resetMatchTimeCalibration()));
 
