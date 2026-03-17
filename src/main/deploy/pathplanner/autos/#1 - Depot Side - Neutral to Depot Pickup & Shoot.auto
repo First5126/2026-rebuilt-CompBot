@@ -13,15 +13,15 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "path",
-                      "data": {
-                        "pathName": "Depot Side Bump to Neutral Zone"
-                      }
-                    },
-                    {
                       "type": "named",
                       "data": {
                         "name": "Intake"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Depot Side Bump to Neutral Zone"
                       }
                     },
                     {
