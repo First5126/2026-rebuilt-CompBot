@@ -20,7 +20,7 @@
         "y": 7.369320214669052
       },
       "prevControl": {
-        "x": 1.1470483005366705,
+        "x": 1.1470483005366696,
         "y": 7.466672629695886
       },
       "nextControl": {
@@ -52,7 +52,14 @@
   ],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Duck Hood",
+      "waypointRelativePos": 0.3,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,

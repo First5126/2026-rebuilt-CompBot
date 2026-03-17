@@ -107,7 +107,10 @@ public class CommandFactory {
   public Command intakeAndShoot() {
     Command intake = m_intake.runIntake();
     Command turretMovement = m_shootingMechanism.startTrackingCommand();
-    Command shoot = m_flyWheel.setSpeedWithSolution(m_shootingMechanism::getShootingSolution).alongWith(m_hood.setPosition(m_shootingMechanism::getShootingSolution));
+    Command shoot =
+        m_flyWheel
+            .setSpeedWithSolution(m_shootingMechanism::getShootingSolution)
+            .alongWith(m_hood.setPosition(m_shootingMechanism::getShootingSolution));
 
     return intake.alongWith(turretMovement).andThen(shoot);
   }
@@ -116,6 +119,15 @@ public class CommandFactory {
     return m_flyWheel
         .setSpeedWithSolution(m_shootingMechanism::getShootingSolution)
         .alongWith(m_hood.setPosition(m_shootingMechanism::getShootingSolution));
+  }
+
+  public Command indexAndShoot() {
+    Command startFlyWheel = m_flyWheel
+        .setSpeedWithSolution(m_shootingMechanism::getShootingSolution)
+        .alongWith(m_hood.setPosition(m_shootingMechanism::getShootingSolution));
+    Command startIndex = m_indexer.startIndexing();
+
+    return startFlyWheel.withTimeout(1.5).andThen(startIndex);
   }
 
   public Command stopShootingMechanism() {

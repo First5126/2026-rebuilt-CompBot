@@ -35,12 +35,6 @@
                       "data": {
                         "pathName": "Neutral Zone Depot Side Post-pickup to Alliance Zone"
                       }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Shoot"
-                      }
                     }
                   ]
                 }

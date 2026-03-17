@@ -61,4 +61,3 @@ public class Intake extends SubsystemBase {
     m_intakeWheelsMotor.setControl(m_velocityVoltage.withVelocity(speed));
   }
 }
-
