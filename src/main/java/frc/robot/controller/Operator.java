@@ -26,7 +26,6 @@ public class Operator extends CustomXboxController implements Controller {
 
   @Getter @Setter private CommandFactory commandFactory;
   @Getter @Setter private Zones zone;
-  @Getter @Setter private ShootingMechanism shootingMechanism;
 
   private Operator() {
     super(ControllerConstants.OPERATOR_CONTROLLER_PORT);
@@ -74,14 +73,20 @@ public class Operator extends CustomXboxController implements Controller {
         .onTrue(
             new SelectCommand<OperatorState>(
                 Map.of(
-                    OperatorState.NORMAL, commandFactory.duckHood(),
+                    OperatorState.NORMAL, commandFactory.lowerIntake(),
                     OperatorState.OVERRIDE, commandFactory.startIndexing()),
                 () -> operatorState))
         .onFalse(
             new SelectCommand<OperatorState>(
                 Map.of(
-                    OperatorState.NORMAL, Commands.none(),
+                    OperatorState.NORMAL, commandFactory.raiseIntake(),
                     OperatorState.OVERRIDE, commandFactory.stopIndexing()),
+                () -> operatorState))
+        .whileTrue(
+            new SelectCommand<OperatorState>(
+                Map.of(
+                    OperatorState.NORMAL, commandFactory.duckHood(),
+                    OperatorState.OVERRIDE, Commands.none()),
                 () -> operatorState));
 
     this.b()
@@ -90,8 +95,7 @@ public class Operator extends CustomXboxController implements Controller {
                 Map.of(
                     OperatorState.NORMAL, commandFactory.shootCommand(),
                     OperatorState.OVERRIDE,
-                        commandFactory.startFlywheelsWithSolution(
-                            shootingMechanism::getShootingSolution)),
+                        commandFactory.startFlywheelsWithSolution()),
                 () -> operatorState))
         .onFalse(
             new SelectCommand<OperatorState>(
@@ -152,6 +156,51 @@ public class Operator extends CustomXboxController implements Controller {
                 Map.of(
                     OperatorState.NORMAL, Commands.none(),
                     OperatorState.OVERRIDE, commandFactory.moveTurretManualy(Degrees.of(0.1))),
+                () -> operatorState));
+
+
+    this.leftBumper()
+        .onTrue(
+            new SelectCommand<OperatorState>(
+                Map.of(
+                    OperatorState.NORMAL, commandFactory.raiseIntake(),
+                    OperatorState.OVERRIDE, commandFactory.raiseIntake()),
+                () -> operatorState));
+    
+    this.rightBumper()
+        .onTrue(
+            new SelectCommand<OperatorState>(
+                Map.of(
+                    OperatorState.NORMAL, commandFactory.lowerIntake(),
+                    OperatorState.OVERRIDE, commandFactory.lowerIntake()),
+                () -> operatorState));
+
+    this.rightTrigger()
+        .onTrue(
+            new SelectCommand<OperatorState>(
+                Map.of(
+                    OperatorState.NORMAL, Commands.none(),
+                    OperatorState.OVERRIDE, commandFactory.reverseIntake()),
+                () -> operatorState))
+        .onFalse(
+            new SelectCommand<OperatorState>(
+                Map.of(
+                    OperatorState.NORMAL, Commands.none(),
+                    OperatorState.OVERRIDE, commandFactory.stopIntake()),
+                () -> operatorState));
+
+    this.leftTrigger()
+        .onTrue(
+            new SelectCommand<OperatorState>(
+                Map.of(
+                    OperatorState.NORMAL, Commands.none(),
+                    OperatorState.OVERRIDE, commandFactory.startIntake()),
+                () -> operatorState))
+        .onFalse(
+            new SelectCommand<OperatorState>(
+                Map.of(
+                    OperatorState.NORMAL, Commands.none(),
+                    OperatorState.OVERRIDE, commandFactory.stopIntake()),
                 () -> operatorState));
 
     leftJoystickX.whileTrue(commandFactory.moveTurretManualyWithSticks(this::getLeftX));

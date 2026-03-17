@@ -161,8 +161,8 @@ public class CommandFactory {
     return stopIndexing();
   }
 
-  public Command startFlywheelsWithSolution(Supplier<ShootingSolution> solution) {
-    return m_flyWheel.setSpeedWithSolution(solution);
+  public Command startFlywheelsWithSolution() {
+    return m_flyWheel.setSpeedWithSolution(m_shootingMechanism::getShootingSolution);
   }
 
   public Command slowlyMoveHoodDown() {
