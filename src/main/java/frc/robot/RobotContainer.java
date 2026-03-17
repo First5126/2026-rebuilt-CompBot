@@ -73,17 +73,11 @@ public class RobotContainer {
   public CommandFactory m_commandFactory =
       new CommandFactory(
           m_drivetrain,
-         
           m_turret,
-         
           m_zones,
-         
           m_shootingMechanism,
-         
           m_flyWheel,
-         
           m_hood,
-         
           m_indexer,
           operatorState,
           m_intakeDeployer,
@@ -109,13 +103,9 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    Driver.init(
-            m_drivetrain,
-            m_commandFactory)
-        .configureBindings();
+    Driver.init(m_drivetrain, m_commandFactory).configureBindings();
 
-    Operator.init(m_commandFactory, operatorState)
-        .configureBindings();
+    Operator.init(m_commandFactory, operatorState).configureBindings();
 
     // Shooting Mechanism Default Command
     m_shootingMechanism.setDefaultCommand(m_commandFactory.startTurretTracking());

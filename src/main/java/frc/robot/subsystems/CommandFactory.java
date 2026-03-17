@@ -11,7 +11,6 @@ import frc.robot.FMS.ShiftData;
 import frc.robot.FMS.Zones;
 import frc.robot.constants.ControllerConstants.OperatorState;
 import frc.robot.constants.WaypointConstants;
-import frc.robot.subsystems.ShootingMechanism.ShootingSolution;
 import java.util.Set;
 import java.util.function.Supplier;
 

@@ -29,7 +29,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.CANConstants;
 import frc.robot.constants.HoodConstants;
-import frc.robot.constants.TurretConstants;
 import frc.robot.subsystems.ShootingMechanism.ShootingSolution;
 import java.util.function.Supplier;
 
@@ -162,9 +161,11 @@ public class Hood extends SubsystemBase {
   }
 
   public Command manualRotationWithSticks(Supplier<Double> controlerY) {
-    return run(() -> {
-      m_hoodCANCoder.setControl(m_voltageOut.withOutput(HoodConstants.MAX_VOLTAGE_MANUAL * (controlerY.get() - 0.1)));
-    });
+    return run(
+        () -> {
+          m_hoodCANCoder.setControl(
+              m_voltageOut.withOutput(HoodConstants.MAX_VOLTAGE_MANUAL * (controlerY.get() - 0.1)));
+        });
   }
 
   public Command holdCertainPosition(Angle angle) {
