@@ -80,16 +80,18 @@ public class ShootingMechanism extends SubsystemBase {
       Supplier<ChassisSpeeds> speed,
       Supplier<GoalPose> goalPoseSupplier) {
 
-    // check to see if our suppliers are valid
-    if (robotPoseSupplier.get() != null && goalPoseSupplier.get() != null && speed.get() != null) {
-      SmartDashboard.putBoolean("Valid Shooting Solution", true);
+    Pose2d robotPose = robotPoseSupplier.get();
+    ChassisSpeeds robotSpeeds = speed.get();
+    GoalPose goalPose = goalPoseSupplier.get();
 
-      // retreive the value of all the suppliers
-      Pose2d robotPose = robotPoseSupplier.get();
-      ChassisSpeeds robotSpeeds =
-          ChassisSpeeds.fromRobotRelativeSpeeds(speed.get(), robotPose.getRotation());
-      GoalPose goalPose = goalPoseSupplier.get();
+    // check to see if our suppliers are valid
+    if (robotPose != null && goalPose != null && robotSpeeds != null) {
+      SmartDashboard.putBoolean("Valid Shooting Solution", true);
       Pose2d targetPose = goalPose.pose;
+
+      // update the robot speeds
+      robotSpeeds =
+        ChassisSpeeds.fromRobotRelativeSpeeds(robotSpeeds, robotPose.getRotation());
 
       // find air time from distance
       double distanceToTarget = robotPose.getTranslation().getDistance(targetPose.getTranslation());
