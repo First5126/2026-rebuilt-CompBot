@@ -10,6 +10,7 @@ import frc.robot.FMS.ShiftData;
 import frc.robot.FMS.Zones;
 import frc.robot.constants.ControllerConstants.OperatorState;
 import frc.robot.constants.WaypointConstants;
+import frc.robot.controller.Operator;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -23,7 +24,6 @@ public class CommandFactory {
   private FlyWheel m_flyWheel;
   private Hood m_hood;
   private Indexer m_indexer;
-  private OperatorState operatorState;
   private IntakeDeployer m_intakeDeployer;
   private Intake m_intake;
 
@@ -35,7 +35,6 @@ public class CommandFactory {
       FlyWheel flyWheel,
       Hood hood,
       Indexer indexer,
-      OperatorState operatorState,
       IntakeDeployer intakeDeployer,
       Intake intake) {
     this.m_drivetrain = drivetrain;
@@ -46,7 +45,6 @@ public class CommandFactory {
     this.m_flyWheel = flyWheel;
     this.m_hood = hood;
     this.m_indexer = indexer;
-    this.operatorState = operatorState;
     this.m_intakeDeployer = intakeDeployer;
     this.m_intake = intake;
   }
@@ -125,14 +123,19 @@ public class CommandFactory {
     return Commands.defer(
         () -> {
           if (checkIfNotOverride()) {
-            return m_flyWheel
-                .setSpeedWithSolution(m_shootingMechanism::getShootingSolution)
-                .alongWith(m_hood.setPosition(m_shootingMechanism::getShootingSolution));
+            Command shootCommand =
+                m_flyWheel
+                    .setSpeedWithSolution(m_shootingMechanism::getShootingSolution)
+                    .alongWith(m_hood.setPosition(m_shootingMechanism::getShootingSolution));
+            shootCommand.addRequirements(m_flyWheel, m_hood);
+            return shootCommand;
           } else {
-            return Commands.none();
+            Command none = Commands.none();
+            none.addRequirements(m_flyWheel);
+            return none;
           }
         },
-        Set.of());
+        Set.of(m_flyWheel, m_hood));
   }
 
   public Command stopShootingMechanism() {
@@ -148,19 +151,26 @@ public class CommandFactory {
   }
 
   private boolean checkIfNotOverride() {
-    return operatorState == OperatorState.NORMAL;
+    // Use the live Operator singleton as the single source of truth. Default to NORMAL
+    // if the Operator state hasn't been set yet (null).
+    OperatorState state = Operator.getInstance().getOperatorState();
+    return state == null || state == OperatorState.NORMAL;
   }
 
   public Command startTurretTracking() {
     return Commands.defer(
         () -> {
           if (checkIfNotOverride()) {
-            return m_shootingMechanism.startTrackingCommand();
+            Command turretCommand = m_shootingMechanism.startTrackingCommand();
+            turretCommand.addRequirements(m_turret, m_shootingMechanism);
+            return turretCommand;
           } else {
-            return Commands.none();
+            Command none = Commands.none();
+            none.addRequirements(m_shootingMechanism);
+            return none;
           }
         },
-        Set.of());
+        Set.of(m_shootingMechanism, m_turret));
   }
 
   public Command shootCommand() {

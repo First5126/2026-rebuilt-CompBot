@@ -67,8 +67,6 @@ public class RobotContainer {
 
   // End of Declaring
 
-  private OperatorState operatorState = OperatorState.NORMAL;
-
   PhotonDetails[] photonDetails = {};
   public CommandFactory m_commandFactory =
       new CommandFactory(
@@ -79,7 +77,6 @@ public class RobotContainer {
           m_flyWheel,
           m_hood,
           m_indexer,
-          operatorState,
           m_intakeDeployer,
           m_intake);
 
@@ -105,7 +102,9 @@ public class RobotContainer {
   private void configureBindings() {
     Driver.init(m_drivetrain, m_commandFactory, m_zones).configureBindings();
 
-    Operator.init(m_commandFactory, operatorState).configureBindings();
+    // Initialize Operator singleton with an explicit NORMAL state so there's a single
+    // source of truth for operator mode (no duplicate copies stored in multiple classes).
+    Operator.init(m_commandFactory, OperatorState.NORMAL).configureBindings();
 
     // Shooting Mechanism Default Command
     m_shootingMechanism.setDefaultCommand(m_commandFactory.startTurretTracking());

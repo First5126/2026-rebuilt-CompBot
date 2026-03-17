@@ -158,7 +158,7 @@ public class Operator extends CustomXboxController implements Controller {
                         commandFactory
                             .reverseShootingCommand()
                             .andThen(Commands.waitSeconds(0.25))
-                            .andThen(commandFactory.stopShooting()),
+                            .andThen(commandFactory.stopShootCommand()),
                     OperatorState.OVERRIDE, commandFactory.stopShooting()),
                 () -> operatorState));
 
@@ -239,7 +239,7 @@ public class Operator extends CustomXboxController implements Controller {
             new SelectCommand<OperatorState>(
                 Map.of(
                     OperatorState.NORMAL, commandFactory.startIntake(),
-                    OperatorState.OVERRIDE, commandFactory.reverseIntake()),
+                    OperatorState.OVERRIDE, commandFactory.startIntake()),
                 () -> operatorState))
         .onFalse(
             new SelectCommand<OperatorState>(
@@ -253,7 +253,7 @@ public class Operator extends CustomXboxController implements Controller {
             new SelectCommand<OperatorState>(
                 Map.of(
                     OperatorState.NORMAL, Commands.none(),
-                    OperatorState.OVERRIDE, commandFactory.startIntake()),
+                    OperatorState.OVERRIDE, commandFactory.reverseIntake()),
                 () -> operatorState))
         .onFalse(
             new SelectCommand<OperatorState>(
