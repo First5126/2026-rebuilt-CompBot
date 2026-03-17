@@ -90,8 +90,7 @@ public class ShootingMechanism extends SubsystemBase {
       Pose2d targetPose = goalPose.pose;
 
       // update the robot speeds
-      robotSpeeds =
-        ChassisSpeeds.fromRobotRelativeSpeeds(robotSpeeds, robotPose.getRotation());
+      robotSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(robotSpeeds, robotPose.getRotation());
 
       // find air time from distance
       double distanceToTarget = robotPose.getTranslation().getDistance(targetPose.getTranslation());
