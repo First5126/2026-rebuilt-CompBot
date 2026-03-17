@@ -31,8 +31,6 @@ public class Operator extends CustomXboxController implements Controller {
     Operator operator = getInstance();
 
     operator.setCommandFactory(commandFactory);
-    operator.setHood(hood);
-    operator.setIntake(intake);
 
     return operator;
   }
@@ -44,14 +42,8 @@ public class Operator extends CustomXboxController implements Controller {
     this.leftBumper().onTrue(commandFactory.raiseIntake());
     this.rightBumper().onTrue(commandFactory.lowerIntake());
 
-    this.rightTrigger().whileTrue(intake.runIntakeCommand());
-    this.leftTrigger().whileTrue(intake.runOuttakeCommand());
-
     this.leftBumper().onTrue(commandFactory.raiseIntake());
     this.rightBumper().onTrue(commandFactory.lowerIntake());
-
-    this.rightTrigger().whileTrue(intake.runIntakeCommand());
-    this.leftTrigger().whileTrue(intake.runOuttakeCommand());
 
     this.povRight().onTrue(commandFactory.manualTurretRotation(Degree.of(45)));
     this.povLeft().onTrue(commandFactory.manualTurretRotation(Degree.of(-45)));

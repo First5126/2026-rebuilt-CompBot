@@ -71,22 +71,15 @@ public class RobotContainer {
   PhotonDetails[] photonDetails = {};
   public CommandFactory m_commandFactory =
       new CommandFactory(
-          m_drivetrain,
-         
-          m_turret,
-         
-          m_zones,
-         
-          m_shootingMechanism,
-         
-          m_flyWheel,
-         
-          m_hood,
-         
-          m_indexer,
-          m_intakeDeployer,
-          m_intake,
-          m_intakeDeployer);
+        m_drivetrain,
+        m_turret,
+        m_zones,
+        m_shootingMechanism,
+        m_flyWheel,
+        m_hood,
+        m_indexer,
+        m_intakeDeployer,
+        m_intake);
 
   private AprilTagLocalization m_aprilTagLocalization =
       new AprilTagLocalization(
@@ -108,20 +101,17 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    Driver.init(
-            m_drivetrain,
-            m_aprilTagLocalization,
-            m_commandFactory,
-            m_intakeDeployer,
-            m_intakeDeployer,
-            m_turret,
-            m_zones,
-            m_indexer,
-            m_flyWheel,
-            m_hood,
-            m_shootingMechanism,
-            m_intake)
-        .configureBindings();
+    Driver.init(m_drivetrain,
+      m_aprilTagLocalization,
+      m_commandFactory,
+      m_intakeDeployer,
+      m_turret,
+      m_zones,
+      m_indexer,
+      m_flyWheel,
+      m_hood,
+      m_shootingMechanism,
+      m_intake).configureBindings();
 
     Operator.init(m_commandFactory).configureBindings();
 
