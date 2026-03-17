@@ -8,11 +8,27 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.333202146690519,
-        "y": 7.580250447227192
+        "x": 4.054366197183099,
+        "y": 7.468186619718311
       },
       "isLocked": false,
       "linkedName": "Trench - Depot Side"
+    },
+    {
+      "anchor": {
+        "x": 5.044401408450705,
+        "y": 7.4522183098591555
+      },
+      "prevControl": {
+        "x": 4.1876545084041545,
+        "y": 7.4522183098591555
+      },
+      "nextControl": {
+        "x": 5.970563380281691,
+        "y": 7.4522183098591555
+      },
+      "isLocked": false,
+      "linkedName": null
     },
     {
       "anchor": {
@@ -20,8 +36,8 @@
         "y": 6.801431127012522
       },
       "prevControl": {
-        "x": 7.004418604651163,
-        "y": 7.888533094812164
+        "x": 6.864788732394366,
+        "y": 7.5160915492957745
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,7 +46,7 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5,
+      "waypointRelativePos": 1.0,
       "rotationDegrees": 180.0
     }
   ],
@@ -38,14 +54,20 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "",
+      "name": "Duck Hood",
       "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "Intake",
+      "waypointRelativePos": 1.75,
       "endWaypointRelativePos": null,
       "command": null
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 1.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -53,14 +75,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 4.28,
+    "velocity": 2.82,
     "rotation": -90.0
   },
   "reversed": false,
   "folder": "Depot Side",
   "idealStartingState": {
-    "velocity": 0,
+    "velocity": 0.0,
     "rotation": 180.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

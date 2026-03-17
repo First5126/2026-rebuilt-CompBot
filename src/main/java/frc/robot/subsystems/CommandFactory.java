@@ -120,14 +120,14 @@ public class CommandFactory {
         .setSpeedWithSolution(m_shootingMechanism::getShootingSolution)
         .alongWith(m_hood.setPosition(m_shootingMechanism::getShootingSolution));
   }
-
+  
   public Command indexAndShoot() {
-    Command startFlyWheel = m_flyWheel
-        .setSpeedWithSolution(m_shootingMechanism::getShootingSolution)
-        .alongWith(m_hood.setPosition(m_shootingMechanism::getShootingSolution));
+    // Command startFlyWheel = m_flyWheel
+    //     .setSpeedWithSolution(m_shootingMechanism::getShootingSolution)
+    //     .alongWith(m_hood.setPosition(m_shootingMechanism::getShootingSolution));
     Command startIndex = m_indexer.startIndexing();
 
-    return startFlyWheel.withTimeout(1.5).andThen(startIndex);
+    return startIndex;
   }
 
   public Command stopShootingMechanism() {

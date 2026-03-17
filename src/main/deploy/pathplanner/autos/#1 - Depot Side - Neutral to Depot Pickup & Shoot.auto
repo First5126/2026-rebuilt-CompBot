@@ -19,15 +19,15 @@
                       }
                     },
                     {
-                      "type": "named",
-                      "data": {
-                        "name": "Intake"
-                      }
-                    },
-                    {
                       "type": "path",
                       "data": {
                         "pathName": "Neutral Zone Depot Side Pickup"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Stop Intake"
                       }
                     },
                     {

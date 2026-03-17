@@ -11,6 +11,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -102,7 +103,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("StopIntake", m_commandFactory.stopIntake());
 
     // Combined Commands
-    NamedCommands.registerCommand("Turret Default", m_shootingMechanism.startTrackingCommand());
+    NamedCommands.registerCommand("Turret Default", m_shootingMechanism.startTrackingCommandAuto());
     NamedCommands.registerCommand("IntakeandShoot", m_commandFactory.intakeAndShoot());
 
     // Intake Deployer
@@ -110,14 +111,20 @@ public class RobotContainer {
     NamedCommands.registerCommand("Raise Intake ", m_intakeDeployer.raiseIntakeUpCommand());
 
     //Shoot
-    NamedCommands.registerCommand("Index and Shoot", m_commandFactory.indexAndShoot());
+    NamedCommands.registerCommand("Index and Shoot", m_commandFactory.startIndexing());
 
     // Duck
     NamedCommands.registerCommand("Duck Hood", m_commandFactory.duckHood());
 
     autoChooser = AutoBuilder.buildAutoChooser();
     configureBindings();
+
+
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
+
+
+  
 
   private void configureBindings() {
     Driver.init(
