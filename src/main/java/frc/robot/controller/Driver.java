@@ -9,6 +9,7 @@ import frc.robot.subsystems.FlyWheel;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.IntakeDeployer;
 import frc.robot.subsystems.ShootingMechanism;
 import frc.robot.subsystems.Turret;
 import frc.robot.vision.AprilTagLocalization;
@@ -29,6 +30,7 @@ public class Driver extends CustomXboxController implements Controller {
   @Getter @Setter private FlyWheel flyWheel;
   @Getter @Setter private ShootingMechanism shootingMechanism;
   @Getter @Setter private Hood hood;
+  @Getter @Setter private Intake intakeRoller;
 
   private final SwerveRequest.SwerveDriveBrake BRAKE = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt POINT = new SwerveRequest.PointWheelsAt();
@@ -56,7 +58,8 @@ public class Driver extends CustomXboxController implements Controller {
       Indexer indexer,
       FlyWheel flyWheel,
       Hood hood,
-      ShootingMechanism shootingMechanism) {
+      ShootingMechanism shootingMechanism,
+      Intake intakeRoller) {
     Driver driver = getInstance();
     driver.setDrivetrain(drivetrain);
     driver.setAprilTagLocalization(aprilTagLocalization);
@@ -68,6 +71,7 @@ public class Driver extends CustomXboxController implements Controller {
     driver.setFlyWheel(flyWheel);
     driver.setHood(hood);
     driver.setShootingMechanism(shootingMechanism);
+    driver.setIntakeRoller(intakeRoller);
 
     return driver;
   }
@@ -86,11 +90,6 @@ public class Driver extends CustomXboxController implements Controller {
 
     // this.a().onTrue(aprilTagLocalization.setTrust(true));
     // this.a().onFalse(aprilTagLocalization.setTrust(false));
-
-    // this.povUp().onTrue(hood.setVoltage(Volts.of(0.5))).onFalse(hood.setVoltage(Volts.of(0)));
-    // this.povDown().onTrue(hood.setVoltage(Volts.of(-0.5))).onFalse(hood.setVoltage(Volts.of(0)));
-
-    // this.a().onTrue(indexer.startIndexing()).onFalse(indexer.stopIndexing());
 
     // Reset the field-centric heading on left bumper press.
     this.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
