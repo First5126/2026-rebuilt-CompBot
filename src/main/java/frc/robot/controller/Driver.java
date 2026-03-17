@@ -30,7 +30,6 @@ public class Driver extends CustomXboxController implements Controller {
   @Getter @Setter private FlyWheel flyWheel;
   @Getter @Setter private ShootingMechanism shootingMechanism;
   @Getter @Setter private Hood hood;
-  @Getter @Setter private Intake intakeRoller;
 
   private final SwerveRequest.SwerveDriveBrake BRAKE = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt POINT = new SwerveRequest.PointWheelsAt();
@@ -52,14 +51,14 @@ public class Driver extends CustomXboxController implements Controller {
       CommandSwerveDrivetrain drivetrain,
       AprilTagLocalization aprilTagLocalization,
       CommandFactory commandFactory,
+      IntakeDeployer intakeDeployer,
       Intake intake,
       Turret turret,
       Zones zone,
       Indexer indexer,
       FlyWheel flyWheel,
       Hood hood,
-      ShootingMechanism shootingMechanism,
-      Intake intakeRoller) {
+      ShootingMechanism shootingMechanism) {
     Driver driver = getInstance();
     driver.setDrivetrain(drivetrain);
     driver.setAprilTagLocalization(aprilTagLocalization);
@@ -71,8 +70,6 @@ public class Driver extends CustomXboxController implements Controller {
     driver.setFlyWheel(flyWheel);
     driver.setHood(hood);
     driver.setShootingMechanism(shootingMechanism);
-    driver.setIntakeRoller(intakeRoller);
-
     return driver;
   }
 

@@ -60,8 +60,8 @@ public class RobotContainer {
   private FlyWheel m_flyWheel = new FlyWheel();
   private Indexer m_indexer = new Indexer();
   private Hood m_hood = new Hood();
-  private IntakeDeployer m_intakeDeployer = new IntakeDeployer();
   private Intake m_intake = new Intake();
+  private IntakeDeployer m_intakeDeployer = new IntakeDeployer();
 
   private ShootingMechanism m_shootingMechanism =
       new ShootingMechanism(m_turret, m_drivetrain, m_zones, m_hood, m_flyWheel);
@@ -111,13 +111,13 @@ public class RobotContainer {
             m_aprilTagLocalization,
             m_commandFactory,
             m_intakeDeployer,
+            m_intake,
             m_turret,
             m_zones,
             m_indexer,
             m_flyWheel,
             m_hood,
-            m_shootingMechanism,
-            m_intake)
+            m_shootingMechanism)
         .configureBindings();
 
     Operator.init(m_commandFactory).configureBindings();

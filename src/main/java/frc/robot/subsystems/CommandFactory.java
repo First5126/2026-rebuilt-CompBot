@@ -101,15 +101,11 @@ public class CommandFactory {
   }
 
   public Command intake() {
-    return m_intake.runIntakeWheelsCommand();
+    return m_intake.runIntake();
   }
 
-  public Command stopIntake() {
-    return m_intake.stopIntakeWheelsCommand();
-  }
-
-   public Command intakeAndShoot() {
-    Command intake = m_intake.runIntakeWheelsCommand();
+  public Command intakeAndShoot() {
+    Command intake = m_intake.runIntake();
     Command turretMovement = m_shootingMechanism.startTrackingCommand();
     Command shoot = m_flyWheel.setSpeedWithSolution(m_shootingMechanism::getShootingSolution).alongWith(m_hood.setPosition(m_shootingMechanism::getShootingSolution));
 
