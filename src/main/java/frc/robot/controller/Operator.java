@@ -154,7 +154,11 @@ public class Operator extends CustomXboxController implements Controller {
         .onFalse(
             new SelectCommand<OperatorState>(
                 Map.of(
-                    OperatorState.NORMAL, commandFactory.stopShootCommand(),
+                    OperatorState.NORMAL,
+                        commandFactory
+                            .reverseShootingCommand()
+                            .andThen(Commands.waitSeconds(0.25))
+                            .andThen(commandFactory.stopShooting()),
                     OperatorState.OVERRIDE, commandFactory.stopShooting()),
                 () -> operatorState));
 
@@ -162,13 +166,13 @@ public class Operator extends CustomXboxController implements Controller {
         .onTrue(
             new SelectCommand<OperatorState>(
                 Map.of(
-                    OperatorState.NORMAL, Commands.none(),
+                    OperatorState.NORMAL, commandFactory.stopShootingCommand(),
                     OperatorState.OVERRIDE, commandFactory.reverseShootingCommand()),
                 () -> operatorState))
         .onFalse(
             new SelectCommand<OperatorState>(
                 Map.of(
-                    OperatorState.NORMAL, Commands.none(),
+                    OperatorState.NORMAL, commandFactory.stopShootingCommand(),
                     OperatorState.OVERRIDE, commandFactory.stopShootingCommand()),
                 () -> operatorState));
 

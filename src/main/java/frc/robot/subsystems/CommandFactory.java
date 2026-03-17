@@ -6,7 +6,6 @@ import static edu.wpi.first.units.Units.Degrees;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import frc.robot.FMS.ShiftData;
 import frc.robot.FMS.Zones;
 import frc.robot.constants.ControllerConstants.OperatorState;
@@ -122,13 +121,18 @@ public class CommandFactory {
     return m_flyWheel.stopSpinning();
   }
 
-  public ConditionalCommand startShootingMechanism() {
-    return new ConditionalCommand(
-        m_flyWheel
-            .setSpeedWithSolution(m_shootingMechanism::getShootingSolution)
-            .alongWith(m_hood.setPosition(m_shootingMechanism::getShootingSolution)),
-        Commands.none(),
-        this::checkIfNotOverride);
+  public Command startShootingMechanism() {
+    return Commands.defer(
+        () -> {
+          if (checkIfNotOverride()) {
+            return m_flyWheel
+                .setSpeedWithSolution(m_shootingMechanism::getShootingSolution)
+                .alongWith(m_hood.setPosition(m_shootingMechanism::getShootingSolution));
+          } else {
+            return Commands.none();
+          }
+        },
+        Set.of());
   }
 
   public Command stopShootingMechanism() {
@@ -147,9 +151,16 @@ public class CommandFactory {
     return operatorState == OperatorState.NORMAL;
   }
 
-  public ConditionalCommand startTurretTracking() {
-    return new ConditionalCommand(
-        m_shootingMechanism.startTrackingCommand(), Commands.none(), this::checkIfNotOverride);
+  public Command startTurretTracking() {
+    return Commands.defer(
+        () -> {
+          if (checkIfNotOverride()) {
+            return m_shootingMechanism.startTrackingCommand();
+          } else {
+            return Commands.none();
+          }
+        },
+        Set.of());
   }
 
   public Command shootCommand() {
