@@ -111,7 +111,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Raise Intake ", m_intakeDeployer.raiseIntakeUpCommand());
 
     //Shoot
-    NamedCommands.registerCommand("Index and Shoot", m_commandFactory.startIndexing());
+    NamedCommands.registerCommand("Index and Shoot", m_commandFactory.indexAndShoot());
 
     // Duck
     NamedCommands.registerCommand("Duck Hood", m_commandFactory.duckHood());
@@ -121,10 +121,7 @@ public class RobotContainer {
 
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
-  }
-
-
-  
+  }  
 
   private void configureBindings() {
     Driver.init(

@@ -97,6 +97,14 @@ public class Turret extends SubsystemBase {
         });
   }
 
+  public Command rotateToPositionAuto(Supplier<ShootingSolution> shootingSolution) {
+    return run(
+        () -> {
+          setPosition(shootingSolution.get().predictedTurretAngle);
+        });
+  }
+
+
   @Override
   public void periodic() {
     double currentAngle = m_turretMotor.getPosition().getValueAsDouble() * 360.0;

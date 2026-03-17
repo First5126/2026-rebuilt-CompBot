@@ -6,6 +6,7 @@ import static edu.wpi.first.units.Units.Degrees;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.FMS.Zones;
 import frc.robot.constants.WaypointConstants;
 import java.util.Set;
@@ -120,13 +121,12 @@ public class CommandFactory {
         .setSpeedWithSolution(m_shootingMechanism::getShootingSolution)
         .alongWith(m_hood.setPosition(m_shootingMechanism::getShootingSolution));
   }
-  
+
   public Command indexAndShoot() {
     // Command startFlyWheel = m_flyWheel
     //     .setSpeedWithSolution(m_shootingMechanism::getShootingSolution)
     //     .alongWith(m_hood.setPosition(m_shootingMechanism::getShootingSolution));
     Command startIndex = m_indexer.startIndexing();
-
     return startIndex;
   }
 

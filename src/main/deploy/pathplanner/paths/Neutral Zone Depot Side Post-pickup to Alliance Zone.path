@@ -16,50 +16,43 @@
     },
     {
       "anchor": {
-        "x": 4.645193661971832,
-        "y": 7.563996478873239
+        "x": 5.890721830985916,
+        "y": 7.5799647887323935
       },
       "prevControl": {
-        "x": 6.105479887374337,
-        "y": 7.5315456738642945
+        "x": 6.561390845070423,
+        "y": 7.548028169014085
       },
       "nextControl": {
-        "x": 3.3030272304541506,
-        "y": 7.593822399573632
+        "x": 5.641004796554807,
+        "y": 7.5918560760862555
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.6602862254025041,
-        "y": 5.973935599284436
+        "x": 3.9585563380281696,
+        "y": 7.5799647887323935
       },
       "prevControl": {
-        "x": 2.1205724508050086,
-        "y": 6.022611806797853
+        "x": 5.418842563430674,
+        "y": 7.547513983723449
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Pickup - Depot"
+      "linkedName": "Under Trench - Depot Side"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5,
+      "waypointRelativePos": 1.0,
       "rotationDegrees": 180.0
     }
   ],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "Index and Shoot",
-      "waypointRelativePos": 1.4308093994778068,
-      "endWaypointRelativePos": null,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 1.0,
     "maxAcceleration": 3.0,
@@ -73,7 +66,7 @@
     "rotation": 180.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Depot Side",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -90.0
