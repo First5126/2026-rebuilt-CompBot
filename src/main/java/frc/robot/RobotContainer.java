@@ -25,6 +25,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.FlyWheel;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.IntakeDeployer;
 import frc.robot.subsystems.ShootingMechanism;
 import frc.robot.subsystems.Turret;
@@ -55,12 +56,11 @@ public class RobotContainer {
 
   private Turret m_turret = new Turret();
   private Zones m_zones = new Zones(m_drivetrain);
-
   private FlyWheel m_flyWheel = new FlyWheel();
   private Indexer m_indexer = new Indexer();
   private Hood m_hood = new Hood();
-
-  private IntakeDeployer m_intake = new IntakeDeployer();
+  private IntakeDeployer m_intakeDeployer = new IntakeDeployer();
+  private Intake m_intake = new Intake();
 
   private ShootingMechanism m_shootingMechanism =
       new ShootingMechanism(m_turret, m_drivetrain, m_zones, m_hood, m_flyWheel);
@@ -73,13 +73,21 @@ public class RobotContainer {
   public CommandFactory m_commandFactory =
       new CommandFactory(
           m_drivetrain,
+         
           m_turret,
+         
           m_zones,
+         
           m_shootingMechanism,
+         
           m_flyWheel,
+         
           m_hood,
+         
           m_indexer,
-          operatorState);
+          operatorState,
+          m_intakeDeployer,
+          m_intake);
 
   private AprilTagLocalization m_aprilTagLocalization =
       new AprilTagLocalization(
@@ -87,6 +95,7 @@ public class RobotContainer {
           m_drivetrain::resetPose,
           m_drivetrain::addVisionMeasurement,
           m_drivetrain,
+          m_zones,
           photonDetails,
           AprilTagLocalizationConstants.LIMELIGHT_DETAILS_RIGHT,
           AprilTagLocalizationConstants.LIMELIGHT_DETAILS_LEFT);

@@ -50,6 +50,15 @@ public class Operator extends CustomXboxController implements Controller {
     return INSTANCE;
   }
 
+  public static Operator init(CommandFactory commandFactory) {
+
+    Operator operator = getInstance();
+
+    operator.setCommandFactory(commandFactory);
+
+    return operator;
+  }
+
   @Override
   public Operator configureBindings() {
 
