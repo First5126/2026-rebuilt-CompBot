@@ -241,4 +241,8 @@ public class CommandFactory {
     return m_intake.stopIntake();
   }
 
+  public Command setIntakeDown() {
+    return m_intakeDeployer.lowerIntakeDownCommand();
+  }
+
 }
