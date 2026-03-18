@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.FMS.Zones;
 import frc.robot.constants.AprilTagLocalizationConstants;
 import frc.robot.constants.AprilTagLocalizationConstants.PhotonDetails;
+import frc.robot.constants.ControllerConstants.OperatorState;
 import frc.robot.controller.Driver;
 import frc.robot.controller.Operator;
 import frc.robot.generated.TunerConstants;
@@ -141,7 +142,13 @@ public class RobotContainer {
     Operator.init(m_commandFactory).configureBindings();
 
     // Shooting Mechanism Default Command
-    m_shootingMechanism.setDefaultCommand(m_shootingMechanism.startTrackingCommand());
+    m_shootingMechanism.setDefaultCommand(m_commandFactory.startTurretTracking());
+    m_flyWheel.setDefaultCommand(m_commandFactory.startShootingMechanism());
+
+    // Turret Default Command
+
+    // this.m_turret.setDefaultCommand(m_turret.rotateToPosition(() ->
+    // m_shootingMechanism.getShootingSolution().predictedTurretAngle));
 
     // Idle while the robot is disabled. This ensures the configured
     // neutral mode is applied to the drive motors while disabled.

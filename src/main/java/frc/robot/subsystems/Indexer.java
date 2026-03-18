@@ -55,6 +55,10 @@ public class Indexer extends SubsystemBase {
     return runOnce(() -> stopMotors());
   }
 
+  public Command reverseIndexing() {
+    return runOnce(() -> reverseMotors());
+  }
+
   private void startMotors() {
     m_indexerMotor.setControl(m_indexerVoltageOut.withOutput(IndexerConstants.indexerSpeed));
     m_spindexerMotor.setControl(m_spindexerVoltageOut.withOutput(IndexerConstants.spindexerSpeed));
@@ -63,5 +67,11 @@ public class Indexer extends SubsystemBase {
   private void stopMotors() {
     m_indexerMotor.setControl(m_dutyCycleOut.withOutput(0));
     m_spindexerMotor.setControl(m_dutyCycleOut.withOutput(0));
+  }
+
+  private void reverseMotors() {
+    m_indexerMotor.setControl(m_indexerVoltageOut.withOutput(IndexerConstants.indexerSpeedReverse));
+    m_spindexerMotor.setControl(
+        m_spindexerVoltageOut.withOutput(IndexerConstants.spindexerSpeedReverse));
   }
 }
