@@ -49,29 +49,11 @@ public class Driver extends CustomXboxController implements Controller {
   }
 
   public static Driver init(
-      CommandSwerveDrivetrain drivetrain,
-      AprilTagLocalization aprilTagLocalization,
-      CommandFactory commandFactory,
-      IntakeDeployer intake,
-      Turret turret,
-      Zones zone,
-      Indexer indexer,
-      FlyWheel flyWheel,
-      Hood hood,
-      ShootingMechanism shootingMechanism,
-      Intake intakeRoller) {
+      CommandSwerveDrivetrain drivetrain, CommandFactory commandFactory, Zones zone) {
     Driver driver = getInstance();
     driver.setDrivetrain(drivetrain);
-    driver.setAprilTagLocalization(aprilTagLocalization);
     driver.setCommandFactory(commandFactory);
-    driver.setIntake(intake);
-    driver.setTurret(turret);
     driver.setZone(zone);
-    driver.setIndexer(indexer);
-    driver.setFlyWheel(flyWheel);
-    driver.setHood(hood);
-    driver.setShootingMechanism(shootingMechanism);
-    driver.setIntakeRoller(intakeRoller);
 
     return driver;
   }
@@ -87,9 +69,6 @@ public class Driver extends CustomXboxController implements Controller {
             this::getLeftY,
             this::getLeftX,
             zone));
-
-    // this.a().onTrue(aprilTagLocalization.setTrust(true));
-    // this.a().onFalse(aprilTagLocalization.setTrust(false));
 
     // Reset the field-centric heading on left bumper press.
     this.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));

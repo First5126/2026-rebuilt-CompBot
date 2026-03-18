@@ -8,6 +8,7 @@ import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -31,6 +32,7 @@ public class IntakeDeployer extends SubsystemBase {
     m_intakeDeployerConfiguration.Slot0 = m_intakeDeployerSlot0Configs;
     m_intakeDeployerConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     m_intakeDeployerConfiguration.Feedback.SensorToMechanismRatio = 18;
+    m_intakeDeployerConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
     MotionMagicConfigs motionMagic = m_intakeDeployerConfiguration.MotionMagic;
 

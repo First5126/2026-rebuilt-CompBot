@@ -24,6 +24,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.CANConstants;
@@ -136,6 +137,34 @@ public class Hood extends SubsystemBase {
     return runOnce(
         () -> {
           m_hoodMotor.setControl(m_positionVoltageRequest.withPosition(angle));
+        });
+  }
+
+  public Command moveAngleUpCommand() {
+    return Commands.run(
+        () -> {
+          m_hoodMotor.setControl(
+              m_positionVoltageRequest.withPosition(
+                  m_hoodMotor.getPosition().getValue().in(Degrees) + 0.1));
+        },
+        this);
+  }
+
+  public Command moveAngleDownCommand() {
+    return Commands.run(
+        () -> {
+          m_hoodMotor.setControl(
+              m_positionVoltageRequest.withPosition(
+                  m_hoodMotor.getPosition().getValue().in(Degrees) - 0.1));
+        },
+        this);
+  }
+
+  public Command manualRotationWithSticks(Supplier<Double> controlerY) {
+    return run(
+        () -> {
+          m_hoodCANCoder.setControl(
+              m_voltageOut.withOutput(HoodConstants.MAX_VOLTAGE_MANUAL * (controlerY.get() - 0.1)));
         });
   }
 

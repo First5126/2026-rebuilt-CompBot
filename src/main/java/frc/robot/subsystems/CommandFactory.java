@@ -6,9 +6,13 @@ import static edu.wpi.first.units.Units.Degrees;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.FMS.ShiftData;
 import frc.robot.FMS.Zones;
+import frc.robot.constants.ControllerConstants.OperatorState;
 import frc.robot.constants.WaypointConstants;
+import frc.robot.controller.Operator;
 import java.util.Set;
+import java.util.function.Supplier;
 
 public class CommandFactory {
 
@@ -79,6 +83,21 @@ public class CommandFactory {
         .repeatedly();
   }
 
+  public Command resetFMSTime() {
+    return Commands.runOnce(
+        () -> {
+          ShiftData.resetMatchTimeCalibration();
+        });
+  }
+
+  public Command reverseShootingCommand() {
+    return m_flyWheel.shootInCommand().alongWith(m_indexer.reverseIndexing());
+  }
+
+  public Command stopShootingCommand() {
+    return m_flyWheel.stopSpinning().alongWith(m_indexer.stopIndexing());
+  }
+
   /* tells the hood to duck for going under the trench */
   public Command duckHood() {
     return m_hood.holdCertainPosition(Degrees.of(0));
@@ -101,9 +120,22 @@ public class CommandFactory {
   }
 
   public Command startShootingMechanism() {
-    return m_flyWheel
-        .setSpeedWithSolution(m_shootingMechanism::getShootingSolution)
-        .alongWith(m_hood.setPosition(m_shootingMechanism::getShootingSolution));
+    return Commands.defer(
+        () -> {
+          if (isNormalOperatingState()) {
+            Command shootCommand =
+                m_flyWheel
+                    .setSpeedWithSolution(m_shootingMechanism::getShootingSolution)
+                    .alongWith(m_hood.setPosition(m_shootingMechanism::getShootingSolution));
+            shootCommand.addRequirements(m_flyWheel, m_hood);
+            return shootCommand;
+          } else {
+            Command none = Commands.none();
+            none.addRequirements(m_flyWheel);
+            return none;
+          }
+        },
+        Set.of(m_flyWheel, m_hood));
   }
 
   public Command stopShootingMechanism() {
@@ -116,6 +148,59 @@ public class CommandFactory {
 
   public Command stopIndexing() {
     return m_indexer.stopIndexing();
+  }
+
+  private boolean isNormalOperatingState() {
+    OperatorState state = Operator.getInstance().getOperatorState();
+    return state == null || state == OperatorState.NORMAL;
+  }
+
+  public Command startTurretTracking() {
+    return Commands.defer(
+        () -> {
+          if (isNormalOperatingState()) {
+            Command turretCommand = m_shootingMechanism.startTrackingCommand();
+            turretCommand.addRequirements(m_turret, m_shootingMechanism);
+            return turretCommand;
+          } else {
+            Command none = Commands.none();
+            none.addRequirements(m_shootingMechanism);
+            return none;
+          }
+        },
+        Set.of(m_shootingMechanism, m_turret));
+  }
+
+  public Command shootCommand() {
+    return startIndexing();
+  }
+
+  public Command stopShootCommand() {
+    return stopIndexing();
+  }
+
+  public Command startFlywheelsWithSolution() {
+    return m_flyWheel.setSpeedWithSolution(m_shootingMechanism::getShootingSolution);
+  }
+
+  public Command slowlyMoveHoodDown() {
+    return m_hood.moveAngleDownCommand();
+  }
+
+  public Command slowlyMoveHoodUp() {
+    return m_hood.moveAngleUpCommand();
+  }
+
+  public Command moveTurretManualy(Angle angle) {
+    return m_turret.manualRotation(angle);
+  }
+
+  public Command moveTurretManualyWithSticks(Supplier<Double> stick) {
+    return m_turret.manualRotationWithSticks(stick);
+  }
+
+  public Command moveHoodManualyWithSticks(Supplier<Double> stick) {
+    return m_hood.manualRotationWithSticks(stick);
   }
 
   public Command raiseIntake() {
