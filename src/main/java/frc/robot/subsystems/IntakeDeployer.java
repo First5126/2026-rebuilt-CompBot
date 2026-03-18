@@ -1,9 +1,12 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Rotations;
+
 import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -13,8 +16,11 @@ import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.ReverseLimitSourceValue;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.DutyCycle;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.CANConstants;
 import frc.robot.constants.IntakeDeployerConstants;
 
@@ -25,6 +31,7 @@ public class IntakeDeployer extends SubsystemBase {
   private TalonFX m_intakeDeployerMotorLeft =
       new TalonFX(CANConstants.intakePivotLeftMotor, CANConstants.mechanismCanivore);
   final MotionMagicExpoVoltage m_request = new MotionMagicExpoVoltage(0);
+  final DutyCycleOut m_dutyRequest = new DutyCycleOut(0);
 
   public IntakeDeployer() {
     TalonFXConfiguration m_intakeDeployerConfiguration = new TalonFXConfiguration();
@@ -36,7 +43,7 @@ public class IntakeDeployer extends SubsystemBase {
     m_intakeDeployerConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     m_intakeDeployerConfiguration.Feedback.SensorToMechanismRatio =
         IntakeDeployerConstants.GEAR_RATIO;
-    m_intakeDeployerConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+    m_intakeDeployerConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
     // Hardware Limit Switches
     HardwareLimitSwitchConfigs hardConfigs = new HardwareLimitSwitchConfigs();
@@ -46,7 +53,7 @@ public class IntakeDeployer extends SubsystemBase {
     hardConfigs.ReverseLimitSource = ReverseLimitSourceValue.LimitSwitchPin;
     hardConfigs.withReverseLimitEnable(true);
 
-    hardConfigs.ForwardLimitEnable = true;
+    hardConfigs.ForwardLimitAutosetPositionEnable = true;
 
     hardConfigs.ReverseLimitAutosetPositionValue = -0.184814;
     hardConfigs.ReverseLimitAutosetPositionEnable = true;
@@ -69,7 +76,19 @@ public class IntakeDeployer extends SubsystemBase {
   }
 
   public Command lowerIntakeDownCommand() {
+    return setWheelsDownCommand().andThen(Commands.waitUntil(this::reachedDeploySetpoint)).andThen(stopWheelsCommand());
+  }
+
+  private Boolean reachedDeploySetpoint() {
+    return m_intakeDeployerMotorLeft.getPosition().getValue().in(Rotations) > IntakeDeployerConstants.INTAKE_HALFWAY_DOWN.in(Rotations);
+  }
+
+  private Command setWheelsDownCommand() {
     return runOnce(() -> lowerIntakeDown());
+  }
+
+  private Command stopWheelsCommand() {
+    return runOnce(() -> stopMotor());
   }
 
   private void raiseIntakeUp() {
@@ -77,10 +96,14 @@ public class IntakeDeployer extends SubsystemBase {
   }
 
   private void lowerIntakeDown() {
-    rotate(IntakeDeployerConstants.INTAKE_DOWN);
+    rotate(IntakeDeployerConstants.INTAKE_HALFWAY_DOWN);
   }
 
   private void rotate(Angle setpoint) {
     m_intakeDeployerMotorLeft.setControl(m_request.withPosition(setpoint));
+  }
+
+  private void stopMotor() {
+    m_intakeDeployerMotorLeft.setControl(m_dutyRequest.withOutput(0));
   }
 }
