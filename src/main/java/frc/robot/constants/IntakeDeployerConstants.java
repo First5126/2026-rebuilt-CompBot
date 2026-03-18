@@ -21,8 +21,7 @@ public class IntakeDeployerConstants {
   public static final AngularVelocity OUTTAKE_SPEED =
       RevolutionsPerSecond.of(-20); // -60 revolution per second
 
-  public static final AngularVelocity MAX_GIGGLE_HEIGHT =
-      RevolutionsPerSecond.of(-0.0205);
+  public static final AngularVelocity MAX_GIGGLE_HEIGHT = RevolutionsPerSecond.of(-0.0205);
 
   public static int CRUISE_VELOCITY = 2; // Target cruise velocity of 80 rps
   public static int ACCELERATION = 8; // Target acceleration of 160 rps/s (0.5 seconds)

@@ -16,11 +16,9 @@ import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.ReverseLimitSourceValue;
 import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.wpilibj.DutyCycle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.CANConstants;
 import frc.robot.constants.IntakeDeployerConstants;
 
@@ -76,11 +74,14 @@ public class IntakeDeployer extends SubsystemBase {
   }
 
   public Command lowerIntakeDownCommand() {
-    return setWheelsDownCommand().andThen(Commands.waitUntil(this::reachedDeploySetpoint)).andThen(stopWheelsCommand());
+    return setWheelsDownCommand()
+        .andThen(Commands.waitUntil(this::reachedDeploySetpoint))
+        .andThen(stopWheelsCommand());
   }
 
   private Boolean reachedDeploySetpoint() {
-    return m_intakeDeployerMotorLeft.getPosition().getValue().in(Rotations) > IntakeDeployerConstants.INTAKE_HALFWAY_DOWN.in(Rotations);
+    return m_intakeDeployerMotorLeft.getPosition().getValue().in(Rotations)
+        > IntakeDeployerConstants.INTAKE_HALFWAY_DOWN.in(Rotations);
   }
 
   private Command setWheelsDownCommand() {
