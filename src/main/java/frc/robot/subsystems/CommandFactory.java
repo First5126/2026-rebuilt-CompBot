@@ -121,7 +121,8 @@ public class CommandFactory {
     return m_flyWheel.stopSpinning();
   }
 
-  // Start flywheel + hood positioning using the ShootingMechanism's computed solution when in NORMAL state
+  // Start flywheel + hood positioning using the ShootingMechanism's computed solution when in
+  // NORMAL state
   public Command startShootingWithSolution() {
     return Commands.defer(
         () -> {
