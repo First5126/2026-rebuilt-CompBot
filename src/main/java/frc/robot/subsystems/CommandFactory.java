@@ -122,7 +122,7 @@ public class CommandFactory {
   public Command startShootingMechanism() {
     return Commands.defer(
         () -> {
-          if (checkIfNotOverride()) {
+          if (isNormalOperatingState()) {
             Command shootCommand =
                 m_flyWheel
                     .setSpeedWithSolution(m_shootingMechanism::getShootingSolution)
@@ -150,9 +150,7 @@ public class CommandFactory {
     return m_indexer.stopIndexing();
   }
 
-  private boolean checkIfNotOverride() {
-    // Use the live Operator singleton as the single source of truth. Default to NORMAL
-    // if the Operator state hasn't been set yet (null).
+  private boolean isNormalOperatingState() {
     OperatorState state = Operator.getInstance().getOperatorState();
     return state == null || state == OperatorState.NORMAL;
   }
@@ -160,7 +158,7 @@ public class CommandFactory {
   public Command startTurretTracking() {
     return Commands.defer(
         () -> {
-          if (checkIfNotOverride()) {
+          if (isNormalOperatingState()) {
             Command turretCommand = m_shootingMechanism.startTrackingCommand();
             turretCommand.addRequirements(m_turret, m_shootingMechanism);
             return turretCommand;
