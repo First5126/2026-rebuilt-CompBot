@@ -183,7 +183,8 @@ public class Hood extends SubsystemBase {
     return run(
         () -> {
           m_hoodMotor.setControl(
-              m_positionVoltageRequest.withPosition(shootingSolution.get().predictedHoodAngle));
+              m_positionVoltageRequest.withPosition(
+                  shootingSolution.get().getPredictedHoodAngle()));
         });
   }
 
