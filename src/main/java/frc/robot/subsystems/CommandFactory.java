@@ -150,7 +150,7 @@ public class CommandFactory {
     return m_indexer.stopIndexing();
   }
 
-  private boolean checkIfNotOverride() {
+  private boolean isNormalOperatingState() {
     // Use the live Operator singleton as the single source of truth. Default to NORMAL
     // if the Operator state hasn't been set yet (null).
     OperatorState state = Operator.getInstance().getOperatorState();
