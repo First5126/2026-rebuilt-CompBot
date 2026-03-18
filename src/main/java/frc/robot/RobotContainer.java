@@ -26,7 +26,6 @@ import frc.robot.subsystems.FlyWheel;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.IntakeDeployer;
 import frc.robot.subsystems.ShootingMechanism;
 import frc.robot.subsystems.Turret;
@@ -72,15 +71,15 @@ public class RobotContainer {
   PhotonDetails[] photonDetails = {};
   public CommandFactory m_commandFactory =
       new CommandFactory(
-        m_drivetrain,
-        m_turret,
-        m_zones,
-        m_shootingMechanism,
-        m_flyWheel,
-        m_hood,
-        m_indexer,
-        m_intakeDeployer,
-        m_intake);
+          m_drivetrain,
+          m_turret,
+          m_zones,
+          m_shootingMechanism,
+          m_flyWheel,
+          m_hood,
+          m_indexer,
+          m_intakeDeployer,
+          m_intake);
 
   private AprilTagLocalization m_aprilTagLocalization =
       new AprilTagLocalization(
@@ -109,8 +108,8 @@ public class RobotContainer {
     Operator.init(m_commandFactory, OperatorState.NORMAL).configureBindings();
 
     // Shooting Mechanism Default Command
-    m_shootingMechanism.setDefaultCommand(m_commandFactory.startTurretTracking());
-    m_flyWheel.setDefaultCommand(m_commandFactory.startShootingWithSolution());
+    //m_shootingMechanism.setDefaultCommand(m_commandFactory.startTurretTracking());
+    //m_flyWheel.setDefaultCommand(m_commandFactory.startShootingWithSolution());
 
     // Turret Default Command
 

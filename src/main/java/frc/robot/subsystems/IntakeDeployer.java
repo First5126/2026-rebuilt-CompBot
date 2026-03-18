@@ -1,14 +1,18 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.ForwardLimitSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.ReverseLimitSourceValue;
+
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -35,6 +39,21 @@ public class IntakeDeployer extends SubsystemBase {
         IntakeDeployerConstants.GEAR_RATIO;
     m_intakeDeployerConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
+    // Hardware Limit Switches
+    HardwareLimitSwitchConfigs hardConfigs = new HardwareLimitSwitchConfigs();
+    hardConfigs.ForwardLimitSource = ForwardLimitSourceValue.LimitSwitchPin;
+    hardConfigs.withForwardLimitEnable(true);
+
+    hardConfigs.ReverseLimitSource = ReverseLimitSourceValue.LimitSwitchPin;
+    hardConfigs.withReverseLimitEnable(true);
+
+    hardConfigs.ForwardLimitEnable = true;
+
+    hardConfigs.ReverseLimitAutosetPositionValue = -0.184814;
+    hardConfigs.ReverseLimitAutosetPositionEnable = true;
+
+    m_intakeDeployerConfiguration.HardwareLimitSwitch = hardConfigs;
+
     MotionMagicConfigs motionMagic = m_intakeDeployerConfiguration.MotionMagic;
 
     motionMagic.MotionMagicCruiseVelocity = IntakeDeployerConstants.CRUISE_VELOCITY;
@@ -43,8 +62,8 @@ public class IntakeDeployer extends SubsystemBase {
     m_intakeDeployerMotorRight.getConfigurator().apply(m_intakeDeployerConfiguration);
     m_intakeDeployerMotorLeft.getConfigurator().apply(m_intakeDeployerConfiguration);
 
-    m_intakeDeployerMotorLeft.setControl(
-        new Follower(m_intakeDeployerMotorRight.getDeviceID(), MotorAlignmentValue.Aligned));
+    m_intakeDeployerMotorRight.setControl(
+        new Follower(m_intakeDeployerMotorLeft.getDeviceID(), MotorAlignmentValue.Aligned));
   }
 
   public Command raiseIntakeUpCommand() {
@@ -64,6 +83,6 @@ public class IntakeDeployer extends SubsystemBase {
   }
 
   private void rotate(Angle setpoint) {
-    m_intakeDeployerMotorRight.setControl(m_request.withPosition(setpoint));
+    m_intakeDeployerMotorLeft.setControl(m_request.withPosition(setpoint));
   }
 }
