@@ -125,21 +125,9 @@ public class RobotContainer {
   }  
 
   private void configureBindings() {
-    Driver.init(
-            m_drivetrain,
-            m_aprilTagLocalization,
-            m_commandFactory,
-            m_intakeDeployer,
-            m_intake,
-            m_turret,
-            m_zones,
-            m_indexer,
-            m_flyWheel,
-            m_hood,
-            m_shootingMechanism)
-        .configureBindings();
+    Driver.init(m_drivetrain, m_commandFactory, m_zones).configureBindings();
 
-    Operator.init(m_commandFactory).configureBindings();
+    Operator.init(m_commandFactory, OperatorState.NORMAL).configureBindings();
 
     // Shooting Mechanism Default Command
     m_shootingMechanism.setDefaultCommand(m_commandFactory.startTurretTracking());
