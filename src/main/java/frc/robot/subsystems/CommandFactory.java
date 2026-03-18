@@ -91,34 +91,41 @@ public class CommandFactory {
         });
   }
 
-  public Command reverseShootingCommand() {
+  // Clear a potential jam by running the flywheel inward while reversing the indexer
+  public Command clearShootingJam() {
     return m_flyWheel.shootInCommand().alongWith(m_indexer.reverseIndexing());
   }
 
-  public Command stopShootingCommand() {
+  // Stop both the flywheel and the indexer
+  public Command stopFlywheelAndIndexer() {
     return m_flyWheel.stopSpinning().alongWith(m_indexer.stopIndexing());
   }
 
-  /* tells the hood to duck for going under the trench */
+  /* sets the hood position for going under the trench */
+  public Command setHoodToTrenchPosition() {
+    return m_hood.holdCertainPosition(Degrees.of(0));
+  }
+
+  public Command rotateTurretBy(Angle amountOfMovement) {
+    return m_turret.manualRotation(amountOfMovement);
+  }
+
+  public Command rotateHoodBy(Angle amountOfMovement) {
+    return m_hood.manualRotation(amountOfMovement);
+  }
+
+  public Command spinFlywheelContinuously() {
+    return m_flyWheel.rotateFlywheel();
+  }
+
+  public Command stopFlywheel() {
+    return m_flyWheel.stopSpinning();
+  }
+
   public Command duckHood() {
     return m_hood.holdCertainPosition(Degrees.of(0));
   }
 
-  public Command manualTurretRotation(Angle amountOfMovement) {
-    return m_turret.manualRotation(amountOfMovement);
-  }
-
-  public Command manualHoodRotation(Angle amountOfMovement) {
-    return m_hood.manualRotation(amountOfMovement);
-  }
-
-  public Command rotateFlywheel() {
-    return m_flyWheel.rotateFlywheel();
-  }
-
-  public Command stopShooting() {
-    return m_flyWheel.stopSpinning();
-  }
 
   public Command intake() {
     return m_intake.runIntake();
@@ -135,7 +142,9 @@ public class CommandFactory {
     return intake.alongWith(turretMovement).andThen(shoot);
   }
 
-  public Command startShootingMechanism() {
+  // Start flywheel + hood positioning using the ShootingMechanism's computed solution when in
+  // NORMAL state
+  public Command startShootingWithSolution() {
     return m_flyWheel
         .setSpeedWithSolution(m_shootingMechanism::getShootingSolution)
         .alongWith(m_hood.setPosition(m_shootingMechanism::getShootingSolution));
@@ -149,7 +158,8 @@ public class CommandFactory {
     return startIndex;
   }
 
-  public Command stopShootingMechanism() {
+  // Stop flywheel and stow hood to 0 degrees
+  public Command stopFlywheelAndStowHood() {
     return m_flyWheel.stopSpinning().alongWith(m_hood.setPosition(Degree.of(0)));
   }
 
@@ -182,35 +192,32 @@ public class CommandFactory {
         Set.of(m_shootingMechanism, m_turret));
   }
 
-  public Command shootCommand() {
+  // Convenience / clearer naming for indexing control
+  public Command startIndexer() {
     return startIndexing();
   }
 
-  public Command stopShootCommand() {
+  public Command stopIndexer() {
     return stopIndexing();
   }
 
-  public Command startFlywheelsWithSolution() {
+  public Command startFlywheelWithSolution() {
     return m_flyWheel.setSpeedWithSolution(m_shootingMechanism::getShootingSolution);
   }
 
-  public Command slowlyMoveHoodDown() {
+  public Command lowerHoodSlowly() {
     return m_hood.moveAngleDownCommand();
   }
 
-  public Command slowlyMoveHoodUp() {
+  public Command raiseHoodSlowly() {
     return m_hood.moveAngleUpCommand();
   }
 
-  public Command moveTurretManualy(Angle angle) {
-    return m_turret.manualRotation(angle);
-  }
-
-  public Command moveTurretManualyWithSticks(Supplier<Double> stick) {
+  public Command rotateTurretWithStickInput(Supplier<Double> stick) {
     return m_turret.manualRotationWithSticks(stick);
   }
 
-  public Command moveHoodManualyWithSticks(Supplier<Double> stick) {
+  public Command rotateHoodWithStickInput(Supplier<Double> stick) {
     return m_hood.manualRotationWithSticks(stick);
   }
 

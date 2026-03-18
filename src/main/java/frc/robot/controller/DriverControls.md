@@ -31,30 +31,30 @@ Mappings (state-specific where applicable):
 
 - A
   - On press (onTrue):
-    - NORMAL: lowerIntake()
-    - OVERRIDE: startIndexing()
+  - NORMAL: lowerIntake()
+  - OVERRIDE: startIndexer()
   - On release (onFalse):
-    - NORMAL: raiseIntake()
-    - OVERRIDE: stopIndexing()
+  - NORMAL: raiseIntake()
+  - OVERRIDE: stopIndexer()
   - While held (whileTrue):
-    - NORMAL: duckHood()
+  - NORMAL: setHoodToTrenchPosition()
     - OVERRIDE: none
 
 - B
   - On press:
-    - NORMAL: shootCommand()
-    - OVERRIDE: startFlywheelsWithSolution()
+  - NORMAL: startIndexer()
+  - OVERRIDE: startFlywheelWithSolution()
   - On release:
-    - NORMAL: stopShootCommand()
-    - OVERRIDE: stopShooting()
+  - NORMAL: stopIndexer()
+  - OVERRIDE: stopFlywheel()
 
 - X
   - On press:
     - NORMAL: none
-    - OVERRIDE: reverseShootingCommand()
+    - OVERRIDE: clearShootingJam()
   - On release:
     - NORMAL: none
-    - OVERRIDE: stopShootingCommand()
+    - OVERRIDE: stopFlywheelAndIndexer()
 
 - Y
   - On press: no-op in both states
@@ -62,12 +62,12 @@ Mappings (state-specific where applicable):
 - D-Pad Up / Down
   - While held:
     - NORMAL: none
-    - OVERRIDE: slowlyMoveHoodUp() (manual hood movement)
+    - OVERRIDE: raiseHoodSlowly() (manual hood movement)
 
 - D-Pad Left / Right
   - While held:
     - NORMAL: none
-    - OVERRIDE: moveTurretManualy(Degrees.of(0.1)) (manual turret movement)
+    - OVERRIDE: rotateTurretBy(Degrees.of(0.1)) (manual turret movement)
 
 - Left Bumper
   - On press:
@@ -96,10 +96,10 @@ Mappings (state-specific where applicable):
     - OVERRIDE: stopIntake()
 
 - Left stick X (deadband > 0.10)
-  - While held: moveTurretManualyWithSticks(this::getLeftX) — manual turret with analogue input
+  - While held: rotateTurretWithStickInput(this::getLeftX) — manual turret with analogue input
 
 - Right stick Y (deadband > 0.10)
-  - While held: moveHoodManualyWithSticks(this::getRightY) — manual hood with analogue input
+  - While held: rotateHoodWithStickInput(this::getRightY) — manual hood with analogue input
 
 - Start
   - On press: reset match-time calibration (ShiftData.resetMatchTimeCalibration())
