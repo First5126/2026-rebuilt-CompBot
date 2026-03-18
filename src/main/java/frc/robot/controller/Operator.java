@@ -179,7 +179,7 @@ public class Operator extends CustomXboxController implements Controller {
         .onTrue(
             new SelectCommand<OperatorState>(
                 Map.of(
-                    OperatorState.NORMAL, Commands.none(),
+                    OperatorState.NORMAL, commandFactory.raiseIntake(),
                     OperatorState.OVERRIDE, commandFactory.raiseIntake()),
                 () -> operatorState));
 
@@ -187,7 +187,7 @@ public class Operator extends CustomXboxController implements Controller {
         .onTrue(
             new SelectCommand<OperatorState>(
                 Map.of(
-                    OperatorState.NORMAL, Commands.none(),
+                    OperatorState.NORMAL, commandFactory.lowerIntake(),
                     OperatorState.OVERRIDE, commandFactory.lowerIntake()),
                 () -> operatorState));
 
