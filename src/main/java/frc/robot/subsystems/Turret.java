@@ -7,6 +7,7 @@ import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXSConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFXS;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -26,6 +27,7 @@ public class Turret extends SubsystemBase {
   private final TalonFXS m_turretMotor;
   private final CANcoder m_turretEncoder;
   private final PositionVoltage m_positionControl;
+  private final VoltageOut m_voltageControl;
 
   public Turret() {
     m_turretMotor = new TalonFXS(CANConstants.turretMotor, CANConstants.mechanismCanivore);
@@ -75,6 +77,7 @@ public class Turret extends SubsystemBase {
 
     m_turretMotor.getConfigurator().apply(talonFXSConfiguration);
     m_positionControl = new PositionVoltage(0);
+    m_voltageControl = new VoltageOut(0);
   }
 
   /**
@@ -84,9 +87,18 @@ public class Turret extends SubsystemBase {
    * @return a WPILib Command object to run once
    */
   public Command manualRotation(Angle amountOfMovement) {
-    return runOnce(
+    return run(
         () -> {
           setPosition(m_turretMotor.getPosition().getValue().plus(amountOfMovement));
+        });
+  }
+
+  public Command manualRotationWithSticks(Supplier<Double> controlerX) {
+    return run(
+        () -> {
+          m_turretMotor.setControl(
+              m_voltageControl.withOutput(
+                  TurretConstants.MAX_VOLTAGE_MANUAL * (controlerX.get() - 0.1)));
         });
   }
 

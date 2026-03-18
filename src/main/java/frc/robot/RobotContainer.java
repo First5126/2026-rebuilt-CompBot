@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.FMS.Zones;
 import frc.robot.constants.AprilTagLocalizationConstants;
 import frc.robot.constants.AprilTagLocalizationConstants.PhotonDetails;
+import frc.robot.constants.ControllerConstants.OperatorState;
 import frc.robot.controller.Driver;
 import frc.robot.controller.Operator;
 import frc.robot.generated.TunerConstants;
@@ -101,28 +102,26 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    Driver.init(m_drivetrain,
-      m_aprilTagLocalization,
-      m_commandFactory,
-      m_intakeDeployer,
-      m_turret,
-      m_zones,
-      m_indexer,
-      m_flyWheel,
-      m_hood,
-      m_shootingMechanism,
-      m_intake).configureBindings();
+    Driver.init(m_drivetrain, m_commandFactory, m_zones).configureBindings();
 
-    Operator.init(m_commandFactory).configureBindings();
+    // Initialize Operator singleton with an explicit NORMAL state so there's a single
+    // source of truth for operator mode (no duplicate copies stored in multiple classes).
+    Operator.init(m_commandFactory, OperatorState.NORMAL).configureBindings();
 
     // Shooting Mechanism Default Command
-    m_shootingMechanism.setDefaultCommand(m_shootingMechanism.startTrackingCommand());
+    m_shootingMechanism.setDefaultCommand(m_commandFactory.startTurretTracking());
+    m_flyWheel.setDefaultCommand(m_commandFactory.startShootingWithSolution());
+
+    // Turret Default Command
+
+    // this.m_turret.setDefaultCommand(m_turret.rotateToPosition(() ->
+    // m_shootingMechanism.getShootingSolution().predictedTurretAngle));
 
     // Idle while the robot is disabled. This ensures the configured
     // neutral mode is applied to the drive motors while disabled.
 
     Trigger trenchTrigger = new Trigger(m_zones::isNearTrench);
-    trenchTrigger.whileTrue(m_commandFactory.duckHood());
+    trenchTrigger.whileTrue(m_commandFactory.setHoodToTrenchPosition());
 
     final SwerveRequest idle = new SwerveRequest.Idle();
     RobotModeTriggers.disabled()
