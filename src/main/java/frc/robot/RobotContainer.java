@@ -108,7 +108,7 @@ public class RobotContainer {
 
     // Shooting Mechanism Default Command
     m_shootingMechanism.setDefaultCommand(m_commandFactory.startTurretTracking());
-    m_flyWheel.setDefaultCommand(m_commandFactory.startShootingMechanism());
+    m_flyWheel.setDefaultCommand(m_commandFactory.startShootingWithSolution());
 
     // Turret Default Command
 
@@ -119,7 +119,7 @@ public class RobotContainer {
     // neutral mode is applied to the drive motors while disabled.
 
     Trigger trenchTrigger = new Trigger(m_zones::isNearTrench);
-    trenchTrigger.whileTrue(m_commandFactory.duckHood());
+    trenchTrigger.whileTrue(m_commandFactory.setHoodToTrenchPosition());
 
     final SwerveRequest idle = new SwerveRequest.Idle();
     RobotModeTriggers.disabled()
