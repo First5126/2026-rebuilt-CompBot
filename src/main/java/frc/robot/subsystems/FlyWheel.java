@@ -61,7 +61,7 @@ public class FlyWheel extends SubsystemBase {
     return run(
         () -> {
           ShootingSolution solution = solutionSupplier.get();
-          setSpeedControl(solution.predictedFlyWheelVelocity);
+          setSpeedControl(solution.getPredictedFlyWheelVelocity());
         });
   }
 

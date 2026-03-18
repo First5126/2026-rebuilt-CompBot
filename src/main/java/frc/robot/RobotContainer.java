@@ -64,6 +64,7 @@ public class RobotContainer {
   private Intake m_intake = new Intake();
   private IntakeDeployer m_intakeDeployer = new IntakeDeployer();
 
+
   private ShootingMechanism m_shootingMechanism =
       new ShootingMechanism(m_turret, m_drivetrain, m_zones, m_hood, m_flyWheel);
 
@@ -130,8 +131,8 @@ public class RobotContainer {
     Operator.init(m_commandFactory, OperatorState.NORMAL).configureBindings();
 
     // Shooting Mechanism Default Command
-    m_shootingMechanism.setDefaultCommand(m_commandFactory.startTurretTracking());
-    m_flyWheel.setDefaultCommand(m_commandFactory.startShootingWithSolution());
+    // m_shootingMechanism.setDefaultCommand(m_commandFactory.startTurretTracking());
+    // m_flyWheel.setDefaultCommand(m_commandFactory.startShootingWithSolution());
 
     // Turret Default Command
 
