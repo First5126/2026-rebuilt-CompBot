@@ -116,14 +116,6 @@ public class Operator extends CustomXboxController implements Controller {
   @Override
   public Operator configureBindings() {
 
-    // 0.10 deadband
-    Trigger rightJoystickX = new Trigger(() -> this.getRightX() > 0.10);
-    Trigger rightJoystickY = new Trigger(() -> this.getRightY() > 0.10);
-
-    // 0.10 deadband
-    Trigger leftJoystickX = new Trigger(() -> this.getLeftX() > 0.10);
-    Trigger leftJoystickY = new Trigger(() -> this.getLeftY() > 0.10);
-
     this.a()
         .onTrue(
             new SelectCommand<OperatorState>(
@@ -184,39 +176,6 @@ public class Operator extends CustomXboxController implements Controller {
                     OperatorState.OVERRIDE, Commands.none()),
                 () -> operatorState));
 
-    /*
-    this.povUp()
-        .whileTrue(
-            new SelectCommand<OperatorState>(
-                Map.of(
-                    OperatorState.NORMAL, Commands.none(),
-                    OperatorState.OVERRIDE, commandFactory.slowlyMoveHoodUp()),
-                () -> operatorState));
-
-    this.povDown()
-        .whileTrue(
-            new SelectCommand<OperatorState>(
-                Map.of(
-                    OperatorState.NORMAL, Commands.none(),
-                    OperatorState.OVERRIDE, commandFactory.slowlyMoveHoodUp()),
-                () -> operatorState));
-
-    this.povLeft()
-        .whileTrue(
-            new SelectCommand<OperatorState>(
-                Map.of(
-                    OperatorState.NORMAL, Commands.none(),
-                    OperatorState.OVERRIDE, commandFactory.moveTurretManualy(Degrees.of(0.1))),
-                () -> operatorState));
-
-    this.povRight()
-        .whileTrue(
-            new SelectCommand<OperatorState>(
-                Map.of(
-                    OperatorState.NORMAL, Commands.none(),
-                    OperatorState.OVERRIDE, commandFactory.moveTurretManualy(Degrees.of(0.1))),
-                () -> operatorState));\
-    */
 
     this.leftBumper()
         .onTrue(
@@ -262,8 +221,6 @@ public class Operator extends CustomXboxController implements Controller {
                     OperatorState.OVERRIDE, commandFactory.stopIntake()),
                 () -> operatorState));
 
-    // leftJoystickX.whileTrue(commandFactory.moveTurretManualyWithSticks(this::getLeftX));
-    // rightJoystickY.whileTrue(commandFactory.moveHoodManualyWithSticks(this::getRightY));
 
     this.start().onTrue(Commands.runOnce(() -> ShiftData.resetMatchTimeCalibration()));
 
