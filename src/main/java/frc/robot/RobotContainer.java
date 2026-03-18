@@ -106,9 +106,9 @@ public class RobotContainer {
     // source of truth for operator mode (no duplicate copies stored in multiple classes).
     Operator.init(m_commandFactory, OperatorState.NORMAL).configureBindings();
 
-    // Shooting Mechanism Default Command
-    m_shootingMechanism.setDefaultCommand(m_commandFactory.startTurretTracking());
-    m_flyWheel.setDefaultCommand(m_commandFactory.startShootingMechanism());
+  // Shooting Mechanism Default Command
+  m_shootingMechanism.setDefaultCommand(m_commandFactory.startTurretTracking());
+  m_flyWheel.setDefaultCommand(m_commandFactory.startShootingWithSolution());
 
     // Turret Default Command
 
@@ -118,8 +118,8 @@ public class RobotContainer {
     // Idle while the robot is disabled. This ensures the configured
     // neutral mode is applied to the drive motors while disabled.
 
-    Trigger trenchTrigger = new Trigger(m_zones::isNearTrench);
-    trenchTrigger.whileTrue(m_commandFactory.duckHood());
+  Trigger trenchTrigger = new Trigger(m_zones::isNearTrench);
+  trenchTrigger.whileTrue(m_commandFactory.setHoodToTrenchPosition());
 
     final SwerveRequest idle = new SwerveRequest.Idle();
     RobotModeTriggers.disabled()

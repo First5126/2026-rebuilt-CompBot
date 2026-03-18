@@ -131,7 +131,7 @@ public class Operator extends CustomXboxController implements Controller {
         .whileTrue(
             new SelectCommand<OperatorState>(
                 Map.of(
-                    OperatorState.NORMAL, commandFactory.duckHood(),
+                    OperatorState.NORMAL, commandFactory.setHoodToTrenchPosition(),
                     OperatorState.OVERRIDE, Commands.none()),
                 () -> operatorState));
 
@@ -139,32 +139,32 @@ public class Operator extends CustomXboxController implements Controller {
         .onTrue(
             new SelectCommand<OperatorState>(
                 Map.of(
-                    OperatorState.NORMAL, commandFactory.shootCommand(),
-                    OperatorState.OVERRIDE, commandFactory.startFlywheelsWithSolution()),
+                    OperatorState.NORMAL, commandFactory.startIndexer(),
+                    OperatorState.OVERRIDE, commandFactory.startFlywheelWithSolution()),
                 () -> operatorState))
         .onFalse(
             new SelectCommand<OperatorState>(
                 Map.of(
                     OperatorState.NORMAL,
                         commandFactory
-                            .reverseShootingCommand()
+                            .clearShootingJam()
                             .andThen(Commands.waitSeconds(0.25))
-                            .andThen(commandFactory.stopShootCommand()),
-                    OperatorState.OVERRIDE, commandFactory.stopShooting()),
+                            .andThen(commandFactory.stopIndexer()),
+                    OperatorState.OVERRIDE, commandFactory.stopFlywheel()),
                 () -> operatorState));
 
     this.x()
         .onTrue(
             new SelectCommand<OperatorState>(
                 Map.of(
-                    OperatorState.NORMAL, commandFactory.stopShootingCommand(),
-                    OperatorState.OVERRIDE, commandFactory.reverseShootingCommand()),
+                    OperatorState.NORMAL, commandFactory.stopFlywheelAndIndexer(),
+                    OperatorState.OVERRIDE, commandFactory.clearShootingJam()),
                 () -> operatorState))
         .onFalse(
             new SelectCommand<OperatorState>(
                 Map.of(
-                    OperatorState.NORMAL, commandFactory.stopShootingCommand(),
-                    OperatorState.OVERRIDE, commandFactory.stopShootingCommand()),
+                    OperatorState.NORMAL, commandFactory.stopFlywheelAndIndexer(),
+                    OperatorState.OVERRIDE, commandFactory.stopFlywheelAndIndexer()),
                 () -> operatorState));
 
     this.y()
