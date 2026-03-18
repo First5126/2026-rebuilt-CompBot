@@ -36,7 +36,7 @@ public class IntakeDeployer extends SubsystemBase {
     m_intakeDeployerConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     m_intakeDeployerConfiguration.Feedback.SensorToMechanismRatio =
         IntakeDeployerConstants.GEAR_RATIO;
-    m_intakeDeployerConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    m_intakeDeployerConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
     // Hardware Limit Switches
     HardwareLimitSwitchConfigs hardConfigs = new HardwareLimitSwitchConfigs();
@@ -58,7 +58,6 @@ public class IntakeDeployer extends SubsystemBase {
     motionMagic.MotionMagicCruiseVelocity = IntakeDeployerConstants.CRUISE_VELOCITY;
     motionMagic.MotionMagicAcceleration = IntakeDeployerConstants.ACCELERATION;
 
-    m_intakeDeployerMotorRight.getConfigurator().apply(m_intakeDeployerConfiguration);
     m_intakeDeployerMotorLeft.getConfigurator().apply(m_intakeDeployerConfiguration);
 
     m_intakeDeployerMotorRight.setControl(
