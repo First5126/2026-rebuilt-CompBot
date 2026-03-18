@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.FMS.ShiftData;
 import frc.robot.FMS.Zones;
 import frc.robot.constants.ControllerConstants;
@@ -176,7 +175,6 @@ public class Operator extends CustomXboxController implements Controller {
                     OperatorState.OVERRIDE, Commands.none()),
                 () -> operatorState));
 
-
     this.leftBumper()
         .onTrue(
             new SelectCommand<OperatorState>(
@@ -220,7 +218,6 @@ public class Operator extends CustomXboxController implements Controller {
                     OperatorState.NORMAL, Commands.none(),
                     OperatorState.OVERRIDE, commandFactory.stopIntake()),
                 () -> operatorState));
-
 
     this.start().onTrue(Commands.runOnce(() -> ShiftData.resetMatchTimeCalibration()));
 
