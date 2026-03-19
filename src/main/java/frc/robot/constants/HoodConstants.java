@@ -14,6 +14,7 @@ public class HoodConstants {
   // Time it takes for the hood to reach 0
   public static double DUCK_SPEED = 0.25;
 
+  // Hood hard/soft travel limits (mechanism angle as configured for the TalonFX fused sensor).
   public static final Angle MIN_ANGLE = Degrees.of(0);
   public static final Angle MAX_ANGLE = Degrees.of(6);
 

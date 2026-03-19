@@ -44,6 +44,19 @@ public class Hood extends SubsystemBase {
   private PositionVoltage m_positionVoltageRequest;
   private VoltageOut m_voltageOut = new VoltageOut(0);
 
+  private Angle clampPosition(final Angle position) {
+    double minDegrees = HoodConstants.MIN_ANGLE.in(Degrees);
+    double maxDegrees = HoodConstants.MAX_ANGLE.in(Degrees);
+    double requestedDegrees = position.in(Degrees);
+
+    double clampedDegrees = Math.max(minDegrees, Math.min(requestedDegrees, maxDegrees));
+    return Degrees.of(clampedDegrees);
+  }
+
+  private void setPositionInternal(final Angle position) {
+    m_hoodMotor.setControl(m_positionVoltageRequest.withPosition(clampPosition(position)));
+  }
+
   public Hood() {
     m_hoodMotor = new TalonFX(CANConstants.hoodMotor, CANConstants.mechanismCanivore);
     m_CANdi = new CANdi(CANConstants.hoodCANdi, CANConstants.mechanismCanivore);
@@ -82,10 +95,10 @@ public class Hood extends SubsystemBase {
     // Software Limit Switches
     SoftwareLimitSwitchConfigs softConfigs = new SoftwareLimitSwitchConfigs();
     softConfigs.ForwardSoftLimitEnable = true;
-    softConfigs.ForwardSoftLimitThreshold = 0.070;
+    softConfigs.ForwardSoftLimitThreshold = HoodConstants.MAX_ANGLE.in(Rotations);
 
     softConfigs.ReverseSoftLimitEnable = true;
-    softConfigs.ReverseSoftLimitThreshold = 0;
+    softConfigs.ReverseSoftLimitThreshold = HoodConstants.MIN_ANGLE.in(Rotations);
 
     m_hoodMotor.getConfigurator().apply(softConfigs);
 
@@ -127,30 +140,21 @@ public class Hood extends SubsystemBase {
   public Command manualRotation(Angle amountOfRotation) {
     return runOnce(
         () -> {
-          m_hoodMotor.setControl(
-              m_positionVoltageRequest.withPosition(
-                  m_hoodMotor.getPosition().getValue().plus(amountOfRotation)));
+          setPositionInternal(m_hoodMotor.getPosition().getValue().plus(amountOfRotation));
         });
   }
 
   public Command setPosition(Angle angle) {
     return runOnce(
         () -> {
-          double clampedDegrees =
-              Math.max(
-                  HoodConstants.MIN_ANGLE.in(Degrees),
-                  Math.min(angle.in(Degrees), HoodConstants.MAX_ANGLE.in(Degrees)));
-          Angle clampedPosition = Degrees.of(clampedDegrees);
-          m_hoodMotor.setControl(m_positionVoltageRequest.withPosition(clampedPosition));
+          setPositionInternal(angle);
         });
   }
 
   public Command moveAngleUpCommand() {
     return Commands.run(
         () -> {
-          m_hoodMotor.setControl(
-              m_positionVoltageRequest.withPosition(
-                  m_hoodMotor.getPosition().getValue().in(Degrees) + 0.1));
+          setPositionInternal(Degrees.of(m_hoodMotor.getPosition().getValue().in(Degrees) + 0.1));
         },
         this);
   }
@@ -158,9 +162,7 @@ public class Hood extends SubsystemBase {
   public Command moveAngleDownCommand() {
     return Commands.run(
         () -> {
-          m_hoodMotor.setControl(
-              m_positionVoltageRequest.withPosition(
-                  m_hoodMotor.getPosition().getValue().in(Degrees) - 0.1));
+          setPositionInternal(Degrees.of(m_hoodMotor.getPosition().getValue().in(Degrees) - 0.1));
         },
         this);
   }
@@ -176,7 +178,7 @@ public class Hood extends SubsystemBase {
   public Command holdCertainPosition(Angle angle) {
     return run(
         () -> {
-          m_hoodMotor.setControl(m_positionVoltageRequest.withPosition(angle));
+          setPositionInternal(angle);
         })
     // Will take any incomming requests and if it does see one then it will cancel itself and run
     // that insted.
@@ -187,9 +189,7 @@ public class Hood extends SubsystemBase {
   public Command setPosition(Supplier<ShootingSolution> shootingSolution) {
     return run(
         () -> {
-          m_hoodMotor.setControl(
-              m_positionVoltageRequest.withPosition(
-                  shootingSolution.get().getPredictedHoodAngle()));
+          setPositionInternal(shootingSolution.get().getPredictedHoodAngle());
         });
   }
 
@@ -197,7 +197,7 @@ public class Hood extends SubsystemBase {
     return runOnce(
         () -> {
           Angle angle = Degrees.of(SmartDashboard.getNumber("Set Hood Angle (Deg)", 0));
-          m_hoodMotor.setControl(m_positionVoltageRequest.withPosition(angle));
+          setPositionInternal(angle);
         });
   }
 

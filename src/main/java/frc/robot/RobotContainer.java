@@ -102,6 +102,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Intake", m_commandFactory.intake());
     NamedCommands.registerCommand("Outtake", m_commandFactory.reverseIntake());
     NamedCommands.registerCommand("StopIntake", m_commandFactory.stopIntake());
+    NamedCommands.registerCommand("Stop Intake", m_commandFactory.stopIntake());
 
     // Combined Commands
     NamedCommands.registerCommand("Turret Default", m_shootingMechanism.startTrackingCommandAuto());
