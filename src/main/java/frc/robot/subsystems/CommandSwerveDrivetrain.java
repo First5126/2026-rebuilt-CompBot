@@ -18,6 +18,7 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -307,6 +308,27 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         Distance hubDistance = Meters.of(getPose2d().getTranslation().getDistance(WaypointConstants.blueHub.getTranslation()));
 
         SmartDashboard.putNumber("Distance To Hub (M)", hubDistance.in(Meters));
+
+        getTurretHeadingForDuck();
+    }
+
+    public double getDriveHeadingDegrees() {
+        SwerveDriveState state = getState();
+        Rotation2d poseRotations = state.Pose.getRotation();
+        ChassisSpeeds fieldSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(state.Speeds, poseRotations);
+        double driveHeadingDegrees = Math.toDegrees(Math.atan2(fieldSpeeds.vyMetersPerSecond, fieldSpeeds.vxMetersPerSecond));
+        SmartDashboard.putNumber("Drive Heading (Degrees)", driveHeadingDegrees);
+
+        return driveHeadingDegrees;
+    }
+
+    public double getTurretHeadingForDuck() {
+        Rotation2d poseRotations = getState().Pose.getRotation();
+        double oppositeDeg = MathUtil.inputModulus(getDriveHeadingDegrees() + 180.0, -180.0, 180.0);
+        double turretRobotRelativeDeg = MathUtil.inputModulus(oppositeDeg - poseRotations.getDegrees(), -180, 180);
+        SmartDashboard.putNumber("Turret Heading for Duck (Degrees)", turretRobotRelativeDeg);
+
+        return turretRobotRelativeDeg;
     }
 
     private void startSimThread() {
