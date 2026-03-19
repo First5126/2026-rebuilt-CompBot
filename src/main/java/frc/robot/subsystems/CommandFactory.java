@@ -6,7 +6,6 @@ import static edu.wpi.first.units.Units.Degrees;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.FMS.ShiftData;
 import frc.robot.FMS.Zones;
 import frc.robot.constants.ControllerConstants.OperatorState;
@@ -126,7 +125,6 @@ public class CommandFactory {
     return m_hood.holdCertainPosition(Degrees.of(0));
   }
 
-
   public Command intake() {
     return m_intake.runIntake();
   }
@@ -156,6 +154,10 @@ public class CommandFactory {
     //     .alongWith(m_hood.setPosition(m_shootingMechanism::getShootingSolution));
     Command startIndex = m_indexer.startIndexing();
     return startIndex;
+  }
+
+  public Command test() {
+    return Commands.none();
   }
 
   // Stop flywheel and stow hood to 0 degrees
@@ -244,5 +246,4 @@ public class CommandFactory {
   public Command setIntakeDown() {
     return m_intakeDeployer.lowerIntakeDownCommand();
   }
-
 }

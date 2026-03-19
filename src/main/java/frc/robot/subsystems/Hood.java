@@ -136,7 +136,12 @@ public class Hood extends SubsystemBase {
   public Command setPosition(Angle angle) {
     return runOnce(
         () -> {
-          m_hoodMotor.setControl(m_positionVoltageRequest.withPosition(angle));
+          double clampedDegrees =
+              Math.max(
+                  HoodConstants.MIN_ANGLE.in(Degrees),
+                  Math.min(angle.in(Degrees), HoodConstants.MAX_ANGLE.in(Degrees)));
+          Angle clampedPosition = Degrees.of(clampedDegrees);
+          m_hoodMotor.setControl(m_positionVoltageRequest.withPosition(clampedPosition));
         });
   }
 

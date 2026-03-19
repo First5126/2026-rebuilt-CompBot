@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.6116100178890873,
-        "y": 0.6816549295786183
+        "x": 3.613309481216458,
+        "y": 0.6844543828264751
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2539464020257487,
-        "y": 0.34346383758839355
+        "x": 5.456518062307248,
+        "y": 0.6844543828264751
       },
       "isLocked": false,
-      "linkedName": "Pickup - Outpost"
+      "linkedName": null
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 1.3010196779964212
       },
       "prevControl": {
-        "x": 6.5014311270125225,
-        "y": 0.7294741616064876
+        "x": 7.242025185893179,
+        "y": 1.0840689239804768
       },
       "nextControl": null,
       "isLocked": true,
@@ -30,8 +30,8 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.6,
-      "rotationDegrees": 0.0
+      "waypointRelativePos": 0.48351648351648385,
+      "rotationDegrees": 180.0
     }
   ],
   "constraintZones": [
@@ -74,7 +74,7 @@
   "folder": "Outpost Side",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -178.83086067209263
   },
   "useDefaultConstraints": true
 }

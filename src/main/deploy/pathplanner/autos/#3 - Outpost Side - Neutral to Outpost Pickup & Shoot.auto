@@ -5,6 +5,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Lower Intake"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -12,12 +18,6 @@
                 "type": "sequential",
                 "data": {
                   "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Lower Intake"
-                      }
-                    },
                     {
                       "type": "named",
                       "data": {
@@ -55,12 +55,6 @@
                       }
                     }
                   ]
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Turret Default"
                 }
               }
             ]

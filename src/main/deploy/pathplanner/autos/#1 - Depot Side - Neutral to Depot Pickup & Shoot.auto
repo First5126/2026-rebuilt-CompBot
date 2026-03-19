@@ -39,7 +39,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "Stop Intake"
+                        "name": "StopIntake"
                       }
                     },
                     {
@@ -59,14 +59,14 @@
                       "data": {
                         "pathName": "Under trench to Depot"
                       }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Intake"
+                      }
                     }
                   ]
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Turret Default"
                 }
               }
             ]

@@ -209,7 +209,7 @@ public class Operator extends CustomXboxController implements Controller {
         .onTrue(
             new SelectCommand<OperatorState>(
                 Map.of(
-                    OperatorState.NORMAL, Commands.none(),
+                    OperatorState.NORMAL, commandFactory.reverseIntake(),
                     OperatorState.OVERRIDE, commandFactory.reverseIntake()),
                 () -> operatorState))
         .onFalse(

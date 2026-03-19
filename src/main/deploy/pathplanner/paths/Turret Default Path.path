@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.9585563380281696,
-        "y": 7.5799647887323935
+        "x": 3.613309481216458,
+        "y": 7.207066189624329
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8507394366197198,
-        "y": 7.548028169014085
+        "x": 2.396404293381037,
+        "y": 7.239516994633274
       },
       "isLocked": false,
-      "linkedName": "Under Trench - Depot Side"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.6602862254025041,
-        "y": 5.973935599284436
+        "x": 1.5851341681574236,
+        "y": 5.113989266547406
       },
       "prevControl": {
-        "x": 2.059493170366527,
-        "y": 5.973935599284436
+        "x": 2.20169946332737,
+        "y": 5.032862254025045
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Pickup - Depot"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.0,
+    "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -45,10 +45,10 @@
     "rotation": 180.0
   },
   "reversed": false,
-  "folder": "Depot Side",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

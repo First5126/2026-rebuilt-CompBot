@@ -5,6 +5,18 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Lower Intake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Hub to Outpost"
@@ -19,7 +31,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "Index and Shoot"
           }
         }
       ]

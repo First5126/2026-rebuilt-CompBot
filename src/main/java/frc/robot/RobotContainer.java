@@ -64,7 +64,6 @@ public class RobotContainer {
   private Intake m_intake = new Intake();
   private IntakeDeployer m_intakeDeployer = new IntakeDeployer();
 
-
   private ShootingMechanism m_shootingMechanism =
       new ShootingMechanism(m_turret, m_drivetrain, m_zones, m_hood, m_flyWheel);
 
@@ -112,8 +111,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("Lower Intake", m_commandFactory.setIntakeDown());
     NamedCommands.registerCommand("Raise Intake ", m_intakeDeployer.raiseIntakeUpCommand());
 
-    //Shoot
+    // Shoot
     NamedCommands.registerCommand("Index and Shoot", m_commandFactory.indexAndShoot());
+    NamedCommands.registerCommand("Test", m_commandFactory.test());
 
     // Duck
     NamedCommands.registerCommand("Duck Hood", m_commandFactory.duckHood());
@@ -121,9 +121,8 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
     configureBindings();
 
-
     SmartDashboard.putData("Auto Chooser", autoChooser);
-  }  
+  }
 
   private void configureBindings() {
     Driver.init(m_drivetrain, m_commandFactory, m_zones).configureBindings();

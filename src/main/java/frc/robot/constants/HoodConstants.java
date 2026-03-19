@@ -1,5 +1,9 @@
 package frc.robot.constants;
 
+import static edu.wpi.first.units.Units.Degrees;
+
+import edu.wpi.first.units.measure.Angle;
+
 public class HoodConstants {
   public static double kP = 135.0;
   public static double kI = 0.0;
@@ -9,6 +13,9 @@ public class HoodConstants {
 
   // Time it takes for the hood to reach 0
   public static double DUCK_SPEED = 0.25;
+
+  public static final Angle MIN_ANGLE = Degrees.of(0);
+  public static final Angle MAX_ANGLE = Degrees.of(6);
 
   public static final double MAX_VOLTAGE_MANUAL = 1;
 

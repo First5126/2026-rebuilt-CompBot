@@ -7,25 +7,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Lower Intake"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Hub to Depot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "Index and Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Turret Default"
           }
         }
       ]

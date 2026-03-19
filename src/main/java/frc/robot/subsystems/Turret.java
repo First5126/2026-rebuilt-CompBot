@@ -116,6 +116,12 @@ public class Turret extends SubsystemBase {
         });
   }
 
+  public Command rotateToPositionAutoCont(Supplier<ShootingSolution> shootingSolution) {
+    return run(() -> {
+          setPosition(shootingSolution.get().getPredictedTurretAngle());
+        })
+        .repeatedly();
+  }
 
   @Override
   public void periodic() {
