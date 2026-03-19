@@ -17,6 +17,7 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.ForwardLimitValue;
 import com.ctre.phoenix6.signals.ReverseLimitValue;
 import com.ctre.phoenix6.signals.S1CloseStateValue;
 import com.ctre.phoenix6.signals.S2CloseStateValue;
@@ -134,7 +135,7 @@ public class Hood extends SubsystemBase {
         m_hoodMotor.getReverseLimit().getValue() == ReverseLimitValue.ClosedToGround);
     SmartDashboard.putBoolean(
         "Forward Limit",
-        m_hoodMotor.getReverseLimit().getValue() == ReverseLimitValue.ClosedToGround);
+        m_hoodMotor.getForwardLimit().getValue() == ForwardLimitValue.ClosedToGround);
   }
 
   public Command manualRotation(Angle amountOfRotation) {
