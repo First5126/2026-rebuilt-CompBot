@@ -27,19 +27,15 @@ public class Zones {
   private static Supplier<Angle> m_pitch;
   private static Supplier<Angle> m_roll;
 
+  private Optional<Alliance> m_team;
   private CommandSwerveDrivetrain m_commandSwerveDrivetrain;
 
   public Zones(CommandSwerveDrivetrain commandSwerveDrivetrain) {
-    m_commandSwerveDrivetrain = commandSwerveDrivetrain;
+    m_team = DriverStation.getAlliance();
     m_pose = () -> commandSwerveDrivetrain.getPose2d();
     m_pitch = () -> m_commandSwerveDrivetrain.getPigeon2().getPitch().getValue();
     m_roll = () -> m_commandSwerveDrivetrain.getPigeon2().getRoll().getValue();
-  }
-
-  private Optional<Alliance> getAlliance() {
-    Optional<Alliance> alliance = DriverStation.getAlliance();
-    SmartDashboard.putString("Zones/Alliance", alliance.map(Enum::name).orElse("Unknown"));
-    return alliance;
+    m_commandSwerveDrivetrain = commandSwerveDrivetrain;
   }
 
   public Zone getZone() {
@@ -77,12 +73,11 @@ public class Zones {
     Translation2d robotTranslation = m_pose.get().getTranslation();
     boolean isInDeadZone = false;
 
-    Optional<Alliance> alliance = getAlliance();
-    if (alliance.isPresent()) {
-      if (alliance.get() == Alliance.Blue)
+    if (m_team.isPresent()) {
+      if (m_team.get() == Alliance.Blue)
         isInDeadZone =
             ZonesConstants.contains(robotTranslation, ZonesConstants.HubDeadZone.BLUE_HUB_DEADZONE);
-      else if (alliance.get() == Alliance.Red)
+      else if (m_team.get() == Alliance.Red)
         isInDeadZone =
             ZonesConstants.contains(robotTranslation, ZonesConstants.HubDeadZone.RED_HUB_DEADZONE);
     }
@@ -95,30 +90,29 @@ public class Zones {
   }
 
   public GoalPose getGoalPose() {
-    Optional<Alliance> alliance = getAlliance();
-    if (!alliance.isPresent()) {
+    if (!m_team.isPresent()) {
       return GoalPoseConstants.BLUE_HUB;
     }
     switch (getZone()) {
       case ALLIANCE_ZONE:
-        return alliance.get() == Alliance.Blue
+        return m_team.get() == Alliance.Blue
             ? GoalPoseConstants.BLUE_HUB
             : GoalPoseConstants.RED_HUB;
       case NEUTRAL_ZONE_LEFT:
-        return alliance.get() == Alliance.Blue
+        return m_team.get() == Alliance.Blue
             ? GoalPoseConstants.BLUE_LEFT_SIDE
             : GoalPoseConstants.RED_LEFT_SIDE;
       case NEUTRAL_ZONE_RIGHT:
-        return alliance.get() == Alliance.Blue
+        return m_team.get() == Alliance.Blue
             ? GoalPoseConstants.BLUE_RIGHT_SIDE
             : GoalPoseConstants.RED_RIGHT_SIDE;
       case OPPONENT_ZONE:
-        return alliance.get() == Alliance.Blue
+        return m_team.get() == Alliance.Blue
             ? GoalPoseConstants.BLUE_HUB
             : GoalPoseConstants.RED_HUB;
       default:
         break;
     }
-    return alliance.get() == Alliance.Blue ? GoalPoseConstants.BLUE_HUB : GoalPoseConstants.RED_HUB;
+    return m_team.get() == Alliance.Blue ? GoalPoseConstants.BLUE_HUB : GoalPoseConstants.RED_HUB;
   }
 }
