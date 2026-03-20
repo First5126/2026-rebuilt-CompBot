@@ -30,6 +30,9 @@ public class Zones {
 
   private final CommandSwerveDrivetrain m_commandSwerveDrivetrain;
 
+  private Optional<Alliance> cachedAlliance = Optional.empty();
+  private boolean allianceCached = false;
+
   public Zones(CommandSwerveDrivetrain commandSwerveDrivetrain) {
     this(commandSwerveDrivetrain, DriverStation::getAlliance);
   }
@@ -46,10 +49,19 @@ public class Zones {
   }
 
   private Optional<Alliance> getAlliance() {
-    Optional<Alliance> alliance = m_allianceSupplier.get();
+    if (!allianceCached) {
+      Optional<Alliance> alliance = m_allianceSupplier.get();
+      if (alliance.isPresent()) {
+        cachedAlliance = alliance;
+        allianceCached = true;
+      }
+    }
+
     SmartDashboard.putString(
-        "Alliance", alliance.isPresent() ? "FOUND: " + alliance.get().name() : "Unknown");
-    return alliance;
+        "Alliance",
+        cachedAlliance.isPresent() ? cachedAlliance.get().name() : "Unknown");
+
+    return cachedAlliance;
   }
 
   public Zone getZone() {
