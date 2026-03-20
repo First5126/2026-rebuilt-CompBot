@@ -94,7 +94,7 @@ public class Zones {
       return GoalPoseConstants.BLUE_HUB;
     }
     switch (getZone()) {
-      case ALLIANCE_ZONE:
+      case BLUE_ZONE:
         return m_team.get() == Alliance.Blue
             ? GoalPoseConstants.BLUE_HUB
             : GoalPoseConstants.RED_HUB;
@@ -106,7 +106,7 @@ public class Zones {
         return m_team.get() == Alliance.Blue
             ? GoalPoseConstants.BLUE_RIGHT_SIDE
             : GoalPoseConstants.RED_RIGHT_SIDE;
-      case OPPONENT_ZONE:
+      case RED_ZONE:
         return m_team.get() == Alliance.Blue
             ? GoalPoseConstants.BLUE_HUB
             : GoalPoseConstants.RED_HUB;

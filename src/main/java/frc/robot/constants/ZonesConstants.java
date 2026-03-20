@@ -13,10 +13,10 @@ public class ZonesConstants {
   }
 
   public enum Zone implements RectangularRegion {
-    ALLIANCE_ZONE(new Translation2d(0.0, 0.0), new Translation2d(4.0, 8.0)),
+    BLUE_ZONE(new Translation2d(0.0, 0.0), new Translation2d(4.0, 8.0)),
     NEUTRAL_ZONE_RIGHT(new Translation2d(4.0, 0.0), new Translation2d(12.0, 4.0)),
     NEUTRAL_ZONE_LEFT(new Translation2d(4.0, 4.0), new Translation2d(12.0, 8.0)),
-    OPPONENT_ZONE(new Translation2d(12.5, 0.0), new Translation2d(16.5, 8.0)),
+    RED_ZONE(new Translation2d(12.5, 0.0), new Translation2d(16.5, 8.0)),
     OUT_OF_BOUNDS(null, null);
 
     private final Translation2d topLeftTranslation;
