@@ -116,6 +116,7 @@ public class Zones {
   }
 
   public GoalPose getGoalPose() {
+    getZone();
     Optional<Alliance> alliance = getAlliance();
     if (!alliance.isPresent()) {
       return GoalPoseConstants.BLUE_HUB;
