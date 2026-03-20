@@ -58,8 +58,7 @@ public class Zones {
     }
 
     SmartDashboard.putString(
-        "Alliance",
-        cachedAlliance.isPresent() ? cachedAlliance.get().name() : "Unknown");
+        "Alliance", cachedAlliance.isPresent() ? cachedAlliance.get().name() : "Unknown");
 
     return cachedAlliance;
   }
@@ -121,26 +120,34 @@ public class Zones {
     if (!alliance.isPresent()) {
       return GoalPoseConstants.BLUE_HUB;
     }
-    switch (getZone()) {
-      case BLUE_ZONE:
-        return alliance.get() == Alliance.Blue
-            ? GoalPoseConstants.BLUE_HUB
-            : GoalPoseConstants.RED_HUB;
-      case NEUTRAL_ZONE_LEFT:
-        return alliance.get() == Alliance.Blue
-            ? GoalPoseConstants.BLUE_LEFT_SIDE
-            : GoalPoseConstants.RED_LEFT_SIDE;
-      case NEUTRAL_ZONE_RIGHT:
-        return alliance.get() == Alliance.Blue
-            ? GoalPoseConstants.BLUE_RIGHT_SIDE
-            : GoalPoseConstants.RED_RIGHT_SIDE;
-      case RED_ZONE:
-        return alliance.get() == Alliance.Blue
-            ? GoalPoseConstants.BLUE_HUB
-            : GoalPoseConstants.RED_HUB;
-      default:
-        break;
+
+    if (alliance.get() == Alliance.Blue) {
+      return GoalPoseConstants.BLUE_HUB;
+    } else {
+      return GoalPoseConstants.RED_HUB;
     }
-    return alliance.get() == Alliance.Blue ? GoalPoseConstants.BLUE_HUB : GoalPoseConstants.RED_HUB;
+
+    // switch (getZone()) {
+    //   case BLUE_ZONE:
+    //     return alliance.get() == Alliance.Blue
+    //         ? GoalPoseConstants.BLUE_HUB
+    //         : GoalPoseConstants.RED_HUB;
+    //   case NEUTRAL_ZONE_LEFT:
+    //     return alliance.get() == Alliance.Blue
+    //         ? GoalPoseConstants.BLUE_LEFT_SIDE
+    //         : GoalPoseConstants.RED_LEFT_SIDE;
+    //   case NEUTRAL_ZONE_RIGHT:
+    //     return alliance.get() == Alliance.Blue
+    //         ? GoalPoseConstants.BLUE_RIGHT_SIDE
+    //         : GoalPoseConstants.RED_RIGHT_SIDE;
+    //   case RED_ZONE:
+    //     return alliance.get() == Alliance.Blue
+    //         ? GoalPoseConstants.BLUE_HUB
+    //         : GoalPoseConstants.RED_HUB;
+    //   default:
+    //     break;
+    // }
+    // return alliance.get() == Alliance.Blue ? GoalPoseConstants.BLUE_HUB :
+    // GoalPoseConstants.RED_HUB;
   }
 }
