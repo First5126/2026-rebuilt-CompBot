@@ -119,13 +119,13 @@ public class Operator extends CustomXboxController implements Controller {
         .onTrue(
             new SelectCommand<OperatorState>(
                 Map.of(
-                    OperatorState.NORMAL, commandFactory.lowerIntake(),
+                    OperatorState.NORMAL, Commands.none(),
                     OperatorState.OVERRIDE, commandFactory.startIndexing()),
                 () -> operatorState))
         .onFalse(
             new SelectCommand<OperatorState>(
                 Map.of(
-                    OperatorState.NORMAL, commandFactory.raiseIntake(),
+                    OperatorState.NORMAL, Commands.none(),
                     OperatorState.OVERRIDE, commandFactory.stopIndexing()),
                 () -> operatorState))
         .whileTrue(
