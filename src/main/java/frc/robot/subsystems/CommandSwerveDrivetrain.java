@@ -257,9 +257,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         double predictedX = robotPose.getX() + robotFieldRelitiveSpeed.vxMetersPerSecond * delayTime;
         double predictedY = robotPose.getY() + robotFieldRelitiveSpeed.vyMetersPerSecond * delayTime;
 
-        double predictedRotation = robotPose.getRotation().getRadians() + robotFieldRelitiveSpeed.omegaRadiansPerSecond * delayTime;
-
-        Pose2d predictedPose = new Pose2d(predictedX, predictedY, new Rotation2d(predictedRotation));
+        Pose2d predictedPose = new Pose2d(predictedX, predictedY, robotPose.getRotation());
         return predictedPose;
     }
 
