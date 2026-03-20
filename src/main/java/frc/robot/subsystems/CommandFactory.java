@@ -156,6 +156,12 @@ public class CommandFactory {
     return startIndex;
   }
 
+
+  public Command stopIndexAndShoot() {
+    Command stopIndex = m_indexer.stopIndexing();
+    return stopIndex;
+  }
+
   public Command test() {
     return Commands.none();
   }

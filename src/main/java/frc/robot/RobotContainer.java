@@ -107,6 +107,7 @@ public class RobotContainer {
     // Combined Commands
     NamedCommands.registerCommand("Turret Default", m_shootingMechanism.startTrackingCommandAuto());
     NamedCommands.registerCommand("IntakeandShoot", m_commandFactory.intakeAndShoot());
+    NamedCommands.registerCommand("StopIndexandShoot", m_commandFactory.stopIndexAndShoot());
 
     // Intake Deployer
     NamedCommands.registerCommand("Lower Intake", m_commandFactory.setIntakeDown());
