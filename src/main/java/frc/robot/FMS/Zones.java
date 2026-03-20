@@ -11,7 +11,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.RobotLogger;
 import frc.robot.constants.GoalPoseConstants;
 import frc.robot.constants.GoalPoseConstants.GoalPose;
 import frc.robot.constants.ZonesConstants;
@@ -27,6 +27,7 @@ public class Zones {
   private final Supplier<Angle> m_pitch;
   private final Supplier<Angle> m_roll;
   private final Supplier<Optional<Alliance>> m_allianceSupplier;
+  private final RobotLogger logger = new RobotLogger("Zones");
 
   private final CommandSwerveDrivetrain m_commandSwerveDrivetrain;
 
@@ -57,8 +58,10 @@ public class Zones {
       }
     }
 
-    SmartDashboard.putString(
-        "Alliance", cachedAlliance.isPresent() ? cachedAlliance.get().name() : "Unknown");
+    logger.log(
+        "Alliance",
+        "Retrieved Alliance: "
+            + (cachedAlliance.isPresent() ? cachedAlliance.get().name() : "Unknown"));
 
     return cachedAlliance;
   }
@@ -67,7 +70,9 @@ public class Zones {
     Translation2d robotTranslation = m_pose.get().getTranslation();
     Zone zone =
         ZonesConstants.firstContainingOrDefault(robotTranslation, Zone.class, Zone.OUT_OF_BOUNDS);
-    SmartDashboard.putString("CurrentZone", zone.name());
+
+    logger.logAndDisplay("CurrentZone", zone);
+
     return zone;
   }
 
@@ -79,10 +84,6 @@ public class Zones {
         Math.abs(pitch) > ZonesConstants.BUMP_ANGLE.in(Degrees)
             || Math.abs(roll) > ZonesConstants.BUMP_ANGLE.in(Degrees);
 
-    SmartDashboard.putNumber("Pitch", pitch);
-    SmartDashboard.putNumber("Roll", roll);
-    SmartDashboard.putBoolean("On Bump", onBump);
-
     return onBump;
   }
 
@@ -90,7 +91,6 @@ public class Zones {
     Pose2d robotPose = m_commandSwerveDrivetrain.getPredictedPose2d(0.25);
     Translation2d robotTranslation = robotPose.getTranslation();
     boolean isNearTrench = ZonesConstants.containsAny(robotTranslation, Trench.class);
-    SmartDashboard.putBoolean("Zones/IsNearTrench", isNearTrench);
     return isNearTrench;
   }
 
@@ -107,7 +107,7 @@ public class Zones {
         isInDeadZone =
             ZonesConstants.contains(robotTranslation, ZonesConstants.HubDeadZone.RED_HUB_DEADZONE);
     }
-    SmartDashboard.putBoolean("Drive/IsInDeadZone", isInDeadZone);
+    logger.log("IsInDeadZone", isInDeadZone);
     return isInDeadZone;
   }
 
@@ -119,12 +119,15 @@ public class Zones {
     getZone();
     Optional<Alliance> alliance = getAlliance();
     if (!alliance.isPresent()) {
+      logger.log("GoalPose", "Alliance information not available, defaulting to Blue Hub pose");
       return GoalPoseConstants.BLUE_HUB;
     }
 
     if (alliance.get() == Alliance.Blue) {
+      logger.log("GoalPose", "Alliance is Blue, using Blue Hub pose");
       return GoalPoseConstants.BLUE_HUB;
     } else {
+      logger.log("GoalPose", "Alliance is Red, using Red Hub pose");
       return GoalPoseConstants.RED_HUB;
     }
 

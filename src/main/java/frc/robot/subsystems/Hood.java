@@ -17,8 +17,6 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.ForwardLimitValue;
-import com.ctre.phoenix6.signals.ReverseLimitValue;
 import com.ctre.phoenix6.signals.S1CloseStateValue;
 import com.ctre.phoenix6.signals.S2CloseStateValue;
 import edu.wpi.first.units.measure.Angle;
@@ -113,8 +111,6 @@ public class Hood extends SubsystemBase {
     // Initalize the PositionVoltage request
     m_positionVoltageRequest = new PositionVoltage(0).withSlot(0);
 
-    SmartDashboard.putNumber("Set Hood Angle (Deg)", 0);
-
     m_zeroTrigger = new Trigger(this::getLowerLimitValue);
     m_zeroTrigger.onTrue(
         runOnce(
@@ -129,14 +125,7 @@ public class Hood extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
-    SmartDashboard.putBoolean(
-        "Reverse Limit",
-        m_hoodMotor.getReverseLimit().getValue() == ReverseLimitValue.ClosedToGround);
-    SmartDashboard.putBoolean(
-        "Forward Limit",
-        m_hoodMotor.getForwardLimit().getValue() == ForwardLimitValue.ClosedToGround);
-  }
+  public void periodic() {}
 
   public Command manualRotation(Angle amountOfRotation) {
     return runOnce(

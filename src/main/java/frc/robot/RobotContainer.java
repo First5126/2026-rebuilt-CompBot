@@ -34,6 +34,7 @@ import frc.robot.subsystems.Turret;
 import frc.robot.vision.AprilTagLocalization;
 
 public class RobotContainer {
+  private final RobotLogger robotLogger = new RobotLogger("RobotContainer");
   private double MaxSpeed =
       1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
   private double MaxAngularRate =
