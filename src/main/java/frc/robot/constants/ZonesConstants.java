@@ -61,7 +61,7 @@ public class ZonesConstants {
     }
   }
 
-  public static enum HubDeadZone implements RectangularRegion {
+  public enum HubDeadZone implements RectangularRegion {
     BLUE_HUB_DEADZONE(new Translation2d(5.203, 4.595), new Translation2d(6.258, 3.556)),
     RED_HUB_DEADZONE(new Translation2d(10.379, 4.595), new Translation2d(11.223, 3.459));
 
