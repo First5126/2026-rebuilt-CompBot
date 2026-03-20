@@ -20,11 +20,11 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.MutAngle;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.FMS.Zones;
+import frc.robot.RobotLogger;
 import frc.robot.constants.AprilTagLocalizationConstants.LimelightDetails;
 import frc.robot.constants.AprilTagLocalizationConstants.PhotonDetails;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -39,6 +39,7 @@ import org.photonvision.targeting.PhotonPipelineResult;
  * thread instead of the main robot loop.
  */
 public class AprilTagLocalization extends SubsystemBase {
+  private static final RobotLogger logger = new RobotLogger("AprilTagLocalization");
   private LimelightDetails[] m_LimelightDetails; // list of limelights that can provide updates
   private PhotonDetails[] m_PhotonVisionCameras; // list of limelights that can provide updates
   private Supplier<Pose2d> m_robotPoseSupplier; // supplies the pose of the robot
@@ -162,7 +163,7 @@ public class AprilTagLocalization extends SubsystemBase {
       PoseEstimate poseEstimate =
           LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(
               limelightDetail.name); // Get the pose from the Limelight
-      SmartDashboard.putBoolean(
+      logger.log(
           "Valid Pose Estimation: ",
           poseEstimate != null
               && poseEstimate.pose.getX() != 0.0
@@ -183,8 +184,8 @@ public class AprilTagLocalization extends SubsystemBase {
                 / MAX_TAG_DISTANCE.in(Meters); // scale the std deviation by the distance
         // Validate the pose for sanity reject bad poses  if fullTrust is true accept regarless of
         // sanity
-        SmartDashboard.putNumber("Pose Estimate X:", poseEstimate.pose.getX());
-        SmartDashboard.putNumber("Pose Estimate Y:", poseEstimate.pose.getY());
+        logger.log("Pose Estimate X:", poseEstimate.pose.getX());
+        logger.log("Pose Estimate Y:", poseEstimate.pose.getY());
         if (m_FullTrust) {
           // set the pose in the pose consumer
           m_poseReset.accept(

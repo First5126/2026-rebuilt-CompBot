@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.FMS.ShiftData;
 import frc.robot.FMS.Zones;
+import frc.robot.RobotLogger;
 import frc.robot.constants.AprilTagLocalizationConstants;
 import frc.robot.constants.GoalPoseConstants.GoalPose;
 import frc.robot.constants.ShootingMechanismConstants;
@@ -25,6 +26,8 @@ import frc.robot.constants.TurretConstants;
 import java.util.function.Supplier;
 
 public class ShootingMechanism extends SubsystemBase {
+  public static final RobotLogger logger = new RobotLogger("ShootingMechanism");
+
   public static class ShootingSolution {
     private Angle predictedHoodAngle;
     private Angle predictedTurretAngle;
@@ -122,6 +125,9 @@ public class ShootingMechanism extends SubsystemBase {
               + ShootingMechanismConstants.mechanismDelay.in(Seconds);
 
       Pose2d predictedRobotPose = m_drivetrain.getPredictedPose2d(delayTime);
+
+      logger.log("Predicted Robot Pose", predictedRobotPose);
+
       double predictedDistanceTraveled =
           robotPose.getTranslation().getDistance(predictedRobotPose.getTranslation());
 
@@ -164,21 +170,7 @@ public class ShootingMechanism extends SubsystemBase {
       double nowSeconds = Timer.getFPGATimestamp();
       if (nowSeconds - m_lastDashboardUpdateSeconds >= DASHBOARD_UPDATE_PERIOD_SECONDS) {
         m_lastDashboardUpdateSeconds = nowSeconds;
-        SmartDashboard.putBoolean("Valid Shooting Solution", true);
-        SmartDashboard.putNumber("Predicated Distance", predictedDistanceTraveled);
-        if (ENABLE_UPDATE_SHOOTING_SOLUTION_PROFILING) {
-          SmartDashboard.putNumber(
-              "updateShootingSolution (ms)", (System.nanoTime() - startNanos) / 1_000_000.0);
-        }
-        SmartDashboard.putNumber(
-            "Hood Angle Interpolated (Deg)",
-            m_currentShootingSolution.getPredictedHoodAngle().in(Degrees));
-        SmartDashboard.putNumber(
-            "Turrent Angle Calculated (Deg)",
-            m_currentShootingSolution.getPredictedTurretAngle().in(Degrees));
-        SmartDashboard.putNumber(
-            "FlyWheel Interpolated (RPS)",
-            m_currentShootingSolution.getPredictedFlyWheelVelocity().in(RotationsPerSecond));
+        logger.log("Valid Shooting Solution", true);
 
         m_field.setRobotPose(robotPose);
         m_predictedPoseObject.setPose(predictedRobotPose);
@@ -187,11 +179,7 @@ public class ShootingMechanism extends SubsystemBase {
       double nowSeconds = Timer.getFPGATimestamp();
       if (nowSeconds - m_lastDashboardUpdateSeconds >= DASHBOARD_UPDATE_PERIOD_SECONDS) {
         m_lastDashboardUpdateSeconds = nowSeconds;
-        SmartDashboard.putBoolean("Valid Shooting Solution", false);
-        if (ENABLE_UPDATE_SHOOTING_SOLUTION_PROFILING) {
-          SmartDashboard.putNumber(
-              "updateShootingSolution (ms)", (System.nanoTime() - startNanos) / 1_000_000.0);
-        }
+        logger.log("Valid Shooting Solution", false);
       }
       m_currentShootingSolution.set(ZERO_ANGLE, ZERO_ANGLE, ZERO_ANGULAR_VELOCITY);
     }
@@ -200,8 +188,6 @@ public class ShootingMechanism extends SubsystemBase {
   @Override
   public void periodic() {
     updateShootingSolution(m_drivetrain::getPose2d, m_zone::getGoalPose);
-
-    SmartDashboard.putBoolean("Can Shoot", canShoot.getAsBoolean());
   }
 
   private boolean canShootFuel() {
@@ -229,23 +215,6 @@ public class ShootingMechanism extends SubsystemBase {
             && (!m_zone.isInDeadZone() || goalPose.requiresShift)
             && (!goalPose.requiresShift || ShiftData.canScore());
 
-    SmartDashboard.putNumber(
-        "Turret Deviation (Deg)",
-        m_turret
-            .getPosition()
-            .minus(m_currentShootingSolution.getPredictedTurretAngle())
-            .in(Degrees));
-
-    SmartDashboard.putNumber(
-        "Hood Deviation (Deg)",
-        m_hood.getPosition().minus(m_currentShootingSolution.getPredictedHoodAngle()).in(Degrees));
-
-    SmartDashboard.putNumber(
-        "FlyWheel Deviation (RPS)",
-        m_flyWheel
-            .getCurrentSpeed()
-            .minus(m_currentShootingSolution.getPredictedFlyWheelVelocity())
-            .in(RotationsPerSecond));
     return check;
   }
 
