@@ -3,37 +3,42 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.1589982110912342,
-        "y": 7.5799647887323935
+        "x": 7.069320214669052,
+        "y": 7.417996422182468
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.051181309682785,
-        "y": 7.548028169014085
+        "x": 8.069320214669052,
+        "y": 7.417996422182468
       },
       "isLocked": false,
-      "linkedName": "Under Trench - Depot Side"
+      "linkedName": "Neutral Zone Back Second Sweep"
     },
     {
       "anchor": {
-        "x": 0.6602862254025041,
-        "y": 5.973935599284436
+        "x": 7.831914132379248,
+        "y": 3.0209123434704828
       },
       "prevControl": {
-        "x": 2.059493170366527,
-        "y": 5.973935599284436
+        "x": 7.831914132379248,
+        "y": 3.757517025601021
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Pickup - Depot"
+      "linkedName": "Neutral Zone- Pickup"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.3,
+      "rotationDegrees": -90.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.0,
+    "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -42,13 +47,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -90.0
   },
   "reversed": false,
   "folder": "Depot Side",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }
