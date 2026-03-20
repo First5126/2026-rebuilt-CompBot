@@ -12,7 +12,7 @@
         "y": 0.5546511627906967
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Neutral Zone - Outpost Side Post-Pickup"
     },
     {
       "anchor": {
@@ -32,16 +32,16 @@
     },
     {
       "anchor": {
-        "x": 0.3844543828264755,
+        "x": 0.675,
         "y": 0.6816549295786183
       },
       "prevControl": {
-        "x": 1.857753094776276,
+        "x": 2.148298711949801,
         "y": 0.6816549295786181
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Pickup - Outpost"
     }
   ],
   "rotationTargets": [
@@ -70,7 +70,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -178.83086067209263
+    "rotation": 179.6778914489981
   },
   "reversed": false,
   "folder": "Outpost Side",

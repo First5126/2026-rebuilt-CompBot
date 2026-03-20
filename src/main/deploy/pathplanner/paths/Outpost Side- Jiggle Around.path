@@ -3,29 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.6782110912343464,
-        "y": 2.99705985915493
+        "x": 0.675,
+        "y": 0.682
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.824806338022504,
-        "y": 1.3363556338039704
+        "x": 1.585134967668663,
+        "y": 0.798025928973808
       },
       "isLocked": false,
-      "linkedName": "Hub Bump - Outpost Side"
+      "linkedName": "Pickup - Outpost"
+    },
+    {
+      "anchor": {
+        "x": 0.7491480322003575,
+        "y": 0.7203479427549193
+      },
+      "prevControl": {
+        "x": 0.43699798747763824,
+        "y": 0.7591900715563505
+      },
+      "nextControl": {
+        "x": 1.0612980769230769,
+        "y": 0.6815058139534881
+      },
+      "isLocked": false,
+      "linkedName": null
     },
     {
       "anchor": {
         "x": 0.675,
-        "y": 0.6816549295786183
+        "y": 0.682
       },
       "prevControl": {
-        "x": 2.8626584506985604,
-        "y": 1.2245774647910388
+        "x": 0.42700703078206054,
+        "y": 0.6503853322258469
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Pickup - Outpost"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -42,13 +58,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 179.6778914489981
+    "rotation": 179.68
   },
   "reversed": false,
   "folder": "Outpost Side",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 179.6778914489981
   },
   "useDefaultConstraints": true
 }
