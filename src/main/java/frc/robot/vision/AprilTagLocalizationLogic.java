@@ -85,7 +85,13 @@ final class AprilTagLocalizationLogic {
       AngularVelocity yawRate = (yaw.minus(oldYaw).div(LOCALIZATION_PERIOD));
 
       LimelightHelpers.SetRobotOrientation(
-          limelightDetail.name, yaw.in(Degrees), yawRate.in(DegreesPerSecond), 0, 0, 0, 0);
+          limelightDetail.name,
+          yaw.in(Degrees),
+          yawRate.in(DegreesPerSecond),
+          0,
+          0,
+          0,
+          0);
 
       PoseEstimate poseEstimate =
           LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightDetail.name);
@@ -95,9 +101,7 @@ final class AprilTagLocalizationLogic {
               && poseEstimate.pose.getX() != 0.0
               && poseEstimate.pose.getY() != 0.0);
 
-      if (poseEstimate != null
-          && poseEstimate.pose.getX() != 0.0
-          && poseEstimate.pose.getY() != 0.0) {
+      if (poseEstimate != null && poseEstimate.pose.getX() != 0.0 && poseEstimate.pose.getY() != 0.0) {
         double scale = poseEstimate.avgTagDist / maxTagDistanceMeters;
         logger.log("Pose Estimate X:", poseEstimate.pose.getX());
         logger.log("Pose Estimate Y:", poseEstimate.pose.getY());
@@ -108,8 +112,7 @@ final class AprilTagLocalizationLogic {
                   poseEstimate.pose.getX(),
                   poseEstimate.pose.getY(),
                   Rotation2d.fromDegrees(yaw.in(Degrees))));
-        } else if (!isPoseOffField(poseEstimate.pose)
-            && poseEstimate.avgTagDist < maxTagDistanceMeters) {
+        } else if (!isPoseOffField(poseEstimate.pose) && poseEstimate.avgTagDist < maxTagDistanceMeters) {
           Matrix<N3, N1> interpolated =
               interpolate(limelightDetail.closeStdDevs, limelightDetail.farStdDevs, scale);
           visionConsumer.accept(poseEstimate.pose, poseEstimate.timestampSeconds, interpolated);
