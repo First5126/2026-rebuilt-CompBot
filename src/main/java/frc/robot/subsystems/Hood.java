@@ -23,6 +23,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -166,14 +167,10 @@ public class Hood extends SubsystemBase {
   }
 
   public Command holdCertainPosition(Angle angle) {
-    return run(
-        () -> {
+    return run(() -> {
           setPositionInternal(angle);
         })
-    // Will take any incomming requests and if it does see one then it will cancel itself and run
-    // that insted.
-    // .withInterruptBehavior(InterruptionBehavior.kCancelSelf)
-    ;
+        .withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
   }
 
   public Command setPosition(Supplier<ShootingSolution> shootingSolution) {

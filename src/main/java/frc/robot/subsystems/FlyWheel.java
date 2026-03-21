@@ -71,6 +71,10 @@ public class FlyWheel extends SubsystemBase {
     return runOnce(() -> stopMotors());
   }
 
+  public Command reverseSpinning() {
+    return runOnce(() -> reverseWheels());
+  }
+
   // public LinearVelocity getDashboardSpeed() {
   //  return MetersPerSecond.of(SmartDashboard.getNumber("Set Shooter Speed (MPS)", 0));
   // }
@@ -97,6 +101,10 @@ public class FlyWheel extends SubsystemBase {
 
     if (rotationSpeed.isEquivalent(RotationsPerSecond.of(0))) stopMotors();
     else m_shooterMotor.setControl(m_shooterSpeed.withVelocity(rotationSpeed));
+  }
+
+  private void reverseWheels() {
+    m_shooterMotor.setControl(m_shooterSpeed.withVelocity(RotationsPerSecond.of(-1)));
   }
 
   private void startMotors() {

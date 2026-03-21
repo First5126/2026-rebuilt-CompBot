@@ -143,6 +143,13 @@ public class Turret extends SubsystemBase {
     return getPosition().isNear(targetPosition, tolerance);
   }
 
+  public Command holdCertainPosition(Angle angle) {
+    return run(
+        () -> {
+          setPosition(angle);
+        });
+  }
+
   private void setPosition(final Angle position) {
     // Convert all angles to degrees for clamping
     double minDegrees = TurretConstants.MIN_ANGLE.in(Degrees);

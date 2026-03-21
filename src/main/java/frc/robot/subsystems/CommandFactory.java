@@ -109,6 +109,15 @@ public class CommandFactory {
     return m_turret.manualRotation(amountOfMovement);
   }
 
+  public Command stopEverything() {
+    return Commands.runOnce(
+        () -> {
+          stopFlywheel();
+          stopIndexer();
+          stopIntake();
+        });
+  }
+
   public Command rotateHoodBy(Angle amountOfMovement) {
     return m_hood.manualRotation(amountOfMovement);
   }
@@ -198,6 +207,10 @@ public class CommandFactory {
   // Convenience / clearer naming for indexing control
   public Command startIndexer() {
     return startIndexing();
+  }
+
+  public Command rotateTurretToZero() {
+    return m_turret.holdCertainPosition(Degrees.of(0));
   }
 
   public Command stopIndexer() {

@@ -172,8 +172,8 @@ public class Operator extends CustomXboxController implements Controller {
         .onTrue(
             new SelectCommand<OperatorState>(
                 Map.of(
-                    OperatorState.NORMAL, Commands.none(),
-                    OperatorState.OVERRIDE, Commands.none()),
+                    OperatorState.NORMAL, commandFactory.rotateTurretToZero(),
+                    OperatorState.OVERRIDE, commandFactory.rotateTurretToZero()),
                 () -> operatorState));
 
     this.leftBumper()
