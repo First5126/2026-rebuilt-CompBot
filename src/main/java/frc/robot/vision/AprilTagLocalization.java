@@ -140,8 +140,12 @@ public class AprilTagLocalization extends SubsystemBase {
    * thread once per AprilTagLocalizationConstants.LOCALIZATION_PERIOD.
    */
   public void poseEstimate() {
+    final Pose2d robotPose = m_robotPoseSupplier.get();
+    final double robotYawDegrees = robotPose.getRotation().getDegrees();
+    final double maxTagDistanceMeters = MAX_TAG_DISTANCE.in(Meters);
+
     for (LimelightDetails limelightDetail : m_LimelightDetails) {
-      m_yaw.mut_replace(Degrees.of(m_robotPoseSupplier.get().getRotation().getDegrees()));
+      m_yaw.mut_replace(Degrees.of(robotYawDegrees));
       AngularVelocity yawRate = (m_yaw.minus(m_OldYaw).div(LOCALIZATION_PERIOD));
       // Set Orientation using LimelightHelpers.SetRobotOrientation and the m_robotPoseSupplier
       LimelightHelpers.SetRobotOrientation(
@@ -181,7 +185,7 @@ public class AprilTagLocalization extends SubsystemBase {
 
         double scale =
             poseEstimate.avgTagDist
-                / MAX_TAG_DISTANCE.in(Meters); // scale the std deviation by the distance
+                / maxTagDistanceMeters; // scale the std deviation by the distance
         // Validate the pose for sanity reject bad poses  if fullTrust is true accept regarless of
         // sanity
         logger.log("Pose Estimate X:", poseEstimate.pose.getX());
@@ -195,8 +199,8 @@ public class AprilTagLocalization extends SubsystemBase {
                   Rotation2d.fromDegrees(m_yaw.in(Degrees))));
         } else if (!(isPoseOffField(poseEstimate.pose))
             && poseEstimate.avgTagDist
-                < MAX_TAG_DISTANCE.in(
-                    Meters)) { // reject poses that are more than max tag distance we trust
+                < maxTagDistanceMeters) { // reject poses that are more than max tag distance we
+          // trust
           // scale std deviation by distance if fullTrust is true set the stdDevs super low.
           Matrix<N3, N1> interpolated =
               interpolate(limelightDetail.closeStdDevs, limelightDetail.farStdDevs, scale);
@@ -222,7 +226,7 @@ public class AprilTagLocalization extends SubsystemBase {
             double scale =
                 PhotonVisionHelpers.getAverageDistanceBetweenTags(
                         photonDetail, finalEstimation.get().estimatedPose.toPose2d())
-                    / MAX_TAG_DISTANCE.in(Meters);
+                    / maxTagDistanceMeters;
             // TODO: replace with real STDV's new Matrix<N3, N1>
             // TODO: interpolate this
             Matrix<N3, N1> interpolated =
