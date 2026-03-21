@@ -425,6 +425,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 isBraking = true;
             }
 
+            /* 
             // Apply max speed when on bump
             boolean onBump = zones.isNearBump();
 
@@ -440,6 +441,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                     y = y * speedMultiplier;
                 }
             }
+
+            */
 
             if (isBraking) {
                 brake();
