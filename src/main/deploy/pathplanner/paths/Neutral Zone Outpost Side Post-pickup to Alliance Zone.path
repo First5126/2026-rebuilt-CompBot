@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 3.65,
-        "y": 0.6816549295786183
+        "x": 3.0,
+        "y": 0.682
       },
       "prevControl": {
-        "x": 5.123298711949801,
-        "y": 0.6816549295786181
+        "x": 4.4732987119498,
+        "y": 0.6819999999999998
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Pickup - Outpost"
+      "linkedName": "Alliance Zone-Shooting Zone"
     }
   ],
   "rotationTargets": [
@@ -54,7 +54,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 179.6778914489981
+    "rotation": -178.83086067209263
   },
   "reversed": false,
   "folder": "Outpost Side",

@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.0,
+        "x": 6.452754919499106,
         "y": 0.682
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.0,
+        "x": 7.452754919499106,
         "y": 0.6820000000000004
       },
       "isLocked": false,
-      "linkedName": "Alliance Zone-Shooting Zone"
+      "linkedName": "Neutral Zone - Outpost side Pre-pickup"
     },
     {
       "anchor": {
-        "x": 6.452754919499106,
-        "y": 0.682
+        "x": 7.695140845070423,
+        "y": 1.3010196779964212
       },
       "prevControl": {
-        "x": 5.452754919499106,
-        "y": 0.682
+        "x": 7.581563027539119,
+        "y": 0.2950447227191393
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Depot side- Neutral"
+      "linkedName": "Neutral Zone - Outpost Side"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -178.83
+    "rotation": 90.0
   },
   "reversed": false,
   "folder": "Outpost Side",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -178.83086067209263
+    "rotation": -178.83
   },
   "useDefaultConstraints": true
 }
