@@ -27,13 +27,13 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Outpost to Neutral Zone"
+                        "pathName": "Outpost Side - Trench to Neutral Zone"
                       }
                     },
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Neutral Zone Outpost Side Pickup"
+                        "pathName": " Outpost Side - Neutral Zone Pickup"
                       }
                     },
                     {

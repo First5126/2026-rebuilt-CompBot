@@ -113,6 +113,7 @@ public class RobotContainer {
     // Intake Deployer
     NamedCommands.registerCommand("Lower Intake", m_commandFactory.setIntakeDown());
     NamedCommands.registerCommand("Raise Intake ", m_intakeDeployer.raiseIntakeUpCommand());
+    NamedCommands.registerCommand("SetTurretToZero", m_commandFactory.setTurretToZero());
 
     // Shoot
     NamedCommands.registerCommand("Index and Shoot", m_commandFactory.indexAndShoot());
