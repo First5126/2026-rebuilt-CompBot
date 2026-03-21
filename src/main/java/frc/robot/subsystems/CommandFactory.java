@@ -161,9 +161,6 @@ public class CommandFactory {
     return stopIndex;
   }
 
-  public Command test() {
-    return Commands.none();
-  }
 
   // Stop flywheel and stow hood to 0 degrees
   public Command stopFlywheelAndStowHood() {
@@ -206,6 +203,10 @@ public class CommandFactory {
 
   public Command stopIndexer() {
     return stopIndexing();
+  }
+
+  public Command test() {
+    return Commands.none();
   }
 
   public Command startFlywheelWithSolution() {
