@@ -161,7 +161,6 @@ public class CommandFactory {
     return stopIndex;
   }
 
-
   // Stop flywheel and stow hood to 0 degrees
   public Command stopFlywheelAndStowHood() {
     return m_flyWheel.stopSpinning().alongWith(m_hood.setPosition(Degree.of(0)));

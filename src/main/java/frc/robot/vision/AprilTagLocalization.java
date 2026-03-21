@@ -40,6 +40,7 @@ import org.photonvision.targeting.PhotonPipelineResult;
  */
 public class AprilTagLocalization extends SubsystemBase {
   private static final RobotLogger logger = new RobotLogger("AprilTagLocalization");
+  private static final int LOG_EVERY_N_ESTIMATES = 25; // ~0.5s if estimates run at 20ms
   private LimelightDetails[] m_LimelightDetails; // list of limelights that can provide updates
   private PhotonDetails[] m_PhotonVisionCameras; // list of limelights that can provide updates
   private Supplier<Pose2d> m_robotPoseSupplier; // supplies the pose of the robot
@@ -50,6 +51,7 @@ public class AprilTagLocalization extends SubsystemBase {
   private VisionConsumer m_VisionConsumer;
   private ResetPose m_poseReset;
   private Zones m_zone;
+  private int m_logCountdown = 0;
 
   /**
    * Creates a new AprilTagLocalization.
@@ -140,6 +142,11 @@ public class AprilTagLocalization extends SubsystemBase {
    * thread once per AprilTagLocalizationConstants.LOCALIZATION_PERIOD.
    */
   public void poseEstimate() {
+    final boolean shouldLog = (m_logCountdown-- <= 0);
+    if (shouldLog) {
+      m_logCountdown = LOG_EVERY_N_ESTIMATES;
+    }
+
     final Pose2d robotPose = m_robotPoseSupplier.get();
     final double robotYawDegrees = robotPose.getRotation().getDegrees();
     final double maxTagDistanceMeters = MAX_TAG_DISTANCE.in(Meters);
@@ -167,14 +174,18 @@ public class AprilTagLocalization extends SubsystemBase {
       PoseEstimate poseEstimate =
           LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(
               limelightDetail.name); // Get the pose from the Limelight
-      logger.log(
-          "Valid Pose Estimation: ",
-          poseEstimate != null
-              && poseEstimate.pose.getX() != 0.0
-              && poseEstimate.pose.getY() != 0.0);
-      if (poseEstimate != null
-          && poseEstimate.pose.getX() != 0.0
-          && poseEstimate.pose.getY() != 0.0) {
+
+      if (poseEstimate == null) {
+        continue;
+      }
+
+      if (shouldLog) {
+        logger.log(
+            "Valid Pose Estimation: ",
+            poseEstimate.pose.getX() != 0.0 && poseEstimate.pose.getY() != 0.0);
+      }
+
+      if (poseEstimate.pose.getX() != 0.0 && poseEstimate.pose.getY() != 0.0) {
         // remove the offset of the camera
         /*poseEstimate.pose =
         poseEstimate.pose.transformBy(
@@ -188,8 +199,6 @@ public class AprilTagLocalization extends SubsystemBase {
                 / maxTagDistanceMeters; // scale the std deviation by the distance
         // Validate the pose for sanity reject bad poses  if fullTrust is true accept regarless of
         // sanity
-        logger.log("Pose Estimate X:", poseEstimate.pose.getX());
-        logger.log("Pose Estimate Y:", poseEstimate.pose.getY());
         if (m_FullTrust) {
           // set the pose in the pose consumer
           m_poseReset.accept(
@@ -214,6 +223,10 @@ public class AprilTagLocalization extends SubsystemBase {
 
     for (PhotonDetails photonDetail : m_PhotonVisionCameras) {
       PhotonPipelineResult result = photonDetail.camera.getLatestResult();
+      if (!result.hasTargets()) {
+        continue;
+      }
+
       Optional<EstimatedRobotPose> estimation =
           photonDetail.poseEstimator.estimateCoprocMultiTagPose(result);
 
