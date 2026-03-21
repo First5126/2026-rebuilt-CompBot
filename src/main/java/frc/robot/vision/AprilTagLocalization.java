@@ -180,7 +180,7 @@ public class AprilTagLocalization extends SubsystemBase {
       }
 
       if (shouldLog) {
-        logger.log(
+        logger.logAndDisplay(
             "Valid Pose Estimation: ",
             poseEstimate.pose.getX() != 0.0 && poseEstimate.pose.getY() != 0.0);
       }

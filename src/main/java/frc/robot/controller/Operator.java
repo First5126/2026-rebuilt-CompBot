@@ -158,7 +158,7 @@ public class Operator extends CustomXboxController implements Controller {
         .onTrue(
             new SelectCommand<OperatorState>(
                 Map.of(
-                    OperatorState.NORMAL, commandFactory.stopFlywheelAndIndexer(),
+                    OperatorState.NORMAL, commandFactory.clearShootingJam(),
                     OperatorState.OVERRIDE, commandFactory.clearShootingJam()),
                 () -> operatorState))
         .onFalse(
