@@ -169,7 +169,7 @@ public class Operator extends CustomXboxController implements Controller {
                 () -> operatorState));
 
     this.y()
-        .onTrue(
+        .whileTrue(
             new SelectCommand<OperatorState>(
                 Map.of(
                     OperatorState.NORMAL, commandFactory.rotateTurretToZero(),
