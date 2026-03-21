@@ -165,7 +165,8 @@ class AprilTagLocalizationLogicTest {
     localization.setFullTrust(false);
 
     double halfMaxDistance = 2.5;
-    assertEquals(5.0, frc.robot.constants.AprilTagLocalizationConstants.MAX_TAG_DISTANCE.in(Meters));
+    assertEquals(
+        5.0, frc.robot.constants.AprilTagLocalizationConstants.MAX_TAG_DISTANCE.in(Meters));
 
     LimelightHelpers.setPoseEstimate(
         limelightName,
@@ -190,4 +191,3 @@ class AprilTagLocalizationLogicTest {
     assertEquals(5.0, stdDevs.get(2, 0), 1e-9);
   }
 }
-
