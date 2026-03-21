@@ -124,11 +124,11 @@ public class Turret extends SubsystemBase {
         });
   }
 
-
   public Command rotateToZero() {
-    return runOnce(() -> {
-        setPosition(Degrees.of(0));
-    });
+    return runOnce(
+        () -> {
+          setPosition(Degrees.of(0));
+        });
   }
 
   public Command rotateToPositionAutoCont(Supplier<ShootingSolution> shootingSolution) {

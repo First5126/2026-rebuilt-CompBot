@@ -225,6 +225,10 @@ public class CommandFactory {
     return m_flyWheel.setSpeedWithSolution(m_shootingMechanism::getShootingSolution);
   }
 
+  public Command setTurretToZero() {
+    return m_turret.holdCertainPosition(Degrees.of(0));
+  }
+
   public Command lowerHoodSlowly() {
     return m_hood.moveAngleDownCommand();
   }
