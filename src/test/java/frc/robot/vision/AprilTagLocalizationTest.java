@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-class AprilTagLocalizationLogicTest {
+class AprilTagLocalizationTest {
   @AfterEach
   void tearDown() {
     LimelightHelpers.clear();
@@ -33,17 +33,19 @@ class AprilTagLocalizationLogicTest {
     var poseSupplier = (java.util.function.Supplier<Pose2d>) () -> suppliedPose;
 
     AtomicReference<Pose2d> resetPoseValue = new AtomicReference<>();
-    AprilTagLocalizationLogic.ResetPose resetPose = resetPoseValue::set;
+    AprilTagLocalization.ResetPose resetPose = resetPoseValue::set;
 
     AtomicInteger visionCalls = new AtomicInteger(0);
-    AprilTagLocalizationLogic.VisionConsumer visionConsumer =
+    AprilTagLocalization.VisionConsumer visionConsumer =
         (pose, ts, stdDevs) -> visionCalls.incrementAndGet();
 
     var localization =
-        new AprilTagLocalizationLogic(
+        new AprilTagLocalization(
             poseSupplier,
             resetPose,
             visionConsumer,
+            null,
+            null,
             new frc.robot.constants.AprilTagLocalizationConstants.PhotonDetails[] {},
             limelightDetails);
     localization.setFullTrust(true);
@@ -73,17 +75,19 @@ class AprilTagLocalizationLogicTest {
     var poseSupplier = (java.util.function.Supplier<Pose2d>) Pose2d::new;
 
     AtomicInteger resetCalls = new AtomicInteger(0);
-    AprilTagLocalizationLogic.ResetPose resetPose = pose -> resetCalls.incrementAndGet();
+    AprilTagLocalization.ResetPose resetPose = pose -> resetCalls.incrementAndGet();
 
     AtomicInteger visionCalls = new AtomicInteger(0);
-    AprilTagLocalizationLogic.VisionConsumer visionConsumer =
+    AprilTagLocalization.VisionConsumer visionConsumer =
         (pose, ts, stdDevs) -> visionCalls.incrementAndGet();
 
     var localization =
-        new AprilTagLocalizationLogic(
+        new AprilTagLocalization(
             poseSupplier,
             resetPose,
             visionConsumer,
+            null,
+            null,
             new frc.robot.constants.AprilTagLocalizationConstants.PhotonDetails[] {},
             limelightDetails);
     localization.setFullTrust(false);
@@ -108,17 +112,19 @@ class AprilTagLocalizationLogicTest {
     var poseSupplier = (java.util.function.Supplier<Pose2d>) Pose2d::new;
 
     AtomicInteger resetCalls = new AtomicInteger(0);
-    AprilTagLocalizationLogic.ResetPose resetPose = pose -> resetCalls.incrementAndGet();
+    AprilTagLocalization.ResetPose resetPose = pose -> resetCalls.incrementAndGet();
 
     AtomicInteger visionCalls = new AtomicInteger(0);
-    AprilTagLocalizationLogic.VisionConsumer visionConsumer =
+    AprilTagLocalization.VisionConsumer visionConsumer =
         (pose, ts, stdDevs) -> visionCalls.incrementAndGet();
 
     var localization =
-        new AprilTagLocalizationLogic(
+        new AprilTagLocalization(
             poseSupplier,
             resetPose,
             visionConsumer,
+            null,
+            null,
             new frc.robot.constants.AprilTagLocalizationConstants.PhotonDetails[] {},
             limelightDetails);
     localization.setFullTrust(false);
@@ -143,12 +149,12 @@ class AprilTagLocalizationLogicTest {
     LimelightDetails limelightDetails = new LimelightDetails(limelightName, close, far);
 
     var poseSupplier = (java.util.function.Supplier<Pose2d>) Pose2d::new;
-    AprilTagLocalizationLogic.ResetPose resetPose = pose -> {};
+    AprilTagLocalization.ResetPose resetPose = pose -> {};
 
     AtomicReference<Pose2d> visionPose = new AtomicReference<>();
     AtomicReference<Double> visionTimestamp = new AtomicReference<>();
     AtomicReference<Matrix<N3, N1>> visionStdDevs = new AtomicReference<>();
-    AprilTagLocalizationLogic.VisionConsumer visionConsumer =
+    AprilTagLocalization.VisionConsumer visionConsumer =
         (pose, ts, stdDevs) -> {
           visionPose.set(pose);
           visionTimestamp.set(ts);
@@ -156,16 +162,19 @@ class AprilTagLocalizationLogicTest {
         };
 
     var localization =
-        new AprilTagLocalizationLogic(
+        new AprilTagLocalization(
             poseSupplier,
             resetPose,
             visionConsumer,
+            null,
+            null,
             new frc.robot.constants.AprilTagLocalizationConstants.PhotonDetails[] {},
             limelightDetails);
     localization.setFullTrust(false);
 
     double halfMaxDistance = 2.5;
-    assertEquals(5.0, frc.robot.constants.AprilTagLocalizationConstants.MAX_TAG_DISTANCE.in(Meters));
+    assertEquals(
+        5.0, frc.robot.constants.AprilTagLocalizationConstants.MAX_TAG_DISTANCE.in(Meters));
 
     LimelightHelpers.setPoseEstimate(
         limelightName,
@@ -190,4 +199,3 @@ class AprilTagLocalizationLogicTest {
     assertEquals(5.0, stdDevs.get(2, 0), 1e-9);
   }
 }
-
