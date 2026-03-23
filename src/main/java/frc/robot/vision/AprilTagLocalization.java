@@ -4,9 +4,8 @@
 
 package frc.robot.vision;
 
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Seconds;
 import static frc.robot.constants.AprilTagLocalizationConstants.FIELD_LAYOUT;
 import static frc.robot.constants.AprilTagLocalizationConstants.LOCALIZATION_PERIOD;
 import static frc.robot.constants.AprilTagLocalizationConstants.MAX_TAG_DISTANCE;
@@ -18,8 +17,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.units.measure.MutAngle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -45,9 +42,8 @@ public class AprilTagLocalization extends SubsystemBase {
   private PhotonDetails[] m_PhotonVisionCameras; // list of limelights that can provide updates
   private Supplier<Pose2d> m_robotPoseSupplier; // supplies the pose of the robot
   private boolean m_FullTrust; // to allow for button trust the tag estimate over all else.
-  private MutAngle m_yaw = Degrees.mutable(0);
   CommandSwerveDrivetrain m_drivetrain;
-  private MutAngle m_OldYaw = Degrees.mutable(0); // the previous yaw
+  private double m_oldYawDegrees = 0.0; // the previous yaw in degrees
   private VisionConsumer m_VisionConsumer;
   private ResetPose m_poseReset;
   private Zones m_zone;
@@ -151,15 +147,17 @@ public class AprilTagLocalization extends SubsystemBase {
     final Pose2d robotPose = m_robotPoseSupplier.get();
     final double robotYawDegrees = robotPose.getRotation().getDegrees();
     final double maxTagDistanceMeters = MAX_TAG_DISTANCE.in(Meters);
+    final double localizationPeriodSeconds = LOCALIZATION_PERIOD.in(Seconds);
 
     for (LimelightDetails limelightDetail : m_LimelightDetails) {
-      m_yaw.mut_replace(Degrees.of(robotYawDegrees));
-      AngularVelocity yawRate = (m_yaw.minus(m_OldYaw).div(LOCALIZATION_PERIOD));
+      final double deltaYawDegrees =
+          MathUtil.inputModulus(robotYawDegrees - m_oldYawDegrees, -180.0, 180.0);
+      final double yawRateDegreesPerSecond = deltaYawDegrees / localizationPeriodSeconds;
       // Set Orientation using LimelightHelpers.SetRobotOrientation and the m_robotPoseSupplier
       LimelightHelpers.SetRobotOrientation(
           limelightDetail.name,
-          m_yaw.in(Degrees),
-          yawRate.in(DegreesPerSecond),
+          robotYawDegrees,
+          yawRateDegreesPerSecond,
           0,
           0,
           0,
@@ -206,7 +204,7 @@ public class AprilTagLocalization extends SubsystemBase {
               new Pose2d(
                   poseEstimate.pose.getX(),
                   poseEstimate.pose.getY(),
-                  Rotation2d.fromDegrees(m_yaw.in(Degrees))));
+                  Rotation2d.fromDegrees(robotYawDegrees)));
         } else if (!(isPoseOffField(poseEstimate.pose))
             && poseEstimate.avgTagDist
                 < maxTagDistanceMeters) { // reject poses that are more than max tag distance we
@@ -218,7 +216,7 @@ public class AprilTagLocalization extends SubsystemBase {
           // set the pose in the pose consumer
           m_VisionConsumer.accept(poseEstimate.pose, poseEstimate.timestampSeconds, interpolated);
         }
-        m_OldYaw.mut_replace(m_yaw);
+        m_oldYawDegrees = robotYawDegrees;
       }
     }
 
@@ -234,12 +232,12 @@ public class AprilTagLocalization extends SubsystemBase {
       if (estimation.isEmpty()) {
         estimation = photonDetail.poseEstimator.estimateLowestAmbiguityPose(result);
       }
-      final var finalEstimation = estimation;
       estimation.ifPresent(
           est -> {
+            final Pose2d estimatedPose2d = est.estimatedPose.toPose2d();
             double scale =
                 PhotonVisionHelpers.getAverageDistanceBetweenTags(
-                        photonDetail, finalEstimation.get().estimatedPose.toPose2d())
+                        photonDetail, estimatedPose2d)
                     / maxTagDistanceMeters;
             // TODO: replace with real STDV's new Matrix<N3, N1>
             // TODO: interpolate this
@@ -247,7 +245,7 @@ public class AprilTagLocalization extends SubsystemBase {
                 interpolate(photonDetail.closeStdDevs, photonDetail.farStdDevs, scale);
 
             m_VisionConsumer.accept(
-                est.estimatedPose.toPose2d(), est.timestampSeconds, interpolated);
+                estimatedPose2d, est.timestampSeconds, interpolated);
           });
     }
   }
