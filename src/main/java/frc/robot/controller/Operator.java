@@ -1,11 +1,11 @@
 package frc.robot.controller;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
 import frc.robot.FMS.ShiftData;
 import frc.robot.FMS.Zones;
+import frc.robot.RobotLogger;
 import frc.robot.constants.ControllerConstants;
 import frc.robot.constants.ControllerConstants.OperatorState;
 import frc.robot.subsystems.CommandFactory;
@@ -24,6 +24,7 @@ import lombok.Setter;
  * <p>Bindings frequently use SelectCommand to choose behavior based on the current OperatorState.
  */
 public class Operator extends CustomXboxController implements Controller {
+  public static RobotLogger logger = new RobotLogger("Operator");
   // Singleton instance
   private static Operator INSTANCE;
 
@@ -119,13 +120,13 @@ public class Operator extends CustomXboxController implements Controller {
         .onTrue(
             new SelectCommand<OperatorState>(
                 Map.of(
-                    OperatorState.NORMAL, commandFactory.lowerIntake(),
+                    OperatorState.NORMAL, Commands.none(),
                     OperatorState.OVERRIDE, commandFactory.startIndexing()),
                 () -> operatorState))
         .onFalse(
             new SelectCommand<OperatorState>(
                 Map.of(
-                    OperatorState.NORMAL, commandFactory.raiseIntake(),
+                    OperatorState.NORMAL, Commands.none(),
                     OperatorState.OVERRIDE, commandFactory.stopIndexing()),
                 () -> operatorState))
         .whileTrue(
@@ -157,7 +158,7 @@ public class Operator extends CustomXboxController implements Controller {
         .onTrue(
             new SelectCommand<OperatorState>(
                 Map.of(
-                    OperatorState.NORMAL, commandFactory.stopFlywheelAndIndexer(),
+                    OperatorState.NORMAL, commandFactory.clearShootingJam(),
                     OperatorState.OVERRIDE, commandFactory.clearShootingJam()),
                 () -> operatorState))
         .onFalse(
@@ -168,11 +169,11 @@ public class Operator extends CustomXboxController implements Controller {
                 () -> operatorState));
 
     this.y()
-        .onTrue(
+        .whileTrue(
             new SelectCommand<OperatorState>(
                 Map.of(
-                    OperatorState.NORMAL, Commands.none(),
-                    OperatorState.OVERRIDE, Commands.none()),
+                    OperatorState.NORMAL, commandFactory.rotateTurretToZero(),
+                    OperatorState.OVERRIDE, commandFactory.rotateTurretToZero()),
                 () -> operatorState));
 
     this.leftBumper()
@@ -209,7 +210,7 @@ public class Operator extends CustomXboxController implements Controller {
         .onTrue(
             new SelectCommand<OperatorState>(
                 Map.of(
-                    OperatorState.NORMAL, Commands.none(),
+                    OperatorState.NORMAL, commandFactory.reverseIntake(),
                     OperatorState.OVERRIDE, commandFactory.reverseIntake()),
                 () -> operatorState))
         .onFalse(
@@ -239,11 +240,11 @@ public class Operator extends CustomXboxController implements Controller {
         () -> {
           if (operatorState == OperatorState.NORMAL) {
             this.setOperatorState(OperatorState.OVERRIDE);
-            SmartDashboard.putBoolean("Operator OVERRIDE Active", true);
+            logger.logAndDisplay("Operator OVERRIDE Active", true);
 
           } else {
             this.setOperatorState(OperatorState.NORMAL);
-            SmartDashboard.putBoolean("Operator OVERRIDE Active", false);
+            logger.logAndDisplay("Operator OVERRIDE Active", false);
           }
         });
   }

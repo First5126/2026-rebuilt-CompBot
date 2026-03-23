@@ -1,0 +1,79 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.4425044722719145,
+        "y": 2.6639534883720923
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 8.302450805008945,
+        "y": 4.189141323792486
+      },
+      "isLocked": false,
+      "linkedName": "Neutral Zone - Outpost Side Hub Pickup"
+    },
+    {
+      "anchor": {
+        "x": 4.6030590339892665,
+        "y": 7.596475849731663
+      },
+      "prevControl": {
+        "x": 6.777262969588551,
+        "y": 7.564025044722719
+      },
+      "nextControl": {
+        "x": 4.1693097564209705,
+        "y": 7.602949719546115
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.0821466905187833,
+        "y": 5.9577101967799635
+      },
+      "prevControl": {
+        "x": 0.38176919297538214,
+        "y": 7.449504554158581
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Alliance Zone - Depot Side"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 122.65600000000002
+    },
+    {
+      "waypointRelativePos": 1.0,
+      "rotationDegrees": 180.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0.0,
+    "rotation": 176.05481377096243
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 3.0,
+    "rotation": 59.49851166957143
+  },
+  "useDefaultConstraints": true
+}

@@ -109,6 +109,15 @@ public class CommandFactory {
     return m_turret.manualRotation(amountOfMovement);
   }
 
+  public Command stopEverything() {
+    return Commands.runOnce(
+        () -> {
+          stopFlywheel();
+          stopIndexer();
+          stopIntake();
+        });
+  }
+
   public Command rotateHoodBy(Angle amountOfMovement) {
     return m_hood.manualRotation(amountOfMovement);
   }
@@ -121,25 +130,44 @@ public class CommandFactory {
     return m_flyWheel.stopSpinning();
   }
 
+  public Command duckHood() {
+    return m_hood.holdCertainPosition(Degrees.of(0));
+  }
+
+  public Command intake() {
+    return m_intake.runIntake();
+  }
+
+  public Command intakeAndShoot() {
+    Command intake = m_intake.runIntake();
+    Command turretMovement = m_shootingMechanism.startTrackingCommand();
+    Command shoot =
+        m_flyWheel
+            .setSpeedWithSolution(m_shootingMechanism::getShootingSolution)
+            .alongWith(m_hood.setPosition(m_shootingMechanism::getShootingSolution));
+
+    return intake.alongWith(turretMovement).andThen(shoot);
+  }
+
   // Start flywheel + hood positioning using the ShootingMechanism's computed solution when in
   // NORMAL state
   public Command startShootingWithSolution() {
-    return Commands.defer(
-        () -> {
-          if (isNormalOperatingState()) {
-            Command shootCommand =
-                m_flyWheel
-                    .setSpeedWithSolution(m_shootingMechanism::getShootingSolution)
-                    .alongWith(m_hood.setPosition(m_shootingMechanism::getShootingSolution));
-            shootCommand.addRequirements(m_flyWheel, m_hood);
-            return shootCommand;
-          } else {
-            Command none = Commands.none();
-            none.addRequirements(m_flyWheel);
-            return none;
-          }
-        },
-        Set.of(m_flyWheel, m_hood));
+    return m_flyWheel
+        .setSpeedWithSolution(m_shootingMechanism::getShootingSolution)
+        .alongWith(m_hood.setPosition(m_shootingMechanism::getShootingSolution));
+  }
+
+  public Command indexAndShoot() {
+    // Command startFlyWheel = m_flyWheel
+    //     .setSpeedWithSolution(m_shootingMechanism::getShootingSolution)
+    //     .alongWith(m_hood.setPosition(m_shootingMechanism::getShootingSolution));
+    Command startIndex = m_indexer.startIndexing();
+    return startIndex;
+  }
+
+  public Command stopIndexAndShoot() {
+    Command stopIndex = m_indexer.stopIndexing();
+    return stopIndex;
   }
 
   // Stop flywheel and stow hood to 0 degrees
@@ -181,12 +209,24 @@ public class CommandFactory {
     return startIndexing();
   }
 
+  public Command rotateTurretToZero() {
+    return m_turret.holdCertainPosition(Degrees.of(0));
+  }
+
   public Command stopIndexer() {
     return stopIndexing();
   }
 
+  public Command test() {
+    return Commands.none();
+  }
+
   public Command startFlywheelWithSolution() {
     return m_flyWheel.setSpeedWithSolution(m_shootingMechanism::getShootingSolution);
+  }
+
+  public Command setTurretToZero() {
+    return m_turret.holdCertainPosition(Degrees.of(0));
   }
 
   public Command lowerHoodSlowly() {
@@ -223,5 +263,9 @@ public class CommandFactory {
 
   public Command stopIntake() {
     return m_intake.stopIntake();
+  }
+
+  public Command setIntakeDown() {
+    return m_intakeDeployer.lowerIntakeDownCommand();
   }
 }

@@ -45,8 +45,6 @@ public class FlyWheel extends SubsystemBase {
     flyWheelConfiguration.Slot0 = slot0;
 
     m_shooterMotor.getConfigurator().apply(flyWheelConfiguration);
-
-    SmartDashboard.putNumber("Set Shooter Speed (RPS)", 5);
   }
 
   public Command setSpeed(Supplier<AngularVelocity> rps) {
@@ -73,6 +71,10 @@ public class FlyWheel extends SubsystemBase {
     return runOnce(() -> stopMotors());
   }
 
+  public Command reverseSpinning() {
+    return runOnce(() -> reverseWheels());
+  }
+
   // public LinearVelocity getDashboardSpeed() {
   //  return MetersPerSecond.of(SmartDashboard.getNumber("Set Shooter Speed (MPS)", 0));
   // }
@@ -86,10 +88,7 @@ public class FlyWheel extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
-    SmartDashboard.putNumber(
-        "Real FlyWheel RPS", m_shooterMotor.getVelocity().getValue().in(RotationsPerSecond));
-  }
+  public void periodic() {}
 
   /*private void setSpeedControl(Supplier<LinearVelocity> ballSpeed) {
     AngularVelocity motorSpeed = calculateAngularVelocity(ballSpeed.get());
@@ -102,6 +101,10 @@ public class FlyWheel extends SubsystemBase {
 
     if (rotationSpeed.isEquivalent(RotationsPerSecond.of(0))) stopMotors();
     else m_shooterMotor.setControl(m_shooterSpeed.withVelocity(rotationSpeed));
+  }
+
+  private void reverseWheels() {
+    m_shooterMotor.setControl(m_shooterSpeed.withVelocity(RotationsPerSecond.of(-1)));
   }
 
   private void startMotors() {
