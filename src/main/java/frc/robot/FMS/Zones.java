@@ -11,7 +11,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.RobotLogger;
 import frc.robot.constants.GoalPoseConstants;
 import frc.robot.constants.GoalPoseConstants.GoalPose;
 import frc.robot.constants.ZonesConstants;
@@ -23,26 +23,56 @@ import java.util.function.Supplier;
 
 /** Add your docs here. */
 public class Zones {
-  private static Supplier<Pose2d> m_pose;
-  private static Supplier<Angle> m_pitch;
-  private static Supplier<Angle> m_roll;
+  private final Supplier<Pose2d> m_pose;
+  private final Supplier<Angle> m_pitch;
+  private final Supplier<Angle> m_roll;
+  private final Supplier<Optional<Alliance>> m_allianceSupplier;
+  private final RobotLogger logger = new RobotLogger("Zones");
 
-  private Optional<Alliance> m_team;
-  private CommandSwerveDrivetrain m_commandSwerveDrivetrain;
+  private final CommandSwerveDrivetrain m_commandSwerveDrivetrain;
+
+  private Optional<Alliance> cachedAlliance = Optional.empty();
+  private boolean allianceCached = false;
 
   public Zones(CommandSwerveDrivetrain commandSwerveDrivetrain) {
-    m_team = DriverStation.getAlliance();
-    m_pose = () -> commandSwerveDrivetrain.getPose2d();
-    m_pitch = () -> m_commandSwerveDrivetrain.getPigeon2().getPitch().getValue();
-    m_roll = () -> m_commandSwerveDrivetrain.getPigeon2().getRoll().getValue();
+    this(commandSwerveDrivetrain, DriverStation::getAlliance);
+  }
+
+  Zones(
+      CommandSwerveDrivetrain commandSwerveDrivetrain,
+      Supplier<Optional<Alliance>> allianceSupplier) {
     m_commandSwerveDrivetrain = commandSwerveDrivetrain;
+    m_allianceSupplier = allianceSupplier;
+
+    m_pose = () -> commandSwerveDrivetrain.getPose2d();
+    m_pitch = () -> commandSwerveDrivetrain.getPigeon2().getPitch().getValue();
+    m_roll = () -> commandSwerveDrivetrain.getPigeon2().getRoll().getValue();
+  }
+
+  private Optional<Alliance> getAlliance() {
+    if (!allianceCached) {
+      Optional<Alliance> alliance = m_allianceSupplier.get();
+      if (alliance.isPresent()) {
+        cachedAlliance = alliance;
+        allianceCached = true;
+      }
+    }
+
+    logger.log(
+        "Alliance",
+        "Retrieved Alliance: "
+            + (cachedAlliance.isPresent() ? cachedAlliance.get().name() : "Unknown"));
+
+    return cachedAlliance;
   }
 
   public Zone getZone() {
     Translation2d robotTranslation = m_pose.get().getTranslation();
     Zone zone =
         ZonesConstants.firstContainingOrDefault(robotTranslation, Zone.class, Zone.OUT_OF_BOUNDS);
-    SmartDashboard.putString("CurrentZone", zone.name());
+
+    logger.logAndDisplay("CurrentZone", zone);
+
     return zone;
   }
 
@@ -54,10 +84,6 @@ public class Zones {
         Math.abs(pitch) > ZonesConstants.BUMP_ANGLE.in(Degrees)
             || Math.abs(roll) > ZonesConstants.BUMP_ANGLE.in(Degrees);
 
-    SmartDashboard.putNumber("Pitch", pitch);
-    SmartDashboard.putNumber("Roll", roll);
-    SmartDashboard.putBoolean("On Bump", onBump);
-
     return onBump;
   }
 
@@ -65,7 +91,6 @@ public class Zones {
     Pose2d robotPose = m_commandSwerveDrivetrain.getPredictedPose2d(0.25);
     Translation2d robotTranslation = robotPose.getTranslation();
     boolean isNearTrench = ZonesConstants.containsAny(robotTranslation, Trench.class);
-    SmartDashboard.putBoolean("Zones/IsNearTrench", isNearTrench);
     return isNearTrench;
   }
 
@@ -73,15 +98,16 @@ public class Zones {
     Translation2d robotTranslation = m_pose.get().getTranslation();
     boolean isInDeadZone = false;
 
-    if (m_team.isPresent()) {
-      if (m_team.get() == Alliance.Blue)
+    Optional<Alliance> alliance = getAlliance();
+    if (alliance.isPresent()) {
+      if (alliance.get() == Alliance.Blue)
         isInDeadZone =
             ZonesConstants.contains(robotTranslation, ZonesConstants.HubDeadZone.BLUE_HUB_DEADZONE);
-      else if (m_team.get() == Alliance.Red)
+      else if (alliance.get() == Alliance.Red)
         isInDeadZone =
             ZonesConstants.contains(robotTranslation, ZonesConstants.HubDeadZone.RED_HUB_DEADZONE);
     }
-    SmartDashboard.putBoolean("Drive/IsInDeadZone", isInDeadZone);
+    logger.log("IsInDeadZone", isInDeadZone);
     return isInDeadZone;
   }
 
@@ -90,29 +116,42 @@ public class Zones {
   }
 
   public GoalPose getGoalPose() {
-    if (!m_team.isPresent()) {
+    getZone();
+    Optional<Alliance> alliance = getAlliance();
+    if (!alliance.isPresent()) {
+      logger.log("GoalPose", "Alliance information not available, defaulting to Blue Hub pose");
       return GoalPoseConstants.BLUE_HUB;
     }
-    switch (getZone()) {
-      case ALLIANCE_ZONE:
-        return m_team.get() == Alliance.Blue
-            ? GoalPoseConstants.BLUE_HUB
-            : GoalPoseConstants.RED_HUB;
-      case NEUTRAL_ZONE_LEFT:
-        return m_team.get() == Alliance.Blue
-            ? GoalPoseConstants.BLUE_LEFT_SIDE
-            : GoalPoseConstants.RED_LEFT_SIDE;
-      case NEUTRAL_ZONE_RIGHT:
-        return m_team.get() == Alliance.Blue
-            ? GoalPoseConstants.BLUE_RIGHT_SIDE
-            : GoalPoseConstants.RED_RIGHT_SIDE;
-      case OPPONENT_ZONE:
-        return m_team.get() == Alliance.Blue
-            ? GoalPoseConstants.BLUE_HUB
-            : GoalPoseConstants.RED_HUB;
-      default:
-        break;
+
+    if (alliance.get() == Alliance.Blue) {
+      logger.log("GoalPose", "Alliance is Blue, using Blue Hub pose");
+      return GoalPoseConstants.BLUE_HUB;
+    } else {
+      logger.log("GoalPose", "Alliance is Red, using Red Hub pose");
+      return GoalPoseConstants.RED_HUB;
     }
-    return m_team.get() == Alliance.Blue ? GoalPoseConstants.BLUE_HUB : GoalPoseConstants.RED_HUB;
+
+    // switch (getZone()) {
+    //   case BLUE_ZONE:
+    //     return alliance.get() == Alliance.Blue
+    //         ? GoalPoseConstants.BLUE_HUB
+    //         : GoalPoseConstants.RED_HUB;
+    //   case NEUTRAL_ZONE_LEFT:
+    //     return alliance.get() == Alliance.Blue
+    //         ? GoalPoseConstants.BLUE_LEFT_SIDE
+    //         : GoalPoseConstants.RED_LEFT_SIDE;
+    //   case NEUTRAL_ZONE_RIGHT:
+    //     return alliance.get() == Alliance.Blue
+    //         ? GoalPoseConstants.BLUE_RIGHT_SIDE
+    //         : GoalPoseConstants.RED_RIGHT_SIDE;
+    //   case RED_ZONE:
+    //     return alliance.get() == Alliance.Blue
+    //         ? GoalPoseConstants.BLUE_HUB
+    //         : GoalPoseConstants.RED_HUB;
+    //   default:
+    //     break;
+    // }
+    // return alliance.get() == Alliance.Blue ? GoalPoseConstants.BLUE_HUB :
+    // GoalPoseConstants.RED_HUB;
   }
 }

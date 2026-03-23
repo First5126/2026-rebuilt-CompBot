@@ -9,13 +9,16 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.FMS.Zones;
 import frc.robot.constants.AprilTagLocalizationConstants;
 import frc.robot.constants.AprilTagLocalizationConstants.PhotonDetails;
+import frc.robot.constants.ControllerConstants.OperatorState;
 import frc.robot.controller.Driver;
 import frc.robot.controller.Operator;
 import frc.robot.generated.TunerConstants;
@@ -31,6 +34,7 @@ import frc.robot.subsystems.Turret;
 import frc.robot.vision.AprilTagLocalization;
 
 public class RobotContainer {
+  private final RobotLogger robotLogger = new RobotLogger("RobotContainer");
   private double MaxSpeed =
       1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
   private double MaxAngularRate =
@@ -58,8 +62,8 @@ public class RobotContainer {
   private FlyWheel m_flyWheel = new FlyWheel();
   private Indexer m_indexer = new Indexer();
   private Hood m_hood = new Hood();
-  private IntakeDeployer m_intakeDeployer = new IntakeDeployer();
   private Intake m_intake = new Intake();
+  private IntakeDeployer m_intakeDeployer = new IntakeDeployer();
 
   private ShootingMechanism m_shootingMechanism =
       new ShootingMechanism(m_turret, m_drivetrain, m_zones, m_hood, m_flyWheel);
@@ -94,35 +98,55 @@ public class RobotContainer {
 
   /** Creates the container and configures bindings. */
   public RobotContainer() {
+
+    // Intake Wheels
+    NamedCommands.registerCommand("Intake", m_commandFactory.intake());
+    NamedCommands.registerCommand("Outtake", m_commandFactory.reverseIntake());
+    NamedCommands.registerCommand("StopIntake", m_commandFactory.stopIntake());
+    NamedCommands.registerCommand("Stop Intake", m_commandFactory.stopIntake());
+
+    // Combined Commands
+    NamedCommands.registerCommand("Turret Default", m_shootingMechanism.startTrackingCommandAuto());
+    NamedCommands.registerCommand("IntakeandShoot", m_commandFactory.intakeAndShoot());
+    NamedCommands.registerCommand("StopIndexandShoot", m_commandFactory.stopIndexAndShoot());
+
+    // Intake Deployer
+    NamedCommands.registerCommand("Lower Intake", m_commandFactory.setIntakeDown());
+    NamedCommands.registerCommand("Raise Intake ", m_intakeDeployer.raiseIntakeUpCommand());
+    NamedCommands.registerCommand("SetTurretToZero", m_commandFactory.setTurretToZero());
+
+    // Shoot
+    NamedCommands.registerCommand("Index and Shoot", m_commandFactory.indexAndShoot());
+    NamedCommands.registerCommand("Test", m_commandFactory.test());
+
+    // Duck
+    NamedCommands.registerCommand("Duck Hood", m_commandFactory.duckHood());
+
     autoChooser = AutoBuilder.buildAutoChooser();
     configureBindings();
+
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   private void configureBindings() {
-    Driver.init(
-            m_drivetrain,
-            m_aprilTagLocalization,
-            m_commandFactory,
-            m_intakeDeployer,
-            m_turret,
-            m_zones,
-            m_indexer,
-            m_flyWheel,
-            m_hood,
-            m_shootingMechanism,
-            m_intake)
-        .configureBindings();
+    Driver.init(m_drivetrain, m_commandFactory, m_zones).configureBindings();
 
-    Operator.init(m_commandFactory).configureBindings();
+    Operator.init(m_commandFactory, OperatorState.NORMAL).configureBindings();
 
     // Shooting Mechanism Default Command
-    m_shootingMechanism.setDefaultCommand(m_shootingMechanism.startTrackingCommand());
+    m_shootingMechanism.setDefaultCommand(m_commandFactory.startTurretTracking());
+    m_flyWheel.setDefaultCommand(m_commandFactory.startShootingWithSolution());
+
+    // Turret Default Command
+
+    // this.m_turret.setDefaultCommand(m_turret.rotateToPosition(() ->
+    // m_shootingMechanism.getShootingSolution().predictedTurretAngle));
 
     // Idle while the robot is disabled. This ensures the configured
     // neutral mode is applied to the drive motors while disabled.
 
     Trigger trenchTrigger = new Trigger(m_zones::isNearTrench);
-    trenchTrigger.whileTrue(m_commandFactory.duckHood());
+    trenchTrigger.whileTrue(m_commandFactory.setHoodToTrenchPosition());
 
     final SwerveRequest idle = new SwerveRequest.Idle();
     RobotModeTriggers.disabled()
@@ -140,5 +164,9 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
+  }
+
+  public void stopAllMotors() {
+    m_commandFactory.stopEverything();
   }
 }

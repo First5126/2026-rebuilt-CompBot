@@ -20,11 +20,11 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.MutAngle;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.FMS.Zones;
+import frc.robot.RobotLogger;
 import frc.robot.constants.AprilTagLocalizationConstants.LimelightDetails;
 import frc.robot.constants.AprilTagLocalizationConstants.PhotonDetails;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -39,6 +39,8 @@ import org.photonvision.targeting.PhotonPipelineResult;
  * thread instead of the main robot loop.
  */
 public class AprilTagLocalization extends SubsystemBase {
+  private static final RobotLogger logger = new RobotLogger("AprilTagLocalization");
+  private static final int LOG_EVERY_N_ESTIMATES = 25; // ~0.5s if estimates run at 20ms
   private LimelightDetails[] m_LimelightDetails; // list of limelights that can provide updates
   private PhotonDetails[] m_PhotonVisionCameras; // list of limelights that can provide updates
   private Supplier<Pose2d> m_robotPoseSupplier; // supplies the pose of the robot
@@ -49,6 +51,7 @@ public class AprilTagLocalization extends SubsystemBase {
   private VisionConsumer m_VisionConsumer;
   private ResetPose m_poseReset;
   private Zones m_zone;
+  private int m_logCountdown = 0;
 
   /**
    * Creates a new AprilTagLocalization.
@@ -139,8 +142,17 @@ public class AprilTagLocalization extends SubsystemBase {
    * thread once per AprilTagLocalizationConstants.LOCALIZATION_PERIOD.
    */
   public void poseEstimate() {
+    final boolean shouldLog = (m_logCountdown-- <= 0);
+    if (shouldLog) {
+      m_logCountdown = LOG_EVERY_N_ESTIMATES;
+    }
+
+    final Pose2d robotPose = m_robotPoseSupplier.get();
+    final double robotYawDegrees = robotPose.getRotation().getDegrees();
+    final double maxTagDistanceMeters = MAX_TAG_DISTANCE.in(Meters);
+
     for (LimelightDetails limelightDetail : m_LimelightDetails) {
-      m_yaw.mut_replace(Degrees.of(m_robotPoseSupplier.get().getRotation().getDegrees()));
+      m_yaw.mut_replace(Degrees.of(robotYawDegrees));
       AngularVelocity yawRate = (m_yaw.minus(m_OldYaw).div(LOCALIZATION_PERIOD));
       // Set Orientation using LimelightHelpers.SetRobotOrientation and the m_robotPoseSupplier
       LimelightHelpers.SetRobotOrientation(
@@ -162,14 +174,18 @@ public class AprilTagLocalization extends SubsystemBase {
       PoseEstimate poseEstimate =
           LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(
               limelightDetail.name); // Get the pose from the Limelight
-      SmartDashboard.putBoolean(
-          "Valid Pose Estimation: ",
-          poseEstimate != null
-              && poseEstimate.pose.getX() != 0.0
-              && poseEstimate.pose.getY() != 0.0);
-      if (poseEstimate != null
-          && poseEstimate.pose.getX() != 0.0
-          && poseEstimate.pose.getY() != 0.0) {
+
+      if (poseEstimate == null) {
+        continue;
+      }
+
+      if (shouldLog) {
+        logger.logAndDisplay(
+            "Valid Pose Estimation: ",
+            poseEstimate.pose.getX() != 0.0 && poseEstimate.pose.getY() != 0.0);
+      }
+
+      if (poseEstimate.pose.getX() != 0.0 && poseEstimate.pose.getY() != 0.0) {
         // remove the offset of the camera
         /*poseEstimate.pose =
         poseEstimate.pose.transformBy(
@@ -180,11 +196,9 @@ public class AprilTagLocalization extends SubsystemBase {
 
         double scale =
             poseEstimate.avgTagDist
-                / MAX_TAG_DISTANCE.in(Meters); // scale the std deviation by the distance
+                / maxTagDistanceMeters; // scale the std deviation by the distance
         // Validate the pose for sanity reject bad poses  if fullTrust is true accept regarless of
         // sanity
-        SmartDashboard.putNumber("Pose Estimate X:", poseEstimate.pose.getX());
-        SmartDashboard.putNumber("Pose Estimate Y:", poseEstimate.pose.getY());
         if (m_FullTrust) {
           // set the pose in the pose consumer
           m_poseReset.accept(
@@ -194,8 +208,8 @@ public class AprilTagLocalization extends SubsystemBase {
                   Rotation2d.fromDegrees(m_yaw.in(Degrees))));
         } else if (!(isPoseOffField(poseEstimate.pose))
             && poseEstimate.avgTagDist
-                < MAX_TAG_DISTANCE.in(
-                    Meters)) { // reject poses that are more than max tag distance we trust
+                < maxTagDistanceMeters) { // reject poses that are more than max tag distance we
+          // trust
           // scale std deviation by distance if fullTrust is true set the stdDevs super low.
           Matrix<N3, N1> interpolated =
               interpolate(limelightDetail.closeStdDevs, limelightDetail.farStdDevs, scale);
@@ -209,6 +223,10 @@ public class AprilTagLocalization extends SubsystemBase {
 
     for (PhotonDetails photonDetail : m_PhotonVisionCameras) {
       PhotonPipelineResult result = photonDetail.camera.getLatestResult();
+      if (!result.hasTargets()) {
+        continue;
+      }
+
       Optional<EstimatedRobotPose> estimation =
           photonDetail.poseEstimator.estimateCoprocMultiTagPose(result);
 
@@ -221,7 +239,7 @@ public class AprilTagLocalization extends SubsystemBase {
             double scale =
                 PhotonVisionHelpers.getAverageDistanceBetweenTags(
                         photonDetail, finalEstimation.get().estimatedPose.toPose2d())
-                    / MAX_TAG_DISTANCE.in(Meters);
+                    / maxTagDistanceMeters;
             // TODO: replace with real STDV's new Matrix<N3, N1>
             // TODO: interpolate this
             Matrix<N3, N1> interpolated =

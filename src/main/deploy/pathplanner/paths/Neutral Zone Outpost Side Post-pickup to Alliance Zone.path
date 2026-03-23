@@ -1,0 +1,82 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.695140845070423,
+        "y": 3.3616457960644004
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 8.221323792486583,
+        "y": 0.5546511627906967
+      },
+      "isLocked": false,
+      "linkedName": "Neutral Zone - Outpost Side Post-Pickup"
+    },
+    {
+      "anchor": {
+        "x": 5.0735957066189625,
+        "y": 0.682
+      },
+      "prevControl": {
+        "x": 6.209373881932021,
+        "y": 0.682
+      },
+      "nextControl": {
+        "x": 3.991583149022434,
+        "y": 0.6820000000000002
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.0,
+        "y": 0.682
+      },
+      "prevControl": {
+        "x": 4.4732987119498,
+        "y": 0.6819999999999998
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Alliance Zone-Shooting Zone"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.9,
+      "rotationDegrees": 180.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Shoot",
+      "waypointRelativePos": 1.4,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "reversed": false,
+  "folder": "Outpost Side",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 90.0
+  },
+  "useDefaultConstraints": true
+}

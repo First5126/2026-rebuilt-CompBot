@@ -9,7 +9,6 @@ import frc.robot.subsystems.FlyWheel;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.IntakeDeployer;
 import frc.robot.subsystems.ShootingMechanism;
 import frc.robot.subsystems.Turret;
 import frc.robot.vision.AprilTagLocalization;
@@ -23,14 +22,13 @@ public class Driver extends CustomXboxController implements Controller {
   @Getter @Setter private CommandSwerveDrivetrain drivetrain;
   @Getter @Setter private AprilTagLocalization aprilTagLocalization;
   @Getter @Setter private CommandFactory commandFactory;
-  @Getter @Setter private IntakeDeployer intake;
+  @Getter @Setter private Intake intake;
   @Getter @Setter private Turret turret;
   @Getter @Setter private Zones zone;
   @Getter @Setter private Indexer indexer;
   @Getter @Setter private FlyWheel flyWheel;
   @Getter @Setter private ShootingMechanism shootingMechanism;
   @Getter @Setter private Hood hood;
-  @Getter @Setter private Intake intakeRoller;
 
   private final SwerveRequest.SwerveDriveBrake BRAKE = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt POINT = new SwerveRequest.PointWheelsAt();
@@ -49,29 +47,11 @@ public class Driver extends CustomXboxController implements Controller {
   }
 
   public static Driver init(
-      CommandSwerveDrivetrain drivetrain,
-      AprilTagLocalization aprilTagLocalization,
-      CommandFactory commandFactory,
-      IntakeDeployer intake,
-      Turret turret,
-      Zones zone,
-      Indexer indexer,
-      FlyWheel flyWheel,
-      Hood hood,
-      ShootingMechanism shootingMechanism,
-      Intake intakeRoller) {
+      CommandSwerveDrivetrain drivetrain, CommandFactory commandFactory, Zones zone) {
     Driver driver = getInstance();
     driver.setDrivetrain(drivetrain);
-    driver.setAprilTagLocalization(aprilTagLocalization);
     driver.setCommandFactory(commandFactory);
-    driver.setIntake(intake);
-    driver.setTurret(turret);
     driver.setZone(zone);
-    driver.setIndexer(indexer);
-    driver.setFlyWheel(flyWheel);
-    driver.setHood(hood);
-    driver.setShootingMechanism(shootingMechanism);
-    driver.setIntakeRoller(intakeRoller);
 
     return driver;
   }
@@ -87,9 +67,6 @@ public class Driver extends CustomXboxController implements Controller {
             this::getLeftY,
             this::getLeftX,
             zone));
-
-    // this.a().onTrue(aprilTagLocalization.setTrust(true));
-    // this.a().onFalse(aprilTagLocalization.setTrust(false));
 
     // Reset the field-centric heading on left bumper press.
     this.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));

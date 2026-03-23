@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Volts;
 
@@ -18,6 +19,7 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -25,20 +27,16 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.RobotLogger;
 import frc.robot.FMS.Zones;
 import frc.robot.constants.DrivetrainConstants;
-import frc.robot.constants.WaypointConstants;
 import frc.robot.controller.CustomXboxController;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
@@ -50,6 +48,7 @@ import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
  * https://v6.docs.ctr-electronics.com/en/stable/docs/tuner/tuner-swerve/index.html
  */
 public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem {
+    private static final RobotLogger logger = new RobotLogger("CommandSwerveDrivetrain");
     private static final double kSimLoopPeriod = 0.004; // 4 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
@@ -236,9 +235,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     public Command goToPose(Pose2d pose) {
-        double[] debugArray = {pose.getX(), pose.getY()};
-        SmartDashboard.putNumberArray("Going to Pose", debugArray);
-
         return AutoBuilder.pathfindToPose(pose, DrivetrainConstants.pathConstraints);
     }
 
@@ -256,9 +252,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         double predictedX = robotPose.getX() + robotFieldRelitiveSpeed.vxMetersPerSecond * delayTime;
         double predictedY = robotPose.getY() + robotFieldRelitiveSpeed.vyMetersPerSecond * delayTime;
 
-        double predictedRotation = robotPose.getRotation().getRadians() + robotFieldRelitiveSpeed.omegaRadiansPerSecond * delayTime;
-
-        Pose2d predictedPose = new Pose2d(predictedX, predictedY, new Rotation2d(predictedRotation));
+        Pose2d predictedPose = new Pose2d(predictedX, predictedY, robotPose.getRotation());
         return predictedPose;
     }
 
@@ -286,6 +280,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     @Override
     public void periodic() {
+        var pigeon = getPigeon2();
+        logger.log("Pigeon Yaw (Degrees)", pigeon.getYaw().getValue().in(Degrees));
+        logger.log("Pigeon Yaw (Rotations)", pigeon.getYaw().getValue().in(Rotations));
+        logger.log("Pigeon Pitch (Degrees)", pigeon.getPitch().getValue().in(Degrees));
+        logger.log("Pigeon Roll (Degrees)", pigeon.getRoll().getValue().in(Degrees));
+
         /*
          * Periodically try to apply the operator perspective.
          * If we haven't applied the operator perspective before, then we should apply it regardless of DS state.
@@ -303,10 +303,25 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
         }
+    }
 
-        Distance hubDistance = Meters.of(getPose2d().getTranslation().getDistance(WaypointConstants.blueHub.getTranslation()));
+    public double getDriveHeadingDegrees() {
+        SwerveDriveState state = getState();
+        Rotation2d poseRotations = state.Pose.getRotation();
+        ChassisSpeeds fieldSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(state.Speeds, poseRotations);
+        double driveHeadingDegrees = Math.toDegrees(Math.atan2(fieldSpeeds.vyMetersPerSecond, fieldSpeeds.vxMetersPerSecond));
+        logger.log("Drive Heading (Degrees)", driveHeadingDegrees);
 
-        SmartDashboard.putNumber("Distance To Hub (M)", hubDistance.in(Meters));
+        return driveHeadingDegrees;
+    }
+
+    public double getTurretHeadingForDuck() {
+        Rotation2d poseRotations = getState().Pose.getRotation();
+        double oppositeDeg = MathUtil.inputModulus(getDriveHeadingDegrees() + 180.0, -180.0, 180.0);
+        double turretRobotRelativeDeg = MathUtil.inputModulus(oppositeDeg - poseRotations.getDegrees(), -180, 180);
+        logger.log("Turret Heading for Duck (Degrees)", turretRobotRelativeDeg);
+
+        return turretRobotRelativeDeg;
     }
 
     private void startSimThread() {
@@ -418,9 +433,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 isBraking = true;
             }
 
+            /* 
             // Apply max speed when on bump
             boolean onBump = zones.isNearBump();
-            SmartDashboard.putBoolean("On Bump", onBump);
+
             if (onBump) {
                 double absX = Math.abs(x); 
                 double absY = Math.abs(y); 
@@ -433,6 +449,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                     y = y * speedMultiplier;
                 }
             }
+
+            */
 
             if (isBraking) {
                 brake();

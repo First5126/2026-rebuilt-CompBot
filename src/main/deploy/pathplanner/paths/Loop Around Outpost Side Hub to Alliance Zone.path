@@ -1,0 +1,95 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.393828264758497,
+        "y": 5.163
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 8.237549194991056,
+        "y": 3.4103220035778166
+      },
+      "isLocked": false,
+      "linkedName": "Neutral Zone - Depot Side Hub Pickup"
+    },
+    {
+      "anchor": {
+        "x": 6.4852057245080506,
+        "y": 2.0149373881932013
+      },
+      "prevControl": {
+        "x": 7.202781881361229,
+        "y": 3.3475788223491048
+      },
+      "nextControl": {
+        "x": 5.803738819320215,
+        "y": 0.7493559928443643
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 4.6030590339892665,
+        "y": 0.4410733452593911
+      },
+      "prevControl": {
+        "x": 5.894782328914295,
+        "y": 0.41268382229400585
+      },
+      "nextControl": {
+        "x": 3.1265474060822895,
+        "y": 0.4735241502683358
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.6884615384615382,
+        "y": 2.761305903398926
+      },
+      "prevControl": {
+        "x": 3.2725760286225394,
+        "y": 2.6396153846153845
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Alliance Zone - Outpost Side"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.7,
+      "rotationDegrees": -126.25109831445668
+    },
+    {
+      "waypointRelativePos": 1.5,
+      "rotationDegrees": 180.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -141.00900595749454
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -62.46823673248127
+  },
+  "useDefaultConstraints": true
+}

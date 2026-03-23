@@ -10,4 +10,7 @@ public class IndexerConstants {
 
   public static final Voltage indexerSpeed = Volts.of(8);
   public static final Voltage spindexerSpeed = Volts.of(6);
+
+  public static final Voltage indexerSpeedReverse = Volts.of(-4);
+  public static final Voltage spindexerSpeedReverse = Volts.of(-3);
 }

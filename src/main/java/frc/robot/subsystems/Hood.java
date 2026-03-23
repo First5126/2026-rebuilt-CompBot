@@ -17,13 +17,14 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.ReverseLimitValue;
 import com.ctre.phoenix6.signals.S1CloseStateValue;
 import com.ctre.phoenix6.signals.S2CloseStateValue;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.CANConstants;
@@ -42,6 +43,19 @@ public class Hood extends SubsystemBase {
 
   private PositionVoltage m_positionVoltageRequest;
   private VoltageOut m_voltageOut = new VoltageOut(0);
+
+  private Angle clampPosition(final Angle position) {
+    double minDegrees = HoodConstants.MIN_ANGLE.in(Degrees);
+    double maxDegrees = HoodConstants.MAX_ANGLE.in(Degrees);
+    double requestedDegrees = position.in(Degrees);
+
+    double clampedDegrees = Math.max(minDegrees, Math.min(requestedDegrees, maxDegrees));
+    return Degrees.of(clampedDegrees);
+  }
+
+  private void setPositionInternal(final Angle position) {
+    m_hoodMotor.setControl(m_positionVoltageRequest.withPosition(clampPosition(position)));
+  }
 
   public Hood() {
     m_hoodMotor = new TalonFX(CANConstants.hoodMotor, CANConstants.mechanismCanivore);
@@ -81,10 +95,10 @@ public class Hood extends SubsystemBase {
     // Software Limit Switches
     SoftwareLimitSwitchConfigs softConfigs = new SoftwareLimitSwitchConfigs();
     softConfigs.ForwardSoftLimitEnable = true;
-    softConfigs.ForwardSoftLimitThreshold = 0.070;
+    softConfigs.ForwardSoftLimitThreshold = HoodConstants.MAX_ANGLE.in(Rotations);
 
     softConfigs.ReverseSoftLimitEnable = true;
-    softConfigs.ReverseSoftLimitThreshold = 0;
+    softConfigs.ReverseSoftLimitThreshold = HoodConstants.MIN_ANGLE.in(Rotations);
 
     m_hoodMotor.getConfigurator().apply(softConfigs);
 
@@ -97,8 +111,6 @@ public class Hood extends SubsystemBase {
 
     // Initalize the PositionVoltage request
     m_positionVoltageRequest = new PositionVoltage(0).withSlot(0);
-
-    SmartDashboard.putNumber("Set Hood Angle (Deg)", 0);
 
     m_zeroTrigger = new Trigger(this::getLowerLimitValue);
     m_zeroTrigger.onTrue(
@@ -114,47 +126,57 @@ public class Hood extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
-    SmartDashboard.putBoolean(
-        "Reverse Limit",
-        m_hoodMotor.getReverseLimit().getValue() == ReverseLimitValue.ClosedToGround);
-    SmartDashboard.putBoolean(
-        "Forward Limit",
-        m_hoodMotor.getReverseLimit().getValue() == ReverseLimitValue.ClosedToGround);
-  }
+  public void periodic() {}
 
   public Command manualRotation(Angle amountOfRotation) {
     return runOnce(
         () -> {
-          m_hoodMotor.setControl(
-              m_positionVoltageRequest.withPosition(
-                  m_hoodMotor.getPosition().getValue().plus(amountOfRotation)));
+          setPositionInternal(m_hoodMotor.getPosition().getValue().plus(amountOfRotation));
         });
   }
 
   public Command setPosition(Angle angle) {
     return runOnce(
         () -> {
-          m_hoodMotor.setControl(m_positionVoltageRequest.withPosition(angle));
+          setPositionInternal(angle);
+        });
+  }
+
+  public Command moveAngleUpCommand() {
+    return Commands.run(
+        () -> {
+          setPositionInternal(Degrees.of(m_hoodMotor.getPosition().getValue().in(Degrees) + 0.1));
+        },
+        this);
+  }
+
+  public Command moveAngleDownCommand() {
+    return Commands.run(
+        () -> {
+          setPositionInternal(Degrees.of(m_hoodMotor.getPosition().getValue().in(Degrees) - 0.1));
+        },
+        this);
+  }
+
+  public Command manualRotationWithSticks(Supplier<Double> controlerY) {
+    return run(
+        () -> {
+          m_hoodCANCoder.setControl(
+              m_voltageOut.withOutput(HoodConstants.MAX_VOLTAGE_MANUAL * (controlerY.get() - 0.1)));
         });
   }
 
   public Command holdCertainPosition(Angle angle) {
-    return run(
-        () -> {
-          m_hoodMotor.setControl(m_positionVoltageRequest.withPosition(angle));
+    return run(() -> {
+          setPositionInternal(angle);
         })
-    // Will take any incomming requests and if it does see one then it will cancel itself and run
-    // that insted.
-    // .withInterruptBehavior(InterruptionBehavior.kCancelSelf)
-    ;
+        .withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
   }
 
   public Command setPosition(Supplier<ShootingSolution> shootingSolution) {
     return run(
         () -> {
-          m_hoodMotor.setControl(
-              m_positionVoltageRequest.withPosition(shootingSolution.get().predictedHoodAngle));
+          setPositionInternal(shootingSolution.get().getPredictedHoodAngle());
         });
   }
 
@@ -162,7 +184,7 @@ public class Hood extends SubsystemBase {
     return runOnce(
         () -> {
           Angle angle = Degrees.of(SmartDashboard.getNumber("Set Hood Angle (Deg)", 0));
-          m_hoodMotor.setControl(m_positionVoltageRequest.withPosition(angle));
+          setPositionInternal(angle);
         });
   }
 
