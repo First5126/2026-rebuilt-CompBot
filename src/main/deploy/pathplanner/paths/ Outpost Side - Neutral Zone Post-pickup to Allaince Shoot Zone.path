@@ -70,7 +70,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -178.83086067209263
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": "Outpost Side",

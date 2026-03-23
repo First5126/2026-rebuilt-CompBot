@@ -16,6 +16,22 @@
     },
     {
       "anchor": {
+        "x": 5.0735957066189625,
+        "y": 0.682
+      },
+      "prevControl": {
+        "x": 6.209373881932021,
+        "y": 0.682
+      },
+      "nextControl": {
+        "x": 3.991583149022434,
+        "y": 0.6820000000000002
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
         "x": 3.0,
         "y": 0.682
       },
@@ -30,7 +46,7 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.45,
+      "waypointRelativePos": 0.9,
       "rotationDegrees": 180.0
     }
   ],
@@ -39,7 +55,7 @@
   "eventMarkers": [
     {
       "name": "Shoot",
-      "waypointRelativePos": 0.7,
+      "waypointRelativePos": 1.4,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -54,7 +70,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -178.83086067209263
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": "Outpost Side",
