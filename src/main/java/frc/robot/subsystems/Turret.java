@@ -104,7 +104,7 @@ public class Turret extends SubsystemBase {
   }
 
   public Command rotateToPosition(Supplier<ShootingSolution> shootingSolution) {
-    return runOnce(
+    return run(
         () -> {
           setPosition(shootingSolution.get().getPredictedTurretAngle());
         });
