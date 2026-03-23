@@ -169,4 +169,8 @@ public class RobotContainer {
   public void stopAllMotors() {
     m_commandFactory.stopEverything();
   }
+
+  public void resetEncoders() {
+    m_turret.resetEncoder();
+  }
 }

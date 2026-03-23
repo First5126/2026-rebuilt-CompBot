@@ -131,6 +131,10 @@ public class Turret extends SubsystemBase {
         });
   }
 
+  public void resetEncoder() {
+    m_turretEncoder.setPosition(0);
+  }
+
   public Command rotateToPositionAutoCont(Supplier<ShootingSolution> shootingSolution) {
     return run(() -> {
           setPosition(shootingSolution.get().getPredictedTurretAngle());

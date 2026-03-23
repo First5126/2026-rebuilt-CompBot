@@ -29,6 +29,7 @@ public class Robot extends TimedRobot {
 
     DogLog.setPdh(new PowerDistribution());
     m_robotContainer = new RobotContainer();
+    m_robotContainer.resetEncoders();
   }
 
   /** Runs once per robot packet. */
