@@ -171,6 +171,6 @@ public class RobotContainer {
   }
 
   public void resetEncoders() {
-    m_turret.resetEncoder();
+    m_turret.resetZero();
   }
 }

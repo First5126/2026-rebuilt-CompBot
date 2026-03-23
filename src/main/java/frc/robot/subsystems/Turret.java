@@ -131,8 +131,8 @@ public class Turret extends SubsystemBase {
         });
   }
 
-  public void resetEncoder() {
-    m_turretEncoder.setPosition(0);
+  public void resetZero() {
+    m_turretMotor.setPosition(0);
   }
 
   public Command rotateToPositionAutoCont(Supplier<ShootingSolution> shootingSolution) {
