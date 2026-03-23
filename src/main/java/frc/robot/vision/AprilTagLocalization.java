@@ -236,16 +236,14 @@ public class AprilTagLocalization extends SubsystemBase {
           est -> {
             final Pose2d estimatedPose2d = est.estimatedPose.toPose2d();
             double scale =
-                PhotonVisionHelpers.getAverageDistanceBetweenTags(
-                        photonDetail, estimatedPose2d)
+                PhotonVisionHelpers.getAverageDistanceBetweenTags(photonDetail, estimatedPose2d)
                     / maxTagDistanceMeters;
             // TODO: replace with real STDV's new Matrix<N3, N1>
             // TODO: interpolate this
             Matrix<N3, N1> interpolated =
                 interpolate(photonDetail.closeStdDevs, photonDetail.farStdDevs, scale);
 
-            m_VisionConsumer.accept(
-                estimatedPose2d, est.timestampSeconds, interpolated);
+            m_VisionConsumer.accept(estimatedPose2d, est.timestampSeconds, interpolated);
           });
     }
   }
