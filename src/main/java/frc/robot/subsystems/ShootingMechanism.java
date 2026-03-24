@@ -186,7 +186,7 @@ public class ShootingMechanism extends SubsystemBase {
   public void periodic() {
     if (ShootingMechanismConstants.updateCounter <= updateCounter) {
       updateShootingSolution(m_drivetrain::getPose2d, m_zone::getGoalPose);
-        updateCounter = 1;
+      updateCounter = 1;
     } else {
       updateCounter++;
     }
