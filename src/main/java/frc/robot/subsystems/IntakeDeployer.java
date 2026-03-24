@@ -73,6 +73,21 @@ public class IntakeDeployer extends SubsystemBase {
     return runOnce(() -> raiseIntakeUp());
   }
 
+  public Command agitateIntakeUp() {
+    return runOnce(() -> rotateToAgitation());
+  }
+
+  public Command agitateIntakeCommand() {
+    return run(() -> agitateIntake()).repeatedly();
+  }
+
+  public Command agitateIntake() {
+    Command agitateUp = agitateIntakeUp();
+    Command agitateDown = lowerIntakeDownFullyCommand();
+
+    return agitateUp.withTimeout(1).andThen(agitateDown).withTimeout(1);
+  }
+
   public Command lowerIntakeDownCommand() {
     return setWheelsDownCommand()
         .andThen(Commands.waitUntil(this::reachedDeploySetpoint))
@@ -85,7 +100,7 @@ public class IntakeDeployer extends SubsystemBase {
   }
 
   private Command setWheelsDownCommand() {
-    return runOnce(() -> lowerIntakeDown());
+    return runOnce(() -> lowerIntakeHalfwayDown());
   }
 
   private Command stopWheelsCommand() {
@@ -96,8 +111,20 @@ public class IntakeDeployer extends SubsystemBase {
     rotate(IntakeDeployerConstants.INTAKE_UP);
   }
 
-  private void lowerIntakeDown() {
+  private void lowerIntakeHalfwayDown() {
     rotate(IntakeDeployerConstants.INTAKE_HALFWAY_DOWN);
+  }
+
+  private void rotateToAgitation() {
+    rotate(IntakeDeployerConstants.MAX_AGITATION_HEIGHT);
+  }
+
+  private void lowerIntakeDown() {
+    rotate(IntakeDeployerConstants.INTAKE_DOWN);
+  }
+
+  public Command lowerIntakeDownFullyCommand() {
+    return runOnce(() -> lowerIntakeDown());
   }
 
   private void rotate(Angle setpoint) {
