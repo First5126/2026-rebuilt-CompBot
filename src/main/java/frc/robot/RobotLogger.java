@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RobotLogger {
   private static final String SEPERATOR = "/";
-  private static final boolean ENABLE_LOGGING = false; // Set to false to disable all logging
+  public static final boolean ENABLE_LOGGING = false; // Set to false to disable all logging
   // Prefix for logs to categorize data easily
   private final String subsystemName;
 
