@@ -144,8 +144,5 @@ public class Zones {
         break;
     }
     return alliance.get() == Alliance.Blue ? GoalPoseConstants.BLUE_HUB : GoalPoseConstants.RED_HUB;
-    
-
-    }
   }
-
+}

@@ -2,8 +2,6 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Rotations;
 
-import java.time.chrono.ThaiBuddhistChronology;
-
 import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -29,7 +27,7 @@ public class IntakeDeployer extends SubsystemBase {
 
   private TalonFX m_intakeDeployerMotorRight =
       new TalonFX(CANConstants.intakePivotRightMotor, CANConstants.mechanismCanivore);
-  private TalonFX  m_intakeDeployerMotorLeft =
+  private TalonFX m_intakeDeployerMotorLeft =
       new TalonFX(CANConstants.intakePivotLeftMotor, CANConstants.mechanismCanivore);
   final MotionMagicExpoVoltage m_request = new MotionMagicExpoVoltage(0);
   final DutyCycleOut m_dutyRequest = new DutyCycleOut(0);
@@ -74,8 +72,6 @@ public class IntakeDeployer extends SubsystemBase {
         new Follower(m_intakeDeployerMotorLeft.getDeviceID(), MotorAlignmentValue.Aligned));
   }
 
-  
-
   public Command raiseIntakeUpCommand() {
     return runOnce(() -> raiseIntakeUp());
   }
@@ -84,14 +80,21 @@ public class IntakeDeployer extends SubsystemBase {
     return runOnce(() -> rotateToAgitation());
   }
 
-  //public Command agitateIntakeCommand() {
-    //return run(() -> agitateIntake()).repeatedly();
-  //}
+  // public Command agitateIntakeCommand() {
+  // return run(() -> agitateIntake()).repeatedly();
+  // }
 
   public Command agitateIntakeCo() {
     Command agitateUp = agitateIntakeUp();
 
-    return agitateUp.until(this::reachedAgitateSetpoint).andThen(Commands.waitSeconds(0.25)).andThen(lowerIntakeDownCommand().until(this::reachedDeploySetpoint).andThen(Commands.waitSeconds(0.25))).repeatedly();
+    return agitateUp
+        .until(this::reachedAgitateSetpoint)
+        .andThen(Commands.waitSeconds(0.25))
+        .andThen(
+            lowerIntakeDownCommand()
+                .until(this::reachedDeploySetpoint)
+                .andThen(Commands.waitSeconds(0.25)))
+        .repeatedly();
   }
 
   public Command lowerIntakeDownCommand() {
@@ -107,7 +110,7 @@ public class IntakeDeployer extends SubsystemBase {
 
   private Boolean reachedAgitateSetpoint() {
     return m_intakeDeployerMotorLeft.getPosition().getValue().in(Rotations)
-        < IntakeDeployerConstants.MAX_AGITATION_HEIGHT.in(Rotations); 
+        < IntakeDeployerConstants.MAX_AGITATION_HEIGHT.in(Rotations);
   }
 
   private Command setWheelsDownCommand() {
@@ -145,7 +148,4 @@ public class IntakeDeployer extends SubsystemBase {
   private void stopMotor() {
     m_intakeDeployerMotorLeft.setControl(m_dutyRequest.withOutput(0));
   }
-
-
-  
 }

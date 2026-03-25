@@ -63,14 +63,14 @@ public class AprilTagLocalizationConstants {
     }
   }
 
-  /*public static final String LIMELIGHT_NAME_RIGHT = "limelight-right";
+  public static final String LIMELIGHT_NAME_RIGHT = "limelight-right";
   public static final Matrix<N3, N1> LIMELIGHT_CLOSE_STDDEV_RIGHT =
       VecBuilder.fill(0.01, 0.01, 999999999.9);
   public static final Matrix<N3, N1> LIMELIGHT_FAR_STDDEV_RIGHT =
       VecBuilder.fill(0.05, 0.05, 999999999.9);
   public static final LimelightDetails LIMELIGHT_DETAILS_RIGHT =
       new LimelightDetails(
-          LIMELIGHT_NAME_RIGHT, LIMELIGHT_CLOSE_STDDEV_RIGHT, LIMELIGHT_FAR_STDDEV_RIGHT);*/
+          LIMELIGHT_NAME_RIGHT, LIMELIGHT_CLOSE_STDDEV_RIGHT, LIMELIGHT_FAR_STDDEV_RIGHT);
 
   public static final String LIMELIGHT_NAME_LEFT = "limelight-left";
   public static final Matrix<N3, N1> LIMELIGHT_CLOSE_STDDEV_LEFT =
