@@ -1,6 +1,7 @@
 package frc.robot.constants;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Rotations;
 
 import edu.wpi.first.units.measure.Angle;
 
@@ -19,6 +20,8 @@ public class HoodConstants {
   public static final Angle MAX_ANGLE = Degrees.of(6);
 
   public static final double MAX_VOLTAGE_MANUAL = 1;
+
+  public static final double MAGNETIC_OFFSET = 0.217529296875;
 
   // TODO: Very important to fix this so we dont rip the hood off
 

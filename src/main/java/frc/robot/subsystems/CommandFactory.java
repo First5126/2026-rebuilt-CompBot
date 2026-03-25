@@ -274,4 +274,8 @@ public class CommandFactory {
   public Command setIntakeDown() {
     return m_intakeDeployer.lowerIntakeDownCommand();
   }
+
+  public Command zeroTurret() {
+    return m_turret.setZero();
+  }
 }
