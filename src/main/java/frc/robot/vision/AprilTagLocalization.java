@@ -52,6 +52,7 @@ public class AprilTagLocalization extends SubsystemBase {
   private ResetPose m_poseReset;
   private Zones m_zone;
   private int m_logCountdown = 0;
+  private int updateCounter = 1;
 
   /**
    * Creates a new AprilTagLocalization.
@@ -274,6 +275,11 @@ public class AprilTagLocalization extends SubsystemBase {
     if (m_zone.isNearBump()) {
       return;
     }
-    poseEstimate();
+    if (2 <= updateCounter) {
+      updateCounter = 1;
+    } else {
+      updateCounter++;
+      poseEstimate();
+    }
   }
 }

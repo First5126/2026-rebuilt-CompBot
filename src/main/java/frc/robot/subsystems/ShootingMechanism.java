@@ -27,6 +27,7 @@ import java.util.function.Supplier;
 
 public class ShootingMechanism extends SubsystemBase {
   public static final RobotLogger logger = new RobotLogger("ShootingMechanism");
+  private int updateCounter = 1;
 
   public static class ShootingSolution {
     private Angle predictedHoodAngle;
@@ -105,7 +106,6 @@ public class ShootingMechanism extends SubsystemBase {
    */
   private void updateShootingSolution(
       Supplier<Pose2d> robotPoseSupplier, Supplier<GoalPose> goalPoseSupplier) {
-    final long startNanos = ENABLE_UPDATE_SHOOTING_SOLUTION_PROFILING ? System.nanoTime() : 0L;
 
     Pose2d robotPose = robotPoseSupplier.get();
     GoalPose goalPose = goalPoseSupplier.get();
@@ -127,9 +127,6 @@ public class ShootingMechanism extends SubsystemBase {
       Pose2d predictedRobotPose = m_drivetrain.getPredictedPose2d(delayTime);
 
       logger.log("Predicted Robot Pose", predictedRobotPose);
-
-      double predictedDistanceTraveled =
-          robotPose.getTranslation().getDistance(predictedRobotPose.getTranslation());
 
       // get the turret pose
       // Avoid Pose2d allocations in the hot loop.
@@ -187,7 +184,12 @@ public class ShootingMechanism extends SubsystemBase {
 
   @Override
   public void periodic() {
-    updateShootingSolution(m_drivetrain::getPose2d, m_zone::getGoalPose);
+    if (ShootingMechanismConstants.updateCounter <= updateCounter) {
+      updateShootingSolution(m_drivetrain::getPose2d, m_zone::getGoalPose);
+      updateCounter = 1;
+    } else {
+      updateCounter++;
+    }
   }
 
   private boolean canShootFuel() {
