@@ -30,7 +30,7 @@ public class CustomXboxController extends CommandXboxController {
   }
 
   public void logDogLog(final String prefix) {
-    if (!RobotLogger.ENABLE_LOGGING) {
+    if (!RobotLogger.isEnabled()) {
       return; // Skip logging if it's disabled
     }
     XboxController hid = getHID();
