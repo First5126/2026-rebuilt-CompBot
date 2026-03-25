@@ -73,9 +73,9 @@ public class Robot extends TimedRobot {
   /** Called once when teleop mode starts. */
   @Override
   public void teleopInit() {
+    m_robotContainer.stopAllMotors();
     if (m_autonomousCommand != null) {
       CommandScheduler.getInstance().cancel(m_autonomousCommand);
-      m_robotContainer.stopAllMotors();
     }
   }
 

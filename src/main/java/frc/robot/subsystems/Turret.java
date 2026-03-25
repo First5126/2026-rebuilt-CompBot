@@ -45,7 +45,7 @@ public class Turret extends SubsystemBase {
     talonFXSConfiguration.Commutation.MotorArrangement = MotorArrangementValue.NEO550_JST;
     talonFXSConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     talonFXSConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-    talonFXSConfiguration.ExternalFeedback.withFusedCANcoder(m_turretEncoder);
+    talonFXSConfiguration.ExternalFeedback.withSyncCANcoder(m_turretEncoder);
     talonFXSConfiguration.ExternalFeedback.RotorToSensorRatio = 10;
     talonFXSConfiguration.ExternalFeedback.SensorToMechanismRatio = 10;
 
@@ -141,7 +141,7 @@ public class Turret extends SubsystemBase {
   @Override
   public void periodic() {
     double currentAngle = m_turretMotor.getPosition().getValueAsDouble() * 360.0;
-    logger.log("Turret Angle (deg)", currentAngle);
+    logger.logAndDisplay("Turret Angle (deg)", currentAngle);
   }
 
   public double findTimeFromFuelShootingDistance(double distance) {
