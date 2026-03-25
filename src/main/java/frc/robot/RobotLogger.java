@@ -1,6 +1,6 @@
 package frc.robot;
 
-import dev.doglog.DogLog;
+/*import dev.doglog.DogLog;*/
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -16,7 +16,7 @@ public class RobotLogger {
   public void log(String key, double value) {
     // Log to DogLog with a structured key
     String fullKey = subsystemName + SEPERATOR + key;
-    DogLog.log(fullKey, value);
+    /*DogLog.log(fullKey, value);*/
   }
 
   public void logAndDisplay(String key, double value) {
@@ -27,7 +27,7 @@ public class RobotLogger {
 
   public void log(String key, boolean value) {
     String fullKey = subsystemName + SEPERATOR + key;
-    DogLog.log(fullKey, value);
+    /*DogLog.log(fullKey, value);*/
   }
 
   public void logAndDisplay(String key, boolean value) {
@@ -37,7 +37,7 @@ public class RobotLogger {
 
   public void log(String key, String value) {
     String fullKey = subsystemName + SEPERATOR + key;
-    DogLog.log(fullKey, value);
+    /*DogLog.log(fullKey, value);*/
   }
 
   public void logAndDisplay(String key, String value) {
@@ -47,7 +47,7 @@ public class RobotLogger {
 
   public <T extends Enum<T>> void log(String key, T value) {
     String fullKey = subsystemName + SEPERATOR + key;
-    DogLog.log(fullKey, value.name());
+    /*DogLog.log(fullKey, value.name());*/
   }
 
   public <T extends Enum<T>> void logAndDisplay(String key, T value) {
@@ -56,6 +56,6 @@ public class RobotLogger {
   }
 
   public void log(String key, Pose2d pose) {
-    DogLog.log(key, pose);
+    /*DogLog.log(key, pose);*/
   }
 }

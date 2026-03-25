@@ -222,7 +222,7 @@ public class CommandFactory {
   }
 
   public Command startFlywheelWithSolution() {
-    return m_flyWheel.setSpeedWithSolution(m_shootingMechanism::getShootingSolution);
+    return m_flyWheel.setSpeedWithSolution(m_shootingMechanism::getShootingSolution).alongWith(agitateIntake());
   }
 
   public Command setTurretToZero() {
@@ -254,7 +254,7 @@ public class CommandFactory {
   }
 
   public Command agitateIntake() {
-   return m_intakeDeployer.agitateIntakeCommand();
+   return m_intakeDeployer.agitateIntakeCo();
   }
 
   public Command startIntake() {

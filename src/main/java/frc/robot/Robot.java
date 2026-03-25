@@ -5,8 +5,8 @@
 package frc.robot;
 
 import com.ctre.phoenix6.HootAutoReplay;
-import dev.doglog.DogLog;
-import dev.doglog.DogLogOptions;
+/*import dev.doglog.DogLog;
+import dev.doglog.DogLogOptions;*/
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -25,9 +25,9 @@ public class Robot extends TimedRobot {
 
   /** Creates the robot and initializes the container. */
   public Robot() {
-    DogLog.setOptions(new DogLogOptions().withCaptureDs(true).withCaptureNt(true));
+    /*DogLog.setOptions(new DogLogOptions().withCaptureDs(true).withCaptureNt(true));
 
-    DogLog.setPdh(new PowerDistribution());
+    DogLog.setPdh(new PowerDistribution());*/
     m_robotContainer = new RobotContainer();
   }
 
@@ -35,8 +35,8 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     m_timeAndJoystickReplay.update();
-    Driver.getInstance().logDogLog("Controllers/Driver");
-    Operator.getInstance().logDogLog("Controllers/Operator");
+    /*Driver.getInstance().logDogLog("Controllers/Driver");
+    Operator.getInstance().logDogLog("Controllers/Operator");*/
     CommandScheduler.getInstance().run();
   }
 

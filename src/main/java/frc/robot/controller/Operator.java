@@ -180,8 +180,8 @@ public class Operator extends CustomXboxController implements Controller {
         .whileTrue(
             new SelectCommand<OperatorState>(
                 Map.of(
-                    OperatorState.NORMAL, Commands.none(),
-                    OperatorState.OVERRIDE, commandFactory.agitateIntake()),
+                    OperatorState.NORMAL, commandFactory.agitateIntake(),
+                    OperatorState.OVERRIDE, Commands.none()),
                 () -> operatorState));
 
     this.rightBumper()
