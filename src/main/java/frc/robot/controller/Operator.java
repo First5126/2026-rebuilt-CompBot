@@ -117,108 +117,35 @@ public class Operator extends CustomXboxController implements Controller {
   public Operator configureBindings() {
 
     this.a()
-        .onTrue(
-            new SelectCommand<OperatorState>(
-                Map.of(
-                    OperatorState.NORMAL, Commands.none(),
-                    OperatorState.OVERRIDE, commandFactory.startIndexing()),
-                () -> operatorState))
-        .onFalse(
-            new SelectCommand<OperatorState>(
-                Map.of(
-                    OperatorState.NORMAL, Commands.none(),
-                    OperatorState.OVERRIDE, commandFactory.stopIndexing()),
-                () -> operatorState))
-        .whileTrue(
-            new SelectCommand<OperatorState>(
-                Map.of(
-                    OperatorState.NORMAL, commandFactory.setHoodToTrenchPosition(),
-                    OperatorState.OVERRIDE, Commands.none()),
-                () -> operatorState));
-
+        .whileTrue(commandFactory.setHoodToTrenchPosition());
+        
     this.b()
-        .onTrue(
-            new SelectCommand<OperatorState>(
-                Map.of(
-                    OperatorState.NORMAL, commandFactory.startIndexer(),
-                    OperatorState.OVERRIDE, commandFactory.startFlywheelWithSolution()),
-                () -> operatorState))
-        .onFalse(
-            new SelectCommand<OperatorState>(
-                Map.of(
-                    OperatorState.NORMAL,
-                        commandFactory
-                            .clearShootingJam()
-                            .andThen(Commands.waitSeconds(0.25))
-                            .andThen(commandFactory.stopIndexer()),
-                    OperatorState.OVERRIDE, commandFactory.stopFlywheel()),
-                () -> operatorState));
+        .onTrue(commandFactory.startIndexer())
+        .onFalse(commandFactory
+                    .clearShootingJam()
+                    .andThen(Commands.waitSeconds(0.25))
+                    .andThen(commandFactory.stopIndexer()));
 
     this.x()
-        .onTrue(
-            new SelectCommand<OperatorState>(
-                Map.of(
-                    OperatorState.NORMAL, commandFactory.clearShootingJam(),
-                    OperatorState.OVERRIDE, commandFactory.clearShootingJam()),
-                () -> operatorState))
-        .onFalse(
-            new SelectCommand<OperatorState>(
-                Map.of(
-                    OperatorState.NORMAL, commandFactory.stopFlywheelAndIndexer(),
-                    OperatorState.OVERRIDE, commandFactory.stopFlywheelAndIndexer()),
-                () -> operatorState));
+        .onTrue(commandFactory.clearShootingJam())
+        .onFalse(commandFactory.stopFlywheelAndIndexer());
 
     this.y()
-        .whileTrue(
-            new SelectCommand<OperatorState>(
-                Map.of(
-                    OperatorState.NORMAL, commandFactory.rotateTurretToZero(),
-                    OperatorState.OVERRIDE, commandFactory.rotateTurretToZero()),
-                () -> operatorState));
+        .whileTrue(commandFactory.rotateTurretToZero());
 
     this.leftBumper()
-        .whileTrue(
-            new SelectCommand<OperatorState>(
-                Map.of(
-                    OperatorState.NORMAL, commandFactory.agitateIntake(),
-                    OperatorState.OVERRIDE, Commands.none()),
-                () -> operatorState));
+        .whileTrue(commandFactory.agitateIntake());
 
     this.rightBumper()
-        .onTrue(
-            new SelectCommand<OperatorState>(
-                Map.of(
-                    OperatorState.NORMAL, Commands.none(),
-                    OperatorState.OVERRIDE, commandFactory.lowerIntake()),
-                () -> operatorState));
+        .onTrue(commandFactory.lowerIntake());
 
     this.rightTrigger()
-        .onTrue(
-            new SelectCommand<OperatorState>(
-                Map.of(
-                    OperatorState.NORMAL, commandFactory.startIntake(),
-                    OperatorState.OVERRIDE, commandFactory.startIntake()),
-                () -> operatorState))
-        .onFalse(
-            new SelectCommand<OperatorState>(
-                Map.of(
-                    OperatorState.NORMAL, commandFactory.stopIntake(),
-                    OperatorState.OVERRIDE, commandFactory.stopIntake()),
-                () -> operatorState));
+        .onTrue(commandFactory.startIntake())
+        .onFalse(commandFactory.stopIntake());
 
     this.leftTrigger()
-        .onTrue(
-            new SelectCommand<OperatorState>(
-                Map.of(
-                    OperatorState.NORMAL, commandFactory.reverseIntake(),
-                    OperatorState.OVERRIDE, commandFactory.reverseIntake()),
-                () -> operatorState))
-        .onFalse(
-            new SelectCommand<OperatorState>(
-                Map.of(
-                    OperatorState.NORMAL, Commands.none(),
-                    OperatorState.OVERRIDE, commandFactory.stopIntake()),
-                () -> operatorState));
+        .onTrue(commandFactory.reverseIntake())
+        .onFalse(commandFactory.stopIntake());
 
     this.start().onTrue(Commands.runOnce(() -> ShiftData.resetMatchTimeCalibration()));
 
