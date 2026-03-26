@@ -20,6 +20,8 @@ public class HoodConstants {
 
   public static final double MAX_VOLTAGE_MANUAL = 1;
 
+  public static final double MAGNETIC_OFFSET = 0.217529296875;
+
   // TODO: Very important to fix this so we dont rip the hood off
 
 }
