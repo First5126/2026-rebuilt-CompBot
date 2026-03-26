@@ -223,8 +223,7 @@ public class CommandFactory {
 
   public Command startFlywheelWithSolution() {
     return m_flyWheel
-        .setSpeedWithSolution(m_shootingMechanism::getShootingSolution)
-        .alongWith(agitateIntake());
+        .setSpeedWithSolution(m_shootingMechanism::getShootingSolution);
   }
 
   public Command setTurretToZero() {

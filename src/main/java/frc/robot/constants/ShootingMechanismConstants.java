@@ -32,6 +32,7 @@ public class ShootingMechanismConstants {
   public static final Angle hoodMaximumError = Degree.of(2);
   public static final AngularVelocity flyWheelMaximumError = RotationsPerSecond.of(2);
   public static final Time mechanismDelay = Milliseconds.of(52.647);
+  public static final Time computationDelay = Milliseconds.of(20);
   public static final int updateCounter = 2;
 
   // Distance first then Time
