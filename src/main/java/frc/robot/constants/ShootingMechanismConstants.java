@@ -62,13 +62,10 @@ public class ShootingMechanismConstants {
           Map.entry(3.46, 52.0),
           Map.entry(4.11, 53.5),
           Map.entry(2.41, 47.5),
-          Map.entry(4.23, 54.75),
-          Map.entry(5.788, 62.0),
-          Map.entry(5.619, 59.0),
-          Map.entry(5.418, 59.0),
-          Map.entry(5.150, 57.5),
-          Map.entry(5.0, 57.5),
-          Map.entry(4.394, 57.5));
+          Map.entry(4.23, 57.5),
+          Map.entry(5.6, 63.0),
+          Map.entry(5.25, 62.0),
+          Map.entry(4.925, 61.0));
 
   private static final InterpolatingDoubleTreeMap DISTANCE_TO_ANGLE_INTERPOLATOR_HUB =
       InterpolatingDoubleTreeMap.ofEntries(
