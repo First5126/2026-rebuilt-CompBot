@@ -122,7 +122,8 @@ public class ShootingMechanism extends SubsystemBase {
       double delayTime =
           goalPose.interpolationSet.distanceToTimeOfFlight.get(distanceToTarget)
               + AprilTagLocalizationConstants.LOCALIZATION_PERIOD.in(Seconds)
-              + ShootingMechanismConstants.mechanismDelay.in(Seconds);
+              + ShootingMechanismConstants.mechanismDelay.in(Seconds)
+              + ShootingMechanismConstants.computationDelay.in(Seconds);
 
       Pose2d predictedRobotPose = m_drivetrain.getPredictedPose2d(delayTime);
 

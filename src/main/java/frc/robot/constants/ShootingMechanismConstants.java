@@ -32,6 +32,7 @@ public class ShootingMechanismConstants {
   public static final Angle hoodMaximumError = Degree.of(2);
   public static final AngularVelocity flyWheelMaximumError = RotationsPerSecond.of(2);
   public static final Time mechanismDelay = Milliseconds.of(52.647);
+  public static final Time computationDelay = Milliseconds.of(20);
   public static final int updateCounter = 2;
 
   // Distance first then Time
@@ -45,9 +46,12 @@ public class ShootingMechanismConstants {
           Map.entry(4.11, 1.05),
           Map.entry(2.41, 0.93),
           Map.entry(4.23, 1.09),
-          Map.entry(5.6, 1.28),
-          Map.entry(5.25, 1.22),
-          Map.entry(4.925, 1.13));
+          Map.entry(5.788, 1.5),
+          Map.entry(5.619, 1.57),
+          Map.entry(5.418, 1.47),
+          Map.entry(5.150, 1.36),
+          Map.entry(5.0, 1.31),
+          Map.entry(4.394, 1.26));
 
   private static final InterpolatingDoubleTreeMap DISTANCE_TO_SPEED_INTERPOLATOR_HUB =
       InterpolatingDoubleTreeMap.ofEntries(
@@ -59,9 +63,12 @@ public class ShootingMechanismConstants {
           Map.entry(4.11, 53.5),
           Map.entry(2.41, 47.5),
           Map.entry(4.23, 54.75),
-          Map.entry(5.6, 59.0),
-          Map.entry(5.25, 58.3),
-          Map.entry(4.925, 57.25));
+          Map.entry(5.788, 62.0),
+          Map.entry(5.619, 59.0),
+          Map.entry(5.418, 59.0),
+          Map.entry(5.150, 57.5),
+          Map.entry(5.0, 57.5),
+          Map.entry(4.394, 57.5));
 
   private static final InterpolatingDoubleTreeMap DISTANCE_TO_ANGLE_INTERPOLATOR_HUB =
       InterpolatingDoubleTreeMap.ofEntries(
@@ -73,9 +80,12 @@ public class ShootingMechanismConstants {
           Map.entry(4.11, 6.0),
           Map.entry(2.41, 0.0),
           Map.entry(4.23, 6.5),
-          Map.entry(5.6, 5.5),
-          Map.entry(5.25, 5.5),
-          Map.entry(5.75, 4.925));
+          Map.entry(5.788, 5.75),
+          Map.entry(5.619, 5.75),
+          Map.entry(5.418, 5.75),
+          Map.entry(5.150, 5.75),
+          Map.entry(5.0, 5.5),
+          Map.entry(54.394, 5.5));
 
   private static final InterpolatingDoubleTreeMap DISTANCE_TO_TIME_INTERPOLATOR_FLOOR =
       InterpolatingDoubleTreeMap.ofEntries(

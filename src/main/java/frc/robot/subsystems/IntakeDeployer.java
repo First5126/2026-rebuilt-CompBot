@@ -16,6 +16,7 @@ import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.ReverseLimitSourceValue;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -33,6 +34,8 @@ public class IntakeDeployer extends SubsystemBase {
 
   public IntakeDeployer() {
     TalonFXConfiguration m_intakeDeployerConfiguration = new TalonFXConfiguration();
+
+    SmartDashboard.getBoolean("ReachedLowerSetpoint", reachedDeploySetpoint());
 
     Slot0Configs m_intakeDeployerSlot0Configs = new Slot0Configs();
     m_intakeDeployerSlot0Configs.kP = IntakeDeployerConstants.INTAKE_KP;
@@ -73,6 +76,27 @@ public class IntakeDeployer extends SubsystemBase {
     return runOnce(() -> raiseIntakeUp());
   }
 
+  public Command agitateIntakeUp() {
+    return runOnce(() -> rotateToAgitation());
+  }
+
+  // public Command agitateIntakeCommand() {
+  // return run(() -> agitateIntake()).repeatedly();
+  // }
+
+  public Command agitateIntakeCo() {
+    Command agitateUp = agitateIntakeUp();
+
+    return agitateUp
+        .until(this::reachedAgitateSetpoint)
+        .andThen(Commands.waitSeconds(0.25))
+        .andThen(
+            lowerIntakeDownCommand()
+                .until(this::reachedDeploySetpoint)
+                .andThen(Commands.waitSeconds(0.25)))
+        .repeatedly();
+  }
+
   public Command lowerIntakeDownCommand() {
     return setWheelsDownCommand()
         .andThen(Commands.waitUntil(this::reachedDeploySetpoint))
@@ -84,8 +108,13 @@ public class IntakeDeployer extends SubsystemBase {
         > IntakeDeployerConstants.INTAKE_HALFWAY_DOWN.in(Rotations);
   }
 
+  private Boolean reachedAgitateSetpoint() {
+    return m_intakeDeployerMotorLeft.getPosition().getValue().in(Rotations)
+        < IntakeDeployerConstants.MAX_AGITATION_HEIGHT.in(Rotations);
+  }
+
   private Command setWheelsDownCommand() {
-    return runOnce(() -> lowerIntakeDown());
+    return runOnce(() -> lowerIntakeHalfwayDown());
   }
 
   private Command stopWheelsCommand() {
@@ -96,8 +125,20 @@ public class IntakeDeployer extends SubsystemBase {
     rotate(IntakeDeployerConstants.INTAKE_UP);
   }
 
-  private void lowerIntakeDown() {
+  private void lowerIntakeHalfwayDown() {
     rotate(IntakeDeployerConstants.INTAKE_HALFWAY_DOWN);
+  }
+
+  private void rotateToAgitation() {
+    rotate(IntakeDeployerConstants.MAX_AGITATION_HEIGHT);
+  }
+
+  private void lowerIntakeDown() {
+    rotate(IntakeDeployerConstants.INTAKE_DOWN);
+  }
+
+  public Command lowerIntakeDownFullyCommand() {
+    return runOnce(() -> lowerIntakeDown());
   }
 
   private void rotate(Angle setpoint) {

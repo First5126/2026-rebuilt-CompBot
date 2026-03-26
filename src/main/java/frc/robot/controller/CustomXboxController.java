@@ -4,6 +4,7 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.RobotLogger;
 import frc.robot.constants.ControllerConstants;
 
 public class CustomXboxController extends CommandXboxController {
@@ -29,6 +30,9 @@ public class CustomXboxController extends CommandXboxController {
   }
 
   public void logDogLog(final String prefix) {
+    if (!RobotLogger.isEnabled()) {
+      return; // Skip logging if it's disabled
+    }
     XboxController hid = getHID();
 
     DogLog.log(prefix + "/Connected", hid.isConnected());

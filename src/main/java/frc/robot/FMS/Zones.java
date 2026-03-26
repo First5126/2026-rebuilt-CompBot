@@ -123,35 +123,26 @@ public class Zones {
       return GoalPoseConstants.BLUE_HUB;
     }
 
-    if (alliance.get() == Alliance.Blue) {
-      logger.log("GoalPose", "Alliance is Blue, using Blue Hub pose");
-      return GoalPoseConstants.BLUE_HUB;
-    } else {
-      logger.log("GoalPose", "Alliance is Red, using Red Hub pose");
-      return GoalPoseConstants.RED_HUB;
+    switch (getZone()) {
+      case BLUE_ZONE:
+        return alliance.get() == Alliance.Blue
+            ? GoalPoseConstants.BLUE_HUB
+            : GoalPoseConstants.RED_HUB;
+      case NEUTRAL_ZONE_LEFT:
+        return alliance.get() == Alliance.Blue
+            ? GoalPoseConstants.BLUE_LEFT_SIDE
+            : GoalPoseConstants.RED_LEFT_SIDE;
+      case NEUTRAL_ZONE_RIGHT:
+        return alliance.get() == Alliance.Blue
+            ? GoalPoseConstants.BLUE_RIGHT_SIDE
+            : GoalPoseConstants.RED_RIGHT_SIDE;
+      case RED_ZONE:
+        return alliance.get() == Alliance.Blue
+            ? GoalPoseConstants.BLUE_HUB
+            : GoalPoseConstants.RED_HUB;
+      default:
+        break;
     }
-
-    // switch (getZone()) {
-    //   case BLUE_ZONE:
-    //     return alliance.get() == Alliance.Blue
-    //         ? GoalPoseConstants.BLUE_HUB
-    //         : GoalPoseConstants.RED_HUB;
-    //   case NEUTRAL_ZONE_LEFT:
-    //     return alliance.get() == Alliance.Blue
-    //         ? GoalPoseConstants.BLUE_LEFT_SIDE
-    //         : GoalPoseConstants.RED_LEFT_SIDE;
-    //   case NEUTRAL_ZONE_RIGHT:
-    //     return alliance.get() == Alliance.Blue
-    //         ? GoalPoseConstants.BLUE_RIGHT_SIDE
-    //         : GoalPoseConstants.RED_RIGHT_SIDE;
-    //   case RED_ZONE:
-    //     return alliance.get() == Alliance.Blue
-    //         ? GoalPoseConstants.BLUE_HUB
-    //         : GoalPoseConstants.RED_HUB;
-    //   default:
-    //     break;
-    // }
-    // return alliance.get() == Alliance.Blue ? GoalPoseConstants.BLUE_HUB :
-    // GoalPoseConstants.RED_HUB;
+    return alliance.get() == Alliance.Blue ? GoalPoseConstants.BLUE_HUB : GoalPoseConstants.RED_HUB;
   }
 }
