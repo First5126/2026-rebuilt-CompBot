@@ -29,6 +29,7 @@ public class Turret extends SubsystemBase {
   private final CANcoder m_turretEncoder;
   private final PositionVoltage m_positionControl;
   private final VoltageOut m_voltageControl;
+  private double m_dynamicOffsetDegrees = 0.0;
 
   public Turret() {
     m_turretMotor = new TalonFXS(CANConstants.turretMotor, CANConstants.mechanismCanivore);
@@ -173,14 +174,36 @@ public class Turret extends SubsystemBase {
         });
   }
 
+  private void incrementDynamicOffset(final double offsetDegrees) {
+    m_dynamicOffsetDegrees += offsetDegrees;
+  }
+  
+  private void resetDynamicOffset() {
+    m_dynamicOffsetDegrees = 0.0;
+  }
+
+  public Command adjustPositionDynamically(double offsetDegrees) {
+    return run(
+        () -> {
+          incrementDynamicOffset(offsetDegrees);
+        });  
+  }  
+    
+  public Command resetDynamicOffsetCommand() {
+    return run(
+        () -> {
+          resetDynamicOffset();
+        });  
+  }
+
   private void setPosition(final Angle position) {
     // Convert all angles to degrees for clamping
     double minDegrees = TurretConstants.MIN_ANGLE.in(Degrees);
     double maxDegrees = TurretConstants.MAX_ANGLE.in(Degrees);
-    double requestedDegrees = position.in(Degrees);
+    double requestedDegrees = position.in(Degrees) + m_dynamicOffsetDegrees;
     double clampedDegrees = Math.max(minDegrees, Math.min(requestedDegrees, maxDegrees));
     // Construct the measure back in degrees
-    Angle clampedPosition = Degrees.of(clampedDegrees);
+    Angle clampedPosition = Degrees.of(clampedDegrees) ;
 
     m_turretMotor.setControl(m_positionControl.withPosition(clampedPosition));
   }
