@@ -183,7 +183,7 @@ public class Turret extends SubsystemBase {
   }
 
   public Command adjustPositionDynamically(double offsetDegrees) {
-    return run(
+    return runOnce(
         () -> {
           incrementDynamicOffset(offsetDegrees);
         });
