@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.6,
-        "y": 7.5799647887323935
+        "x": 3.548,
+        "y": 7.5
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.6,
-        "y": 7.5799647887323935
+        "x": 4.548,
+        "y": 7.5
       },
       "isLocked": false,
       "linkedName": "Under Trench - Depot Side"
@@ -52,7 +52,7 @@
   "reversed": false,
   "folder": "Depot Side",
   "idealStartingState": {
-    "velocity": 2.0,
+    "velocity": 0.0,
     "rotation": 0.0
   },
   "useDefaultConstraints": true

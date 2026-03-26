@@ -79,6 +79,8 @@ public class Turret extends SubsystemBase {
     m_turretMotor.getConfigurator().apply(talonFXSConfiguration);
     m_positionControl = new PositionVoltage(0);
     m_voltageControl = new VoltageOut(0);
+
+    m_turretMotor.setPosition(0);
   }
 
   /**
@@ -136,6 +138,13 @@ public class Turret extends SubsystemBase {
           setPosition(shootingSolution.get().getPredictedTurretAngle());
         })
         .repeatedly();
+  }
+
+  public Command setZero() {
+    return runOnce(
+        () -> {
+          m_turretMotor.setPosition(0);
+        });
   }
 
   @Override

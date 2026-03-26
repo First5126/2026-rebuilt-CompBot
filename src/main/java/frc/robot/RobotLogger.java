@@ -1,11 +1,17 @@
 package frc.robot;
 
-/*import dev.doglog.DogLog;*/
+//import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RobotLogger {
   private static final String SEPERATOR = "/";
+  private static boolean enabled = false;
+
+  static {
+    //DogLog.setEnabled(enabled);
+  }
+
   // Prefix for logs to categorize data easily
   private final String subsystemName;
 
@@ -13,10 +19,21 @@ public class RobotLogger {
     this.subsystemName = subsystemName;
   }
 
+  public static void setEnabled(boolean newEnabled) {
+    enabled = newEnabled;
+    //DogLog.setEnabled(newEnabled);
+  }
+
+  public static boolean isEnabled() {
+    return enabled;
+  }
+
   public void log(String key, double value) {
     // Log to DogLog with a structured key
     String fullKey = subsystemName + SEPERATOR + key;
-    /*DogLog.log(fullKey, value);*/
+    if (enabled) {
+      //DogLog.log(fullKey, value);
+    }
   }
 
   public void logAndDisplay(String key, double value) {
@@ -27,7 +44,10 @@ public class RobotLogger {
 
   public void log(String key, boolean value) {
     String fullKey = subsystemName + SEPERATOR + key;
-    /*DogLog.log(fullKey, value);*/
+
+    if (enabled) {
+      //DogLog.log(fullKey, value);
+    }
   }
 
   public void logAndDisplay(String key, boolean value) {
@@ -37,7 +57,9 @@ public class RobotLogger {
 
   public void log(String key, String value) {
     String fullKey = subsystemName + SEPERATOR + key;
-    /*DogLog.log(fullKey, value);*/
+    if (enabled) {
+      /*DogLog.log(fullKey, value);*/
+    }
   }
 
   public void logAndDisplay(String key, String value) {
@@ -47,7 +69,9 @@ public class RobotLogger {
 
   public <T extends Enum<T>> void log(String key, T value) {
     String fullKey = subsystemName + SEPERATOR + key;
-    /*DogLog.log(fullKey, value.name());*/
+    if (enabled) {
+      /*DogLog.log(fullKey, value.name());*/
+    }
   }
 
   public <T extends Enum<T>> void logAndDisplay(String key, T value) {
@@ -56,6 +80,8 @@ public class RobotLogger {
   }
 
   public void log(String key, Pose2d pose) {
-    /*DogLog.log(key, pose);*/
+    if (enabled) {
+      /*DogLog.log(key, pose);*/
+    }
   }
 }

@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Rotations;
 
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.DigitalInputsConfigs;
 import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -62,6 +63,11 @@ public class Hood extends SubsystemBase {
     m_CANdi = new CANdi(CANConstants.hoodCANdi, CANConstants.mechanismCanivore);
 
     m_hoodCANCoder = new CANcoder(CANConstants.hoodEncoder, CANConstants.mechanismCanivore);
+
+    CANcoderConfiguration encoderConfiguration = new CANcoderConfiguration();
+    encoderConfiguration.MagnetSensor.MagnetOffset = HoodConstants.MAGNETIC_OFFSET;
+
+    m_hoodCANCoder.getConfigurator().apply(encoderConfiguration);
 
     // Mechanism Configuration
     TalonFXConfiguration talonConfiguration = new TalonFXConfiguration();
