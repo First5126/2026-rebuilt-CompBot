@@ -177,7 +177,7 @@ public class Turret extends SubsystemBase {
   private void incrementDynamicOffset(final double offsetDegrees) {
     m_dynamicOffsetDegrees += offsetDegrees;
   }
-  
+
   private void resetDynamicOffset() {
     m_dynamicOffsetDegrees = 0.0;
   }
@@ -186,14 +186,14 @@ public class Turret extends SubsystemBase {
     return run(
         () -> {
           incrementDynamicOffset(offsetDegrees);
-        });  
-  }  
-    
+        });
+  }
+
   public Command resetDynamicOffsetCommand() {
     return run(
         () -> {
           resetDynamicOffset();
-        });  
+        });
   }
 
   private void setPosition(final Angle position) {
@@ -203,7 +203,7 @@ public class Turret extends SubsystemBase {
     double requestedDegrees = position.in(Degrees) + m_dynamicOffsetDegrees;
     double clampedDegrees = Math.max(minDegrees, Math.min(requestedDegrees, maxDegrees));
     // Construct the measure back in degrees
-    Angle clampedPosition = Degrees.of(clampedDegrees) ;
+    Angle clampedPosition = Degrees.of(clampedDegrees);
 
     m_turretMotor.setControl(m_positionControl.withPosition(clampedPosition));
   }
