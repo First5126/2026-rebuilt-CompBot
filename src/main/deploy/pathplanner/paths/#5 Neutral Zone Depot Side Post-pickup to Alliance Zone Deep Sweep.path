@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.160697674413448,
-        "y": 7.434221824679297
+        "x": 7.718336314847942,
+        "y": 7.829393482066669
       },
       "isLocked": false,
       "linkedName": "Neutral Zone - Depot Side Post-pickup"
     },
     {
       "anchor": {
-        "x": 5.890721830985916,
-        "y": 7.5799647887323935
+        "x": 5.85,
+        "y": 7.5
       },
       "prevControl": {
-        "x": 6.561390845070423,
-        "y": 7.548028169014085
+        "x": 6.520669014084507,
+        "y": 7.468063380281691
       },
       "nextControl": {
-        "x": 5.641004796554807,
-        "y": 7.5918560760862555
+        "x": 5.600282965568891,
+        "y": 7.511891287353862
       },
       "isLocked": false,
       "linkedName": null
@@ -41,13 +41,13 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Under Trench - Depot Side"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 1.0,
-      "rotationDegrees": 180.0
+      "rotationDegrees": 0.0
     }
   ],
   "constraintZones": [],
@@ -63,7 +63,7 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": "Depot Side",
