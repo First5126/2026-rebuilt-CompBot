@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.718336314847942,
-        "y": 4.561954225352113
+        "x": 7.750787119856888,
+        "y": 5.113989266547406
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.718336314847942,
-        "y": 7.829393482066669
+        "x": 7.718336314847944,
+        "y": 7.353466168207815
       },
       "isLocked": false,
       "linkedName": "Neutral Zone - Depot Side Post-pickup"
@@ -41,7 +41,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Alliance Zone - Depot Side Shooting Point"
     }
   ],
   "rotationTargets": [

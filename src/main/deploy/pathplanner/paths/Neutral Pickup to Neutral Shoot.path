@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.831914132379248,
-        "y": 3.0209123434704828
+        "x": 7.7021109123434695,
+        "y": 3.394096601073345
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.831914132379248,
-        "y": 2.3879136619949914
+        "x": 7.653434704830055,
+        "y": 5.990161001788909
       },
       "isLocked": false,
       "linkedName": "Neutral Zone- Pickup"
     },
     {
       "anchor": {
-        "x": 6.160697674418604,
-        "y": 5.7143291592128795
+        "x": 3.548,
+        "y": 7.5
       },
       "prevControl": {
-        "x": 6.6686331158907395,
-        "y": 5.7143291592128795
+        "x": 7.9779427549195,
+        "y": 7.547799642218246
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Neutral Zone- Shoot"
+      "linkedName": "Alliance Zone - Depot Side Shooting Point"
     }
   ],
   "rotationTargets": [],
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": "Depot Side",
