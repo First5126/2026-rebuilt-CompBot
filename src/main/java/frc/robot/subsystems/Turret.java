@@ -48,7 +48,6 @@ public class Turret extends SubsystemBase {
     talonFXSConfiguration.ExternalFeedback.withSyncCANcoder(m_turretEncoder);
     talonFXSConfiguration.ExternalFeedback.RotorToSensorRatio = 10;
     talonFXSConfiguration.ExternalFeedback.SensorToMechanismRatio = 10;
-    
 
     CurrentLimitsConfigs limitsConfigs = new CurrentLimitsConfigs();
     // limitsConfigs.SupplyCurrentLimit = TurretConstants.CURRENT_LIMIT;
@@ -143,9 +142,9 @@ public class Turret extends SubsystemBase {
 
   public Command setZero() {
     return runOnce(
-      () -> {
-        m_turretMotor.setPosition(0);
-      });
+        () -> {
+          m_turretMotor.setPosition(0);
+        });
   }
 
   @Override
