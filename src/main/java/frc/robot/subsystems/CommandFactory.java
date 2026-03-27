@@ -276,4 +276,12 @@ public class CommandFactory {
   public Command zeroTurret() {
     return m_turret.setZero();
   }
+
+  public Command incrementTurretOffset(double offsetDegrees) {
+    return m_turret.adjustPositionDynamically(offsetDegrees);
+  }
+
+  public Command agitateIndexer() {
+    return m_indexer.agitateIndexer();
+  }
 }
