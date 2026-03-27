@@ -59,7 +59,9 @@ public class Indexer extends SubsystemBase {
   }
 
   public Command agitateIndexer() {
-    return startIndexing().andThen(Commands.waitSeconds(1).andThen(reverseIndexing().andThen(Commands.waitSeconds(0.1))));
+    return startIndexing()
+        .andThen(
+            Commands.waitSeconds(1).andThen(reverseIndexing().andThen(Commands.waitSeconds(0.1))));
   }
 
   private void startMotors() {
