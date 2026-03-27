@@ -224,7 +224,7 @@ public class ShootingMechanism extends SubsystemBase {
   public Command startTrackingCommand() {
     // Command trackingCommand =
     // m_turret.rotateToPosition(this::getShootingSolution).alongWith(m_hood.setPosition(this::getShootingSolution));
-    Command trackingCommand = m_turret.rotateToPosition(this::getShootingSolution);
+    Command trackingCommand = m_turret.rotateToPositionAuto(this::getShootingSolution);
     trackingCommand.addRequirements(this);
     return trackingCommand;
   }

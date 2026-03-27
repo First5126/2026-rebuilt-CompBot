@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.864364937388194,
-        "y": 5.649427549194991
+        "x": 7.653434704830055,
+        "y": 5.6981037567084085
       },
       "isLocked": false,
       "linkedName": "Neutral Zone - Depot Side"
@@ -47,7 +47,7 @@
   "reversed": false,
   "folder": "Depot Side",
   "idealStartingState": {
-    "velocity": 1.0,
+    "velocity": 0.5,
     "rotation": -90.0
   },
   "useDefaultConstraints": false

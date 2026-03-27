@@ -5,7 +5,7 @@
 package frc.robot;
 
 import com.ctre.phoenix6.HootAutoReplay;
-/*import dev.doglog.DogLog;
+/*=import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;*/
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -25,9 +25,9 @@ public class Robot extends TimedRobot {
 
   /** Creates the robot and initializes the container. */
   public Robot() {
-    DogLog.setOptions(
+    /*DogLog.setOptions(
         new DogLogOptions().withCaptureDs(true).withCaptureNt(true).withLogExtras(false));
-    DogLog.setPdh(new PowerDistribution());
+    DogLog.setPdh(new PowerDistribution());*/
     m_robotContainer = new RobotContainer();
   }
 

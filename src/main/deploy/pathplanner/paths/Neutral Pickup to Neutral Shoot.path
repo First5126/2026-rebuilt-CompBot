@@ -8,27 +8,48 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.767012522361359,
-        "y": 7.937209302325581
+        "x": 7.663204225352114,
+        "y": 6.637834507042253
       },
       "isLocked": false,
       "linkedName": "Neutral Zone- Pickup"
     },
     {
       "anchor": {
-        "x": 3.548,
-        "y": 7.5
+        "x": 7.26399647887324,
+        "y": 7.212693661971831
       },
       "prevControl": {
-        "x": 7.9779427549195,
-        "y": 7.547799642218246
+        "x": 7.6105194428899035,
+        "y": 7.15493983463572
+      },
+      "nextControl": {
+        "x": 6.880757042253522,
+        "y": 7.276566901408451
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.495475352112677,
+        "y": 7.34044014084507
+      },
+      "prevControl": {
+        "x": 7.9254181070321765,
+        "y": 7.388239783063316
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "Alliance Zone - Depot Side Shooting Point"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.0,
+      "rotationDegrees": 0.5
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
