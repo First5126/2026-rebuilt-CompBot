@@ -35,6 +35,7 @@ public class Turret extends SubsystemBase {
   public Turret() {
     m_turretMotor = new TalonFXS(CANConstants.turretMotor, CANConstants.mechanismCanivore);
     m_turretEncoder = new CANcoder(CANConstants.turretEncoder, CANConstants.mechanismCanivore);
+    m_turretEncoder.getConfigurator().apply(new CANcoderConfiguration());
 
     double absolutePosition = m_turretEncoder.getAbsolutePosition().getValue().in(Rotations);
     double magnetOffsetRot = -absolutePosition; // desiredZero (0) - current
@@ -82,10 +83,9 @@ public class Turret extends SubsystemBase {
     talonFXSConfiguration.Slot0 = slotConfigs;
 
     m_turretMotor.getConfigurator().apply(talonFXSConfiguration);
+    m_turretMotor.setPosition(m_turretEncoder.getPosition().getValue());
     m_positionControl = new PositionVoltage(0);
     m_voltageControl = new VoltageOut(0);
-
-    m_turretMotor.setPosition(0);
   }
 
   /**
