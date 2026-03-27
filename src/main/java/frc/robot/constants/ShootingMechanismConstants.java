@@ -62,10 +62,14 @@ public class ShootingMechanismConstants {
           Map.entry(3.46, 53.0),
           Map.entry(4.11, 58.5),
           Map.entry(2.41, 47.5),
-          Map.entry(4.23, 57.5),
-          Map.entry(5.6, 63.0),
-          Map.entry(5.25, 62.0),
-          Map.entry(4.925, 61.0));
+          Map.entry(4.23, 58.0),
+          Map.entry(5.788, 62.0),
+          Map.entry(5.619, 60.0),
+          Map.entry(5.418, 59.0),
+          Map.entry(5.150, 59.0),
+          Map.entry(5.0, 58.5),
+          Map.entry(4.75, 58.25), // Added an extra point to fill in a dead area
+          Map.entry(4.394, 57.5));
 
   private static final InterpolatingDoubleTreeMap DISTANCE_TO_ANGLE_INTERPOLATOR_HUB =
       InterpolatingDoubleTreeMap.ofEntries(

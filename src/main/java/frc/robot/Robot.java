@@ -26,7 +26,10 @@ public class Robot extends TimedRobot {
 
   /** Creates the robot and initializes the container. */
   public Robot() {
-    DogLog.setOptions(new DogLogOptions().withCaptureDs(true).withCaptureNt(true));
+    DogLog.setOptions(new DogLogOptions()
+      .withCaptureDs(true)
+      .withCaptureNt(true)
+      .withLogExtras(false));
     DogLog.setPdh(new PowerDistribution());
     m_robotContainer = new RobotContainer();
   }
@@ -35,8 +38,8 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     // Read the value from SmartDashboard
-    boolean logEnabled = SmartDashboard.getBoolean("Enable DogLog", false);
-    RobotLogger.setEnabled(logEnabled);
+    //boolean logEnabled = SmartDashboard.getBoolean("Enable DogLog", false);
+    //RobotLogger.setEnabled(logEnabled);
 
     m_timeAndJoystickReplay.update();
     if (RobotLogger.isEnabled()) {
