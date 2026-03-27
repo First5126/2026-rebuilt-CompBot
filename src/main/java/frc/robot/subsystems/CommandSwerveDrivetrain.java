@@ -280,11 +280,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     @Override
     public void periodic() {
-        var pigeon = getPigeon2();
+        /*var pigeon = getPigeon2();
         logger.log("Pigeon Yaw (Degrees)", pigeon.getYaw().getValue().in(Degrees));
         logger.log("Pigeon Yaw (Rotations)", pigeon.getYaw().getValue().in(Rotations));
         logger.log("Pigeon Pitch (Degrees)", pigeon.getPitch().getValue().in(Degrees));
-        logger.log("Pigeon Roll (Degrees)", pigeon.getRoll().getValue().in(Degrees));
+        logger.log("Pigeon Roll (Degrees)", pigeon.getRoll().getValue().in(Degrees));*/
 
         /*
          * Periodically try to apply the operator perspective.
