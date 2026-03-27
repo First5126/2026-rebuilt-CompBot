@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.452754919499106,
-        "y": 0.682
+        "x": 6.4815492957746486,
+        "y": 0.8094014084507046
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.452754919499106,
-        "y": 0.6820000000000004
+        "x": 7.4815492957746486,
+        "y": 0.809401408450705
       },
       "isLocked": false,
       "linkedName": "Neutral Zone - Outpost side Pre-pickup"
@@ -48,7 +48,7 @@
   "folder": "Outpost Side",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -178.83
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

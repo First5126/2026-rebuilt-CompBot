@@ -3,41 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.695140845070423,
-        "y": 3.3616457960644004
+        "x": 7.7994633273703045,
+        "y": 3.0371377459749542
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.221323792486583,
-        "y": 0.5546511627906967
+        "x": 7.6791725352112685,
+        "y": 2.214612676056338
       },
       "isLocked": false,
       "linkedName": "Neutral Zone - Outpost Side Post-Pickup"
     },
     {
       "anchor": {
-        "x": 4.533415492957747,
-        "y": 0.47406690140845054
+        "x": 4.6771302816901414,
+        "y": 0.682
       },
       "prevControl": {
-        "x": 5.2163321150066775,
-        "y": 0.4842077779737458
+        "x": 8.49355633802817,
+        "y": 0.49003521126760574
       },
       "nextControl": {
-        "x": 3.850498870908817,
-        "y": 0.46392602484315515
+        "x": 3.9950007375071843,
+        "y": 0.7163108583539155
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.0,
+        "x": 3.5593485915492966,
         "y": 0.682
       },
       "prevControl": {
-        "x": 3.8787147887323945,
-        "y": 0.4261619718309863
+        "x": 4.454031690140846,
+        "y": 0.617781690140845
       },
       "nextControl": null,
       "isLocked": false,
@@ -47,7 +47,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.6,
-      "rotationDegrees": 180.0
+      "rotationDegrees": 0.0
     }
   ],
   "constraintZones": [],
@@ -61,7 +61,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 2.5,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -70,13 +70,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": "Outpost Side",
   "idealStartingState": {
-    "velocity": 0,
+    "velocity": 0.0,
     "rotation": 90.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

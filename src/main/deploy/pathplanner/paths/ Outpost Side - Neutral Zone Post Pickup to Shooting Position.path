@@ -3,37 +3,42 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.695140845070423,
-        "y": 4.897288732394365
+        "x": 7.734561717352415,
+        "y": 3.4427728085867613
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.588533094812165,
-        "y": 2.0636135957066184
+        "x": 7.627953967094157,
+        "y": 0.6090976718990144
       },
       "isLocked": false,
       "linkedName": "End of neutral pickup"
     },
     {
       "anchor": {
-        "x": 3.3212522361359564,
-        "y": 0.5384257602862248
+        "x": 3.3198239436619725,
+        "y": 0.6656866197183104
       },
       "prevControl": {
-        "x": 8.480930232558139,
-        "y": 0.2625939177101964
+        "x": 8.20612676056338,
+        "y": 0.7295598591549299
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.65,
+      "rotationDegrees": 0.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 2.5,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -42,7 +47,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": "Outpost Side",
@@ -50,5 +55,5 @@
     "velocity": 0,
     "rotation": 90.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

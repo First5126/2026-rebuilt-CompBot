@@ -192,7 +192,7 @@ public class CommandFactory {
     return Commands.defer(
         () -> {
           if (isNormalOperatingState()) {
-            Command turretCommand = m_shootingMechanism.startTrackingCommand();
+            Command turretCommand = m_shootingMechanism.startTrackingCommandAuto();
             turretCommand.addRequirements(m_turret, m_shootingMechanism);
             return turretCommand;
           } else {

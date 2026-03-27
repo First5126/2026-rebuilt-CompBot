@@ -1,6 +1,6 @@
 package frc.robot;
 
-//import dev.doglog.DogLog;
+import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -9,7 +9,7 @@ public class RobotLogger {
   private static boolean enabled = false;
 
   static {
-    //DogLog.setEnabled(enabled);
+    DogLog.setEnabled(enabled);
   }
 
   // Prefix for logs to categorize data easily
@@ -21,7 +21,7 @@ public class RobotLogger {
 
   public static void setEnabled(boolean newEnabled) {
     enabled = newEnabled;
-    //DogLog.setEnabled(newEnabled);
+    DogLog.setEnabled(newEnabled);
   }
 
   public static boolean isEnabled() {
@@ -32,7 +32,7 @@ public class RobotLogger {
     // Log to DogLog with a structured key
     String fullKey = subsystemName + SEPERATOR + key;
     if (enabled) {
-      //DogLog.log(fullKey, value);
+      DogLog.log(fullKey, value);
     }
   }
 
@@ -46,7 +46,7 @@ public class RobotLogger {
     String fullKey = subsystemName + SEPERATOR + key;
 
     if (enabled) {
-      //DogLog.log(fullKey, value);
+      DogLog.log(fullKey, value);
     }
   }
 
@@ -58,7 +58,7 @@ public class RobotLogger {
   public void log(String key, String value) {
     String fullKey = subsystemName + SEPERATOR + key;
     if (enabled) {
-      /*DogLog.log(fullKey, value);*/
+      DogLog.log(fullKey, value);
     }
   }
 
@@ -70,7 +70,7 @@ public class RobotLogger {
   public <T extends Enum<T>> void log(String key, T value) {
     String fullKey = subsystemName + SEPERATOR + key;
     if (enabled) {
-      /*DogLog.log(fullKey, value.name());*/
+      DogLog.log(fullKey, value.name());
     }
   }
 
@@ -81,7 +81,7 @@ public class RobotLogger {
 
   public void log(String key, Pose2d pose) {
     if (enabled) {
-      /*DogLog.log(key, pose);*/
+      DogLog.log(key, pose);
     }
   }
 }

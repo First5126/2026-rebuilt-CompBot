@@ -1,6 +1,6 @@
 package frc.robot.controller;
 
-//import dev.doglog.DogLog;
+import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -35,7 +35,7 @@ public class CustomXboxController extends CommandXboxController {
     }
     XboxController hid = getHID();
 
-    /*DogLog.log(prefix + "/Connected", hid.isConnected());
+    DogLog.log(prefix + "/Connected", hid.isConnected());
     DogLog.log(prefix + "/POV", hid.getPOV());
 
     DogLog.log(prefix + "/Axes/LeftXRaw", hid.getLeftX());
@@ -61,7 +61,7 @@ public class CustomXboxController extends CommandXboxController {
     DogLog.log(prefix + "/Buttons/LeftBumper", hid.getLeftBumperButton());
     DogLog.log(prefix + "/Buttons/RightBumper", hid.getRightBumperButton());
     DogLog.log(prefix + "/Buttons/LeftStick", hid.getLeftStickButton());
-    DogLog.log(prefix + "/Buttons/RightStick", hid.getRightStickButton());*/
+    DogLog.log(prefix + "/Buttons/RightStick", hid.getRightStickButton());
   }
 
   @Override
