@@ -2,14 +2,12 @@ package frc.robot.controller;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.SelectCommand;
 import frc.robot.FMS.ShiftData;
 import frc.robot.FMS.Zones;
 import frc.robot.RobotLogger;
 import frc.robot.constants.ControllerConstants;
 import frc.robot.constants.ControllerConstants.OperatorState;
 import frc.robot.subsystems.CommandFactory;
-import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -116,36 +114,29 @@ public class Operator extends CustomXboxController implements Controller {
   @Override
   public Operator configureBindings() {
 
-    this.a()
-        .whileTrue(commandFactory.setHoodToTrenchPosition());
-        
+    this.a().whileTrue(commandFactory.setHoodToTrenchPosition());
+
     this.b()
         .onTrue(commandFactory.startIndexer())
-        .onFalse(commandFactory
-                    .clearShootingJam()
-                    .andThen(Commands.waitSeconds(0.25))
-                    .andThen(commandFactory.stopIndexer()));
+        .onFalse(
+            commandFactory
+                .clearShootingJam()
+                .andThen(Commands.waitSeconds(0.25))
+                .andThen(commandFactory.stopIndexer()));
 
     this.x()
         .onTrue(commandFactory.clearShootingJam())
         .onFalse(commandFactory.stopFlywheelAndIndexer());
 
-    this.y()
-        .whileTrue(commandFactory.rotateTurretToZero());
+    this.y().whileTrue(commandFactory.rotateTurretToZero());
 
-    this.leftBumper()
-        .whileTrue(commandFactory.agitateIntake());
+    this.leftBumper().whileTrue(commandFactory.agitateIntake());
 
-    this.rightBumper()
-        .onTrue(commandFactory.lowerIntake());
+    this.rightBumper().onTrue(commandFactory.lowerIntake());
 
-    this.rightTrigger()
-        .onTrue(commandFactory.startIntake())
-        .onFalse(commandFactory.stopIntake());
+    this.rightTrigger().onTrue(commandFactory.startIntake()).onFalse(commandFactory.stopIntake());
 
-    this.leftTrigger()
-        .onTrue(commandFactory.reverseIntake())
-        .onFalse(commandFactory.stopIntake());
+    this.leftTrigger().onTrue(commandFactory.reverseIntake()).onFalse(commandFactory.stopIntake());
 
     this.start().onTrue(Commands.runOnce(() -> ShiftData.resetMatchTimeCalibration()));
 
