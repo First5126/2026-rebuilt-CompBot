@@ -130,7 +130,7 @@ public class Operator extends CustomXboxController implements Controller {
 
     this.y().whileTrue(commandFactory.rotateTurretToZero());
 
-    this.leftBumper().whileTrue(commandFactory.agitateIntake());
+    this.leftBumper().whileTrue(commandFactory.agitateIntake().alongWith(commandFactory.startIntake()));
 
     this.rightBumper().onTrue(commandFactory.lowerIntake());
 
