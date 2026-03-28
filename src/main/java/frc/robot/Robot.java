@@ -7,17 +7,24 @@ package frc.robot;
 import com.ctre.phoenix6.HootAutoReplay;
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.FMS.ShiftData;
 import frc.robot.controller.Driver;
 import frc.robot.controller.Operator;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
+  
 
   private final RobotContainer m_robotContainer;
+
+  private Operator operator;
+
 
   /* log and replay timestamp and joystick data */
   private final HootAutoReplay m_timeAndJoystickReplay =
@@ -39,12 +46,17 @@ public class Robot extends TimedRobot {
     // RobotLogger.setEnabled(logEnabled);
 
     m_timeAndJoystickReplay.update();
+
+    operator.rumbleCommand();
+    
     if (RobotLogger.isEnabled()) {
       Driver.getInstance().logDogLog("Controllers/Driver");
       Operator.getInstance().logDogLog("Controllers/Operator");
     }
     CommandScheduler.getInstance().run();
   }
+
+
 
   /** Called once when the robot transitions to disabled. */
   @Override

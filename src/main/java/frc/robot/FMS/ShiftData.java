@@ -10,6 +10,7 @@ public class ShiftData {
   private static DriverStation.Alliance m_firstActiveAlliance;
   private static DriverStation.Alliance m_ourAlliance;
   private static double m_matchTimeOffsetSeconds = 0.0;
+  private static boolean m_hasRumbledThisShift = false;
 
   /**
    * Enumeration to keep track of the shifts including the time in each shift. Shift duration is the
@@ -141,6 +142,23 @@ public class ShiftData {
         return false;
     }
   }
+
+
+  public static boolean Rumble() {
+    double timeRemaining = getTimeRemainingInShift();
+
+  // Trigger once when crossing 5 seconds
+  if (timeRemaining <= 5.0 && !m_hasRumbledThisShift) {
+    m_hasRumbledThisShift = true;
+  }
+
+  // Reset when we're safely above 5 seconds (new shift)
+  if (timeRemaining > 5.0) {
+    m_hasRumbledThisShift = false;
+  }
+
+  return m_hasRumbledThisShift;
+}
 
   /**
    * Calculates the time remaining in the current shift.

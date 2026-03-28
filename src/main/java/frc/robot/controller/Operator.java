@@ -1,5 +1,6 @@
 package frc.robot.controller;
 
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.FMS.ShiftData;
@@ -33,6 +34,8 @@ public class Operator extends CustomXboxController implements Controller {
    */
   @Getter @Setter public OperatorState operatorState;
 
+  @Getter @Setter public ShiftData shiftData;
+
   /**
    * Factory for creating commands bound to this controller.
    *
@@ -42,6 +45,7 @@ public class Operator extends CustomXboxController implements Controller {
 
   /** The current FMS zone. Present for potential FMS-dependent command selection. */
   @Getter @Setter private Zones zone;
+
 
   /**
    * Private constructor to enforce singleton usage.
@@ -144,6 +148,8 @@ public class Operator extends CustomXboxController implements Controller {
     this.povLeft().onTrue(commandFactory.incrementTurretOffset(1));
     this.povRight().onTrue(commandFactory.incrementTurretOffset(-1));
 
+    this.rumbleCommand();
+
     return this;
   }
 
@@ -168,4 +174,18 @@ public class Operator extends CustomXboxController implements Controller {
           }
         });
   }
+
+  public Command rumbleCommand() {
+    return Commands.run(
+      () -> {
+        if (ShiftData.Rumble()) {
+          setRumble(GenericHID.RumbleType.kBothRumble, 1.0);
+
+        } else {
+          setRumble(GenericHID.RumbleType.kBothRumble, 0.0);
+      }
+    });
+  }
+
+  
 }
