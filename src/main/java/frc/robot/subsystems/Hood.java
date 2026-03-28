@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.Volt;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.DigitalInputsConfigs;
@@ -28,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.RobotLogger;
 import frc.robot.constants.CANConstants;
 import frc.robot.constants.HoodConstants;
 import frc.robot.subsystems.ShootingMechanism.ShootingSolution;
@@ -44,6 +46,7 @@ public class Hood extends SubsystemBase {
 
   private PositionVoltage m_positionVoltageRequest;
   private VoltageOut m_voltageOut = new VoltageOut(0);
+  private static final RobotLogger logger = new RobotLogger("Hood");
 
   private Angle clampPosition(final Angle position) {
     double minDegrees = HoodConstants.MIN_ANGLE.in(Degrees);
@@ -132,7 +135,15 @@ public class Hood extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {}
+  public void periodic() {
+    double currentAngle = m_hoodMotor.getPosition().getValueAsDouble() * 360.0;
+    logger.logAndDisplay("Hood Angle (deg)", currentAngle);
+  }
+
+  public Command lowerHoodUntilZero() {
+    return setVoltage(HoodConstants.VOLTAGE_AUTO_ZERO)
+        .andThen(Commands.waitUntil(m_zeroTrigger).andThen(setVoltage(Volt.of(0))));
+  }
 
   public Command manualRotation(Angle amountOfRotation) {
     return runOnce(

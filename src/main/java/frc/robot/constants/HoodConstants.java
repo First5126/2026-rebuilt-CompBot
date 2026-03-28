@@ -1,8 +1,10 @@
 package frc.robot.constants;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Volts;
 
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Voltage;
 
 public class HoodConstants {
   public static double kP = 135.0;
@@ -19,6 +21,7 @@ public class HoodConstants {
   public static final Angle MAX_ANGLE = Degrees.of(6);
 
   public static final double MAX_VOLTAGE_MANUAL = 1;
+  public static final Voltage VOLTAGE_AUTO_ZERO = Volts.of(-0.5);
 
   public static final double MAGNETIC_OFFSET = 0.217529296875;
 
