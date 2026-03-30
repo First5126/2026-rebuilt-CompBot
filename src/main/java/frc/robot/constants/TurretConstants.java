@@ -11,12 +11,12 @@ public class TurretConstants {
   public static final Angle MIN_ANGLE = Units.Degrees.of(-162);
   public static final Angle MAX_ANGLE = Units.Degrees.of(162);
 
-  public static final double kP = 90.0/GEAR_RATIO;
-  public static final double kI = 0.0/GEAR_RATIO;
-  public static final double kD = 0.0/GEAR_RATIO;
+  public static final double kP = 90.0 / GEAR_RATIO;
+  public static final double kI = 0.0 / GEAR_RATIO;
+  public static final double kD = 0.0 / GEAR_RATIO;
   public static final double kS = 0.32;
   public static final double kV = 0.106;
-  public static final double kA = 0.0/GEAR_RATIO;
+  public static final double kA = 0.0 / GEAR_RATIO;
 
   public static final double CURRENT_LIMIT = 30;
   public static final double STATOR_LIMIT = 30;
