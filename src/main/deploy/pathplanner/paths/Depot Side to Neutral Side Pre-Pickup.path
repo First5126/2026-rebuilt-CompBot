@@ -3,32 +3,37 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.647235915492958,
-        "y": 6.605897887323944
+        "x": 3.5,
+        "y": 7.337
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.647235915492958,
-        "y": 5.698082593021595
+        "x": 5.236292871077843,
+        "y": 7.337
       },
       "isLocked": false,
-      "linkedName": "Neutral Zone - Depot Side"
+      "linkedName": "Under Trench - Depot Side Update "
     },
     {
       "anchor": {
-        "x": 7.647235915492958,
-        "y": 5.5839260563380275
+        "x": 7.0,
+        "y": 7.337
       },
       "prevControl": {
-        "x": 7.647235915492958,
-        "y": 6.5839260563380275
+        "x": 5.5565577643825,
+        "y": 7.337
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Under Trench - Depot Side Updated"
+      "linkedName": "Neutral Zone Pre-pickup"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.4,
+      "rotationDegrees": 0.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -42,13 +47,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": "Depot Side",
+  "folder": null,
   "idealStartingState": {
-    "velocity": 0.5,
-    "rotation": -90.0
+    "velocity": 0,
+    "rotation": 0.0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

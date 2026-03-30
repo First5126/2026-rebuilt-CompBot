@@ -11,6 +11,7 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.ForwardLimitSourceValue;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -40,6 +41,7 @@ public class IntakeDeployer extends SubsystemBase {
     Slot0Configs m_intakeDeployerSlot0Configs = new Slot0Configs();
     m_intakeDeployerSlot0Configs.kP = IntakeDeployerConstants.INTAKE_KP;
     m_intakeDeployerSlot0Configs.kG = IntakeDeployerConstants.INTAKE_KG;
+    m_intakeDeployerSlot0Configs.GravityType = GravityTypeValue.Arm_Cosine;
 
     m_intakeDeployerConfiguration.Slot0 = m_intakeDeployerSlot0Configs;
     m_intakeDeployerConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
