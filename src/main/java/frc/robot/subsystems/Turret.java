@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Rotations;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
@@ -34,11 +35,15 @@ public class Turret extends SubsystemBase {
   public Turret() {
     m_turretMotor = new TalonFXS(CANConstants.turretMotor, CANConstants.mechanismCanivore);
     m_turretEncoder = new CANcoder(CANConstants.turretEncoder, CANConstants.mechanismCanivore);
+    m_turretEncoder.getConfigurator().apply(new CANcoderConfiguration());
+
+    double absolutePosition = m_turretEncoder.getAbsolutePosition().getValue().in(Rotations);
+    double magnetOffsetRot = -absolutePosition; // desiredZero (0) - current
 
     CANcoderConfiguration canCoderConfiguration = new CANcoderConfiguration();
     canCoderConfiguration.MagnetSensor.withSensorDirection(
         SensorDirectionValue.CounterClockwise_Positive);
-    canCoderConfiguration.MagnetSensor.withMagnetOffset(TurretConstants.ENCODER_OFFSET);
+    canCoderConfiguration.MagnetSensor.withMagnetOffset(magnetOffsetRot);
 
     m_turretEncoder.getConfigurator().apply(canCoderConfiguration);
 
@@ -46,7 +51,7 @@ public class Turret extends SubsystemBase {
     talonFXSConfiguration.Commutation.MotorArrangement = MotorArrangementValue.NEO550_JST;
     talonFXSConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     talonFXSConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-    talonFXSConfiguration.ExternalFeedback.withRemoteCANcoder(m_turretEncoder);
+    talonFXSConfiguration.ExternalFeedback.withSyncCANcoder(m_turretEncoder);
     talonFXSConfiguration.ExternalFeedback.RotorToSensorRatio = 10;
     talonFXSConfiguration.ExternalFeedback.SensorToMechanismRatio = 10;
 
@@ -78,10 +83,9 @@ public class Turret extends SubsystemBase {
     talonFXSConfiguration.Slot0 = slotConfigs;
 
     m_turretMotor.getConfigurator().apply(talonFXSConfiguration);
+    m_turretMotor.setPosition(m_turretEncoder.getPosition().getValue());
     m_positionControl = new PositionVoltage(0);
     m_voltageControl = new VoltageOut(0);
-
-    m_turretEncoder.setPosition(0);
   }
 
   /**
@@ -206,5 +210,14 @@ public class Turret extends SubsystemBase {
     Angle clampedPosition = Degrees.of(clampedDegrees);
 
     m_turretMotor.setControl(m_positionControl.withPosition(clampedPosition));
+  }
+
+  public void resetEncoder() {
+    // Recompute the magnet offset so the CANcoder reads logical zero (0 rotations)
+    CANcoderConfiguration canCoderConfiguration = new CANcoderConfiguration();
+    double absRot = m_turretEncoder.getAbsolutePosition().getValue().in(Rotations);
+    double magnetOffsetRot = -absRot;
+    canCoderConfiguration.MagnetSensor.withMagnetOffset(magnetOffsetRot);
+    m_turretEncoder.getConfigurator().apply(canCoderConfiguration);
   }
 }
