@@ -51,7 +51,7 @@ public class Turret extends SubsystemBase {
     talonFXSConfiguration.Commutation.MotorArrangement = MotorArrangementValue.NEO550_JST;
     talonFXSConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     talonFXSConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-    talonFXSConfiguration.ExternalFeedback.withRemoteCANcoder(m_turretEncoder);
+    talonFXSConfiguration.ExternalFeedback.withSyncCANcoder(m_turretEncoder);
     talonFXSConfiguration.ExternalFeedback.RotorToSensorRatio = 10;
     talonFXSConfiguration.ExternalFeedback.SensorToMechanismRatio = 10;
 
