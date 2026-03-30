@@ -128,6 +128,9 @@ public class Hood extends SubsystemBase {
                   m_hoodCANCoder.setPosition(Rotations.of(0.0));
                 })
             .ignoringDisable(true));
+
+
+    m_hoodCANCoder.setPosition(0);
   }
 
   private boolean getLowerLimitValue() {

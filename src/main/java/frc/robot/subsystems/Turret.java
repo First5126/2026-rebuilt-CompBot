@@ -81,6 +81,7 @@ public class Turret extends SubsystemBase {
     m_positionControl = new PositionVoltage(0);
     m_voltageControl = new VoltageOut(0);
 
+    m_turretEncoder.setPosition(0);
     m_turretMotor.setPosition(0);
   }
 
