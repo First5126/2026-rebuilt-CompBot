@@ -27,13 +27,14 @@ import java.util.function.Supplier;
 public class Turret extends SubsystemBase {
   private static final RobotLogger logger = new RobotLogger("Turret");
   private final TalonFXS m_turretMotor;
-  private final CANcoder m_turretEncoder;
+  //private final CANcoder m_turretEncoder;
   private final PositionVoltage m_positionControl;
   private final VoltageOut m_voltageControl;
   private double m_dynamicOffsetDegrees = 0.0;
 
   public Turret() {
     m_turretMotor = new TalonFXS(CANConstants.turretMotor, CANConstants.mechanismCanivore);
+    /*
     m_turretEncoder = new CANcoder(CANConstants.turretEncoder, CANConstants.mechanismCanivore);
     m_turretEncoder.getConfigurator().apply(new CANcoderConfiguration());
 
@@ -46,14 +47,17 @@ public class Turret extends SubsystemBase {
     canCoderConfiguration.MagnetSensor.withMagnetOffset(magnetOffsetRot);
 
     m_turretEncoder.getConfigurator().apply(canCoderConfiguration);
+    */
 
     TalonFXSConfiguration talonFXSConfiguration = new TalonFXSConfiguration();
     talonFXSConfiguration.Commutation.MotorArrangement = MotorArrangementValue.NEO550_JST;
     talonFXSConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     talonFXSConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    /* 
     talonFXSConfiguration.ExternalFeedback.withSyncCANcoder(m_turretEncoder);
     talonFXSConfiguration.ExternalFeedback.RotorToSensorRatio = 10;
     talonFXSConfiguration.ExternalFeedback.SensorToMechanismRatio = 10;
+    */
 
     CurrentLimitsConfigs limitsConfigs = new CurrentLimitsConfigs();
     // limitsConfigs.SupplyCurrentLimit = TurretConstants.CURRENT_LIMIT;
@@ -64,10 +68,10 @@ public class Turret extends SubsystemBase {
     talonFXSConfiguration.CurrentLimits = limitsConfigs;
 
     talonFXSConfiguration.SoftwareLimitSwitch.withForwardSoftLimitThreshold(
-        TurretConstants.MAX_ANGLE);
+        TurretConstants.MAX_ANGLE.times(TurretConstants.GEAR_RATIO));
     talonFXSConfiguration.SoftwareLimitSwitch.withForwardSoftLimitEnable(true);
     talonFXSConfiguration.SoftwareLimitSwitch.withReverseSoftLimitThreshold(
-        TurretConstants.MIN_ANGLE);
+        TurretConstants.MIN_ANGLE.times(TurretConstants.GEAR_RATIO));
     talonFXSConfiguration.SoftwareLimitSwitch.withReverseSoftLimitEnable(true);
 
     talonFXSConfiguration.ExternalFeedback.FeedbackRemoteSensorID = CANConstants.turretEncoder;
@@ -83,9 +87,10 @@ public class Turret extends SubsystemBase {
     talonFXSConfiguration.Slot0 = slotConfigs;
 
     m_turretMotor.getConfigurator().apply(talonFXSConfiguration);
-    m_turretMotor.setPosition(m_turretEncoder.getPosition().getValue());
+    //m_turretMotor.setPosition(m_turretEncoder.getPosition().getValue());
     m_positionControl = new PositionVoltage(0);
     m_voltageControl = new VoltageOut(0);
+    m_turretMotor.setPosition(0);
   }
 
   /**
@@ -155,7 +160,7 @@ public class Turret extends SubsystemBase {
   @Override
   public void periodic() {
     double currentAngle = m_turretMotor.getPosition().getValueAsDouble() * 360.0;
-    logger.logAndDisplay("Turret Angle (deg)", currentAngle);
+    logger.logAndDisplay("Turret Angle (deg)", currentAngle/TurretConstants.GEAR_RATIO);
   }
 
   public double findTimeFromFuelShootingDistance(double distance) {
@@ -200,10 +205,11 @@ public class Turret extends SubsystemBase {
         });
   }
 
-  private void setPosition(final Angle position) {
+  private void setPosition(Angle position) {
+    position = position.times(TurretConstants.GEAR_RATIO);
     // Convert all angles to degrees for clamping
-    double minDegrees = TurretConstants.MIN_ANGLE.in(Degrees);
-    double maxDegrees = TurretConstants.MAX_ANGLE.in(Degrees);
+    double minDegrees = TurretConstants.MIN_ANGLE.in(Degrees) * TurretConstants.GEAR_RATIO;
+    double maxDegrees = TurretConstants.MAX_ANGLE.in(Degrees) * TurretConstants.GEAR_RATIO;
     double requestedDegrees = position.in(Degrees) + m_dynamicOffsetDegrees;
     double clampedDegrees = Math.max(minDegrees, Math.min(requestedDegrees, maxDegrees));
     // Construct the measure back in degrees
@@ -211,7 +217,7 @@ public class Turret extends SubsystemBase {
 
     m_turretMotor.setControl(m_positionControl.withPosition(clampedPosition));
   }
-
+  /*
   public void resetEncoder() {
     // Recompute the magnet offset so the CANcoder reads logical zero (0 rotations)
     CANcoderConfiguration canCoderConfiguration = new CANcoderConfiguration();
@@ -220,4 +226,5 @@ public class Turret extends SubsystemBase {
     canCoderConfiguration.MagnetSensor.withMagnetOffset(magnetOffsetRot);
     m_turretEncoder.getConfigurator().apply(canCoderConfiguration);
   }
+    */
 }
