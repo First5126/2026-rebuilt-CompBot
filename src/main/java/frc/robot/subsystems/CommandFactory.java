@@ -130,6 +130,10 @@ public class CommandFactory {
     return m_flyWheel.stopSpinning();
   }
 
+  public Command stopFlywheelWhileTrue() {
+    return m_flyWheel.stopSpinningWhileTrue();
+  }
+
   public Command duckHood() {
     return m_hood.holdCertainPosition(Degrees.of(0));
   }

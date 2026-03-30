@@ -71,6 +71,10 @@ public class FlyWheel extends SubsystemBase {
     return runOnce(() -> stopMotors());
   }
 
+  public Command stopSpinningWhileTrue() {
+    return run(() -> stopMotors());
+  }
+
   public Command reverseSpinning() {
     return runOnce(() -> reverseWheels());
   }
