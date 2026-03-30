@@ -140,7 +140,7 @@ public class Operator extends CustomXboxController implements Controller {
 
     this.start().onTrue(Commands.runOnce(() -> ShiftData.resetMatchTimeCalibration()));
 
-    this.back().onTrue(changeOperatorStateCommand());
+    this.back().onTrue(commandFactory.zeroHood());
     this.povLeft().onTrue(commandFactory.incrementTurretOffset(1));
     this.povRight().onTrue(commandFactory.incrementTurretOffset(-1));
 
