@@ -99,8 +99,7 @@ public class ShootingMechanismConstants {
           Map.entry(7.3, 1.45),
           Map.entry(8.5, 1.52),
           // Fudged from here
-          Map.entry(16.0, 2.0)
-          );
+          Map.entry(16.0, 2.0));
 
   private static final InterpolatingDoubleTreeMap DISTANCE_TO_SPEED_INTERPOLATOR_FLOOR =
       InterpolatingDoubleTreeMap.ofEntries(

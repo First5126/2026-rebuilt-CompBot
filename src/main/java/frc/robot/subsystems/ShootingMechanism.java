@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.FMS.ShiftData;
 import frc.robot.FMS.Zones;
 import frc.robot.RobotLogger;
 import frc.robot.constants.AprilTagLocalizationConstants;
@@ -200,24 +199,24 @@ public class ShootingMechanism extends SubsystemBase {
     }
     boolean check = false;
     /*boolean check =
-        m_turret
-                .getPosition()
-                .isNear(
-                    m_currentShootingSolution.getPredictedTurretAngle(),
-                    ShootingMechanismConstants.turretMaximumError)
-            && m_hood
-                .getPosition()
-                .isNear(
-                    m_currentShootingSolution.getPredictedHoodAngle(),
-                    ShootingMechanismConstants.hoodMaximumError)
-            && m_flyWheel
-                .getCurrentSpeed()
-                .isNear(
-                    m_currentShootingSolution.getPredictedFlyWheelVelocity(),
-                    ShootingMechanismConstants.flyWheelMaximumError)
-            && (!m_zone.isInDeadZone() || goalPose.requiresShift)
-            && (!goalPose.requiresShift || ShiftData.canScore());
-*/
+            m_turret
+                    .getPosition()
+                    .isNear(
+                        m_currentShootingSolution.getPredictedTurretAngle(),
+                        ShootingMechanismConstants.turretMaximumError)
+                && m_hood
+                    .getPosition()
+                    .isNear(
+                        m_currentShootingSolution.getPredictedHoodAngle(),
+                        ShootingMechanismConstants.hoodMaximumError)
+                && m_flyWheel
+                    .getCurrentSpeed()
+                    .isNear(
+                        m_currentShootingSolution.getPredictedFlyWheelVelocity(),
+                        ShootingMechanismConstants.flyWheelMaximumError)
+                && (!m_zone.isInDeadZone() || goalPose.requiresShift)
+                && (!goalPose.requiresShift || ShiftData.canScore());
+    */
     return check;
   }
 
@@ -233,7 +232,7 @@ public class ShootingMechanism extends SubsystemBase {
     // Command trackingCommand =
     // m_turret.rotateToPosition(this::getShootingSolution).alongWith(m_hood.setPosition(this::getShootingSolution));
     Command trackingCommand = m_turret.rotateToPositionAutoCont(this::getShootingSolution);
-    //Command flywheelCommand = m_flyWheel.setSpeedWithSolution(this::getShootingSolution);
+    // Command flywheelCommand = m_flyWheel.setSpeedWithSolution(this::getShootingSolution);
     trackingCommand.addRequirements(this);
     return trackingCommand;
   }

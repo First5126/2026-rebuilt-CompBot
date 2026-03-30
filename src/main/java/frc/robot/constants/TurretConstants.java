@@ -21,7 +21,7 @@ public class TurretConstants {
   public static final double CURRENT_LIMIT = 30;
   public static final double STATOR_LIMIT = 30;
   public static final double MAX_VOLTAGE_MANUAL = 1;
- 
+
   public static final Angle ENCODER_OFFSET = Units.Rotations.of(0.4697265);
 
   // Meters per second at 12 volts. This is used for feedforward calculations, and should be

@@ -2,7 +2,6 @@ package frc.robot.controller;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.FMS.ShiftData;
 import frc.robot.FMS.Zones;
 import frc.robot.RobotLogger;
 import frc.robot.constants.ControllerConstants;
@@ -130,7 +129,8 @@ public class Operator extends CustomXboxController implements Controller {
 
     this.y().whileTrue(commandFactory.rotateTurretToZero());
 
-    this.leftBumper().whileTrue(commandFactory.agitateIntake().alongWith(commandFactory.startIntake()));
+    this.leftBumper()
+        .whileTrue(commandFactory.agitateIntake().alongWith(commandFactory.startIntake()));
 
     this.rightBumper().onTrue(commandFactory.lowerIntake());
 
