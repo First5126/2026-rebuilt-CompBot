@@ -11,7 +11,7 @@ public class ShiftData {
   private static DriverStation.Alliance m_ourAlliance;
   private static double m_matchTimeOffsetSeconds = 0.0;
 
-  /*public enum GameShift {
+  public enum GameShift {
   Auto(20, 20),
   TransitionShift(10, 140),
   ShiftOne(25, 130),
@@ -38,7 +38,7 @@ public class ShiftData {
    *
    * @return int an integer value representing the start time of the stage.
    */
-  /*public int getStartTime() {
+  public int getStartTime() {
     return startTime;
   }
 
@@ -47,7 +47,7 @@ public class ShiftData {
    *
    * @return in an integer value representing the end time of the stage.
    */
-  /*public int getEndTime() {
+  public int getEndTime() {
       return startTime - shiftDuration;
     }
   }
@@ -57,7 +57,7 @@ public class ShiftData {
    *
    * @return GameShift shift related to the current gameplay
    */
-  /*public static GameShift getShift() {
+  public static GameShift getShift() {
     // If we are in autonomous, we don't have to check what the remaining time is.
     boolean auto = DriverStation.isAutonomous();
     if (auto) return GameShift.Auto;
@@ -85,7 +85,7 @@ public class ShiftData {
    *
    * @return boolean representing if our alliance has the first enabled hub.
    */
-  /*public static boolean getFirstActiveAlliance() {
+  public static boolean getFirstActiveAlliance() {
     if (m_ourAlliance == null) {
       m_ourAlliance = DriverStation.getAlliance().orElse(null);
     }
@@ -136,7 +136,7 @@ public class ShiftData {
    *
    * @return double representing the seconds remaining in the shift.
    */
-  /*public static double getTimeRemainingInShift() {
+  public static double getTimeRemainingInShift() {
     GameShift currentShift = getShift();
     double currentTime = getAdjustedMatchTime();
 
@@ -150,7 +150,7 @@ public class ShiftData {
    *
    * @return double representing the percentage remaining in the shift. ex: 0.0 to 1.0
    */
-  /*public static double getRemainingShiftPercentage() {
+  public static double getRemainingShiftPercentage() {
     GameShift currentShift = getShift();
     double percentage = ShiftData.getTimeRemainingInShift() / currentShift.shiftDuration;
     return Math.max(0.0, Math.min(1.0, percentage));
@@ -165,7 +165,7 @@ public class ShiftData {
    *
    * @return the shift that was used as the calibration anchor.
    */
-  /*public static GameShift zeroMatchTimeToClosestShift() {
+  public static GameShift zeroMatchTimeToClosestShift() {
     double rawMatchTime = sanitizeMatchTime(DriverStation.getMatchTime());
     GameShift closestShift = getClosestShiftByStartTime(rawMatchTime);
     m_matchTimeOffsetSeconds = closestShift.getStartTime() - rawMatchTime;
@@ -173,7 +173,7 @@ public class ShiftData {
   }
 
   /** Clears match-time calibration and returns to raw DriverStation timing. */
-  /*public static void resetMatchTimeCalibration() {
+  public static void resetMatchTimeCalibration() {
     m_matchTimeOffsetSeconds = 0.0;
   }
 
@@ -182,7 +182,7 @@ public class ShiftData {
    *
    * @return offset in seconds added to DriverStation match time.
    */
-  /*public static double getMatchTimeCalibrationOffsetSeconds() {
+  public static double getMatchTimeCalibrationOffsetSeconds() {
     return m_matchTimeOffsetSeconds;
   }
 
@@ -191,7 +191,7 @@ public class ShiftData {
    *
    * @return alliance with the first enabled hub, or null when unavailable/invalid.
    */
-  /*private static DriverStation.Alliance getFirstActiveAllianceFromFmsData() {
+  private static DriverStation.Alliance getFirstActiveAllianceFromFmsData() {
       // Gets the alliance which has the second shift.
       String gameData = DriverStation.getGameSpecificMessage();
       if (gameData.length() < 1) return null;
@@ -209,7 +209,7 @@ public class ShiftData {
       }
     }
 
-    /*private static double sanitizeMatchTime(double matchTimeSeconds) {
+    private static double sanitizeMatchTime(double matchTimeSeconds) {
       if (!Double.isFinite(matchTimeSeconds)) return GameShift.TransitionShift.getStartTime();
       return Math.max(0.0, matchTimeSeconds);
     }
@@ -218,7 +218,7 @@ public class ShiftData {
       return sanitizeMatchTime(DriverStation.getMatchTime() + m_matchTimeOffsetSeconds);
     }
 
-    /*private static GameShift getClosestShiftByStartTime(double matchTimeSeconds) {
+    private static GameShift getClosestShiftByStartTime(double matchTimeSeconds) {
       GameShift closestShift = GameShift.TransitionShift;
       double closestDifference = Double.POSITIVE_INFINITY;
 
@@ -243,5 +243,5 @@ public class ShiftData {
     static void resetMatchTimeCalibrationForTesting() {
       m_matchTimeOffsetSeconds = 0.0;
     }
-  }*/
-}
+  }
+
