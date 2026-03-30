@@ -83,12 +83,12 @@ public class CommandFactory {
         .repeatedly();
   }
 
-  public Command resetFMSTime() {
+  /*public Command resetFMSTime() {
     return Commands.runOnce(
         () -> {
           ShiftData.resetMatchTimeCalibration();
         });
-  }
+  }*/
 
   // Clear a potential jam by running the flywheel inward while reversing the indexer
   public Command clearShootingJam() {

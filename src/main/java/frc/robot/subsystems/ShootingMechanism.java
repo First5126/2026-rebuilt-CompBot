@@ -198,8 +198,8 @@ public class ShootingMechanism extends SubsystemBase {
     if (goalPose == null) {
       return false;
     }
-
-    boolean check =
+    boolean check = false;
+    /*boolean check =
         m_turret
                 .getPosition()
                 .isNear(
@@ -217,7 +217,7 @@ public class ShootingMechanism extends SubsystemBase {
                     ShootingMechanismConstants.flyWheelMaximumError)
             && (!m_zone.isInDeadZone() || goalPose.requiresShift)
             && (!goalPose.requiresShift || ShiftData.canScore());
-
+*/
     return check;
   }
 

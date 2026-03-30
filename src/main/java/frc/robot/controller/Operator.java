@@ -138,7 +138,7 @@ public class Operator extends CustomXboxController implements Controller {
 
     this.leftTrigger().onTrue(commandFactory.reverseIntake()).onFalse(commandFactory.stopIntake());
 
-    this.start().onTrue(Commands.runOnce(() -> ShiftData.resetMatchTimeCalibration()));
+    /*this.start().onTrue(Commands.runOnce(() -> ShiftData.resetMatchTimeCalibration()));*/
 
     this.back().onTrue(commandFactory.zeroHood());
     this.povLeft().onTrue(commandFactory.incrementTurretOffset(1));

@@ -58,7 +58,7 @@ public class LEDLights extends SubsystemBase {
     return run(() -> m_candle.setControl(m_solidColorControl.withColor(RED)));
   }
 
-  public Command ledByMotion(
+  /*public Command ledByMotion(
       DoubleSupplier rightTrigger,
       DoubleSupplier leftTrigger,
       DoubleSupplier rotationX,
@@ -85,7 +85,7 @@ public class LEDLights extends SubsystemBase {
             setRed();
           }
         });
-  }
+  }*/
 
   private void applyColor(RGBWColor color) {
     m_candle.setControl(m_solidColorControl.withColor(color));

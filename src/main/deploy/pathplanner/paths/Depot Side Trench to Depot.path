@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.511443661971832,
-        "y": 7.468186619718311
+        "x": 3.499731663685152,
+        "y": 7.337
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.511443661971831,
-        "y": 7.468186619718311
+        "x": 2.499731663685151,
+        "y": 7.337
       },
       "isLocked": false,
-      "linkedName": "Under Trench - Depot Side"
+      "linkedName": "Under Trench - Depot Side Update "
     },
     {
       "anchor": {

@@ -57,7 +57,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 5.0
+                        "waitTime": 3.0
                       }
                     },
                     {
@@ -99,7 +99,13 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": " Outpost Side - Neutral Zone Post Pickup to Shooting Position"
+                        "pathName": "Neutral to Outpost Side Move"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Outpost Side Move to Outpost Side Shoot"
                       }
                     },
                     {

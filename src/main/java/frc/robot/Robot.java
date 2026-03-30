@@ -36,7 +36,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     // Read the value from SmartDashboard
-    boolean logEnabled = SmartDashboard.getBoolean("Enable DogLog", true);
+    boolean logEnabled = SmartDashboard.getBoolean("Enable DogLog", false);
     RobotLogger.setEnabled(logEnabled);
 
     m_timeAndJoystickReplay.update();

@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.653431014469426,
-        "y": 5.698103731516619
+        "x": 7.647235915492958,
+        "y": 5.698082593021595
       },
       "isLocked": false,
       "linkedName": "Neutral Zone - Depot Side"
@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.0,
+    "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,

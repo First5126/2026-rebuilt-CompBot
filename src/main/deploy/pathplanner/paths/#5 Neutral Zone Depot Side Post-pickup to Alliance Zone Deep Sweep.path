@@ -8,36 +8,36 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.55608228980322,
-        "y": 6.622951699463328
+        "x": 7.647235915492958,
+        "y": 6.625732246828207
       },
       "isLocked": false,
       "linkedName": "Under Trench - Depot Side Updated"
     },
     {
       "anchor": {
-        "x": 6.9446302816901415,
-        "y": 7.356408450704225
+        "x": 6.874615384615384,
+        "y": 7.336869409660108
       },
       "prevControl": {
-        "x": 8.030475352112678,
-        "y": 7.34044014084507
+        "x": 7.9604604550379205,
+        "y": 7.3209010998009525
       },
       "nextControl": {
-        "x": 6.694657310178246,
-        "y": 7.360084523814694
+        "x": 6.624642413103489,
+        "y": 7.340545482770577
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.511443661971832,
-        "y": 7.468186619718311
+        "x": 3.499731663685152,
+        "y": 7.337
       },
       "prevControl": {
-        "x": 4.9717298873743365,
-        "y": 7.435735814709366
+        "x": 4.960378409084608,
+        "y": 7.337
       },
       "nextControl": null,
       "isLocked": false,
@@ -54,7 +54,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.0,
+    "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
