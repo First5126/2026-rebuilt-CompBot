@@ -129,7 +129,6 @@ public class Hood extends SubsystemBase {
                 })
             .ignoringDisable(true));
 
-
     m_hoodCANCoder.setPosition(0);
   }
 
