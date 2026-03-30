@@ -10,7 +10,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 public class IntakeDeployerConstants {
   public static double INTAKE_KP = 80;
 
-  public static int GEAR_RATIO = 18;
+  public static int GEAR_RATIO = 25;
 
   public static Angle INTAKE_UP = Degrees.of(0);
   public static Angle INTAKE_HALFWAY_DOWN = Rotations.of(-0.1);
