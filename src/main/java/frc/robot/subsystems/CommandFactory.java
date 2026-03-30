@@ -284,4 +284,8 @@ public class CommandFactory {
   public Command agitateIndexer() {
     return m_indexer.agitateIndexer();
   }
+
+  public Command zeroHood() {
+    return m_hood.lowerHoodUntilZero();
+  }
 }
