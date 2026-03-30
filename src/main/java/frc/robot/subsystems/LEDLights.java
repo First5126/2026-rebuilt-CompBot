@@ -13,8 +13,6 @@ import com.ctre.phoenix6.signals.RGBWColor;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.FMS.ShiftData;
-import java.util.function.DoubleSupplier;
 
 public class LEDLights extends SubsystemBase {
 
@@ -58,7 +56,7 @@ public class LEDLights extends SubsystemBase {
     return run(() -> m_candle.setControl(m_solidColorControl.withColor(RED)));
   }
 
-  public Command ledByMotion(
+  /*public Command ledByMotion(
       DoubleSupplier rightTrigger,
       DoubleSupplier leftTrigger,
       DoubleSupplier rotationX,
@@ -85,7 +83,7 @@ public class LEDLights extends SubsystemBase {
             setRed();
           }
         });
-  }
+  }*/
 
   private void applyColor(RGBWColor color) {
     m_candle.setControl(m_solidColorControl.withColor(color));

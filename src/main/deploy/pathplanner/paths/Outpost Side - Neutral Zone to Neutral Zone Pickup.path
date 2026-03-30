@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.452754919499106,
-        "y": 0.682
+        "x": 6.4815492957746486,
+        "y": 0.8094014084507046
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.452754919499106,
-        "y": 0.6820000000000004
+        "x": 7.4815492957746486,
+        "y": 0.809401408450705
       },
       "isLocked": false,
       "linkedName": "Neutral Zone - Outpost side Pre-pickup"
     },
     {
       "anchor": {
-        "x": 7.695140845070423,
-        "y": 1.3010196779964212
+        "x": 7.7994633273703045,
+        "y": 1.8851341681574239
       },
       "prevControl": {
-        "x": 7.581563027539119,
-        "y": 0.2950447227191393
+        "x": 7.7994633273703045,
+        "y": 0.8727678652411801
       },
       "nextControl": null,
       "isLocked": false,
@@ -41,14 +41,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
+    "velocity": 2.0,
     "rotation": 90.0
   },
   "reversed": false,
   "folder": "Outpost Side",
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": -178.83
+    "velocity": 2.0,
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

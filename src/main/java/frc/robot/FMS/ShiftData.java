@@ -11,13 +11,6 @@ public class ShiftData {
   private static DriverStation.Alliance m_ourAlliance;
   private static double m_matchTimeOffsetSeconds = 0.0;
 
-  /**
-   * Enumeration to keep track of the shifts including the time in each shift. Shift duration is the
-   * shift's length. Start time is the time remaining in the match when the shift starts. All times
-   * are pulled from the <a
-   * href="https://firstfrc.blob.core.windows.net/frc2026/Manual/2026GameManual.pdf">FRC Game
-   * Manual</a>.
-   */
   public enum GameShift {
     Auto(20, 20),
     TransitionShift(10, 140),
@@ -35,11 +28,6 @@ public class ShiftData {
       this.startTime = startTime;
     }
 
-    /**
-     * Get the duration of the stage.
-     *
-     * @return int an integer value representing the duration of the stage.
-     */
     public int getDuration() {
       return shiftDuration;
     }

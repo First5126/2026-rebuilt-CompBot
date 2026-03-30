@@ -3,58 +3,58 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.718336314847942,
-        "y": 4.561954225352113
+        "x": 7.647235915492958,
+        "y": 5.5839260563380275
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.160697674413448,
-        "y": 7.434221824679297
+        "x": 7.647235915492958,
+        "y": 7.079443634114357
       },
       "isLocked": false,
-      "linkedName": "Neutral Zone - Depot Side Post-pickup"
+      "linkedName": "Under Trench - Depot Side Updated"
     },
     {
       "anchor": {
-        "x": 5.890721830985916,
-        "y": 7.5799647887323935
+        "x": 6.874615384615384,
+        "y": 7.336869409660108
       },
       "prevControl": {
-        "x": 6.561390845070423,
-        "y": 7.548028169014085
+        "x": 7.9604604550379205,
+        "y": 7.3209010998009525
       },
       "nextControl": {
-        "x": 5.641004796554807,
-        "y": 7.5918560760862555
+        "x": 6.624642413103489,
+        "y": 7.340545482770577
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.6,
-        "y": 7.5799647887323935
+        "x": 3.499731663685152,
+        "y": 7.337
       },
       "prevControl": {
-        "x": 5.060286225402505,
-        "y": 7.547513983723449
+        "x": 4.960378409084608,
+        "y": 7.337
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Under Trench - Depot Side"
+      "linkedName": "Under Trench - Depot Side Update "
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 1.0,
-      "rotationDegrees": 180.0
+      "rotationDegrees": -0.0
     }
   ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.0,
+    "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -63,7 +63,7 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": "Depot Side",

@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.6,
-        "y": 7.5799647887323935
+        "x": 3.499731663685152,
+        "y": 7.336869409660108
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.6,
-        "y": 7.5799647887323935
+        "x": 4.499731663685152,
+        "y": 7.336869409660108
       },
       "isLocked": false,
-      "linkedName": "Under Trench - Depot Side"
+      "linkedName": "Under Trench - Depot Side Update "
     },
     {
       "anchor": {
-        "x": 7.069320214669052,
-        "y": 7.417996422182468
+        "x": 5.819964221824687,
+        "y": 7.336869409660108
       },
       "prevControl": {
-        "x": 6.069320214669052,
-        "y": 7.417996422182468
+        "x": 4.819964221824687,
+        "y": 7.336869409660108
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.5,
-      "rotationDegrees": 180.0
+      "rotationDegrees": 0.0
     }
   ],
   "constraintZones": [],
@@ -46,14 +46,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
+    "velocity": 2.0,
     "rotation": 0.0
   },
   "reversed": false,
   "folder": "Depot Side",
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": 180.0
+    "velocity": 0.0,
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

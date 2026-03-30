@@ -9,6 +9,7 @@ import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.controller.Driver;
@@ -35,8 +36,8 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     // Read the value from SmartDashboard
-    // boolean logEnabled = SmartDashboard.getBoolean("Enable DogLog", false);
-    // RobotLogger.setEnabled(logEnabled);
+    boolean logEnabled = SmartDashboard.getBoolean("Enable DogLog", false);
+    RobotLogger.setEnabled(logEnabled);
 
     m_timeAndJoystickReplay.update();
     if (RobotLogger.isEnabled()) {

@@ -81,12 +81,12 @@ public class ShootingMechanismConstants {
           Map.entry(4.11, 6.0),
           Map.entry(2.41, 0.0),
           Map.entry(4.23, 6.5),
-          Map.entry(5.788, 5.75),
-          Map.entry(5.619, 5.75),
+          Map.entry(5.788, 5.95),
+          Map.entry(5.619, 5.85),
           Map.entry(5.418, 5.75),
           Map.entry(5.150, 5.75),
           Map.entry(5.0, 5.5),
-          Map.entry(54.394, 5.5));
+          Map.entry(4.394, 5.5));
 
   private static final InterpolatingDoubleTreeMap DISTANCE_TO_TIME_INTERPOLATOR_FLOOR =
       InterpolatingDoubleTreeMap.ofEntries(
@@ -97,7 +97,9 @@ public class ShootingMechanismConstants {
           Map.entry(5.65, 1.4),
           Map.entry(6.0, 1.35),
           Map.entry(7.3, 1.45),
-          Map.entry(8.5, 1.52));
+          Map.entry(8.5, 1.52),
+          // Fudged from here
+          Map.entry(16.0, 2.0));
 
   private static final InterpolatingDoubleTreeMap DISTANCE_TO_SPEED_INTERPOLATOR_FLOOR =
       InterpolatingDoubleTreeMap.ofEntries(
@@ -108,7 +110,9 @@ public class ShootingMechanismConstants {
           Map.entry(5.65, 55.0),
           Map.entry(6.0, 55.0),
           Map.entry(7.3, 60.0),
-          Map.entry(8.5, 65.0));
+          Map.entry(8.5, 65.0),
+          // Fudged from here
+          Map.entry(16.0, 75.0));
 
   private static final InterpolatingDoubleTreeMap DISTANCE_TO_ANGLE_INTERPOLATOR_FLOOR =
       InterpolatingDoubleTreeMap.ofEntries(
@@ -119,7 +123,9 @@ public class ShootingMechanismConstants {
           Map.entry(5.65, 15.0),
           Map.entry(6.0, 20.0),
           Map.entry(7.3, 20.0),
-          Map.entry(8.5, 20.0));
+          Map.entry(8.5, 20.0),
+          // Fudged from here
+          Map.entry(16.0, 20.0));
 
   public static final InterpolationSet floorInterpolation =
       new InterpolationSet(
