@@ -39,6 +39,7 @@ public class IntakeDeployer extends SubsystemBase {
 
     Slot0Configs m_intakeDeployerSlot0Configs = new Slot0Configs();
     m_intakeDeployerSlot0Configs.kP = IntakeDeployerConstants.INTAKE_KP;
+    m_intakeDeployerSlot0Configs.kG = IntakeDeployerConstants.INTAKE_KG;
 
     m_intakeDeployerConfiguration.Slot0 = m_intakeDeployerSlot0Configs;
     m_intakeDeployerConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
