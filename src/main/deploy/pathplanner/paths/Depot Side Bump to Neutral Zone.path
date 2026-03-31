@@ -3,41 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.6457602862254017,
-        "y": 7.190840787119857
+        "x": 4.0189445438282645,
+        "y": 7.452
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.03788370203331,
-        "y": 7.197753722693945
+        "x": 4.4111288906641795,
+        "y": 7.452
       },
       "isLocked": false,
       "linkedName": "Trench - Depot Side"
     },
     {
       "anchor": {
-        "x": 5.154722719141324,
-        "y": 7.515348837209302
+        "x": 5.15617957746479,
+        "y": 7.4522183098591555
       },
       "prevControl": {
-        "x": 4.298016194546621,
-        "y": 7.523666376283037
+        "x": 4.277922535211268,
+        "y": 7.43625
       },
       "nextControl": {
-        "x": 6.799458634634281,
-        "y": 7.499380527350147
+        "x": 6.800721204597284,
+        "y": 7.482119066716111
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.647235915492958,
-        "y": 6.605897887323944
+        "x": 7.647,
+        "y": 6.606
       },
       "prevControl": {
-        "x": 7.35980633802817,
-        "y": 7.260598591549296
+        "x": 7.647,
+        "y": 7.3210166250617945
       },
       "nextControl": null,
       "isLocked": false,
@@ -67,7 +67,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 2.0,
+    "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,

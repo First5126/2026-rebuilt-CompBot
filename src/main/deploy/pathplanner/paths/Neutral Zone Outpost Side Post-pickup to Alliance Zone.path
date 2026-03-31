@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.695140845070423,
-        "y": 3.3616457960644004
+        "x": 7.7994633273703045,
+        "y": 4.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.221323792486583,
-        "y": 0.5546511627906967
+        "x": 7.7994633273703045,
+        "y": 1.1441135587389102
       },
       "isLocked": false,
       "linkedName": "Neutral Zone - Outpost Side Post-Pickup"
@@ -20,23 +20,23 @@
         "y": 0.682
       },
       "prevControl": {
-        "x": 6.209373881932021,
-        "y": 0.682
+        "x": 7.507406082289803,
+        "y": 0.7331305903398926
       },
       "nextControl": {
-        "x": 3.991583149022434,
-        "y": 0.6820000000000002
+        "x": 3.991821845886566,
+        "y": 0.6592736049338823
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.0,
+        "x": 3.5593485915492966,
         "y": 0.682
       },
       "prevControl": {
-        "x": 4.4732987119498,
+        "x": 5.032647303499097,
         "y": 0.6819999999999998
       },
       "nextControl": null,
@@ -47,7 +47,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.9,
-      "rotationDegrees": 180.0
+      "rotationDegrees": 0.0
     }
   ],
   "constraintZones": [],
@@ -70,7 +70,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": "Outpost Side",

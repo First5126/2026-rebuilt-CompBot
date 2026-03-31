@@ -6,7 +6,6 @@ import static edu.wpi.first.units.Units.Degrees;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.FMS.ShiftData;
 import frc.robot.FMS.Zones;
 import frc.robot.constants.ControllerConstants.OperatorState;
 import frc.robot.constants.WaypointConstants;
@@ -83,12 +82,12 @@ public class CommandFactory {
         .repeatedly();
   }
 
-  public Command resetFMSTime() {
+  /*public Command resetFMSTime() {
     return Commands.runOnce(
         () -> {
           ShiftData.resetMatchTimeCalibration();
         });
-  }
+  }*/
 
   // Clear a potential jam by running the flywheel inward while reversing the indexer
   public Command clearShootingJam() {
@@ -192,7 +191,7 @@ public class CommandFactory {
     return Commands.defer(
         () -> {
           if (isNormalOperatingState()) {
-            Command turretCommand = m_shootingMechanism.startTrackingCommand();
+            Command turretCommand = m_shootingMechanism.startTrackingCommandAuto();
             turretCommand.addRequirements(m_turret, m_shootingMechanism);
             return turretCommand;
           } else {
@@ -283,5 +282,9 @@ public class CommandFactory {
 
   public Command agitateIndexer() {
     return m_indexer.agitateIndexer();
+  }
+
+  public Command zeroHood() {
+    return m_hood.lowerHoodUntilZero();
   }
 }
