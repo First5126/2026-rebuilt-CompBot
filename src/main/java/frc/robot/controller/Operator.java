@@ -127,8 +127,6 @@ public class Operator extends CustomXboxController implements Controller {
         .onTrue(commandFactory.clearShootingJam())
         .onFalse(commandFactory.stopFlywheelAndIndexer());
 
-    this.y().whileTrue(commandFactory.rotateTurretToZero());
-
     this.leftBumper()
         .whileTrue(commandFactory.agitateIntake().alongWith(commandFactory.startIntake()));
 
@@ -140,7 +138,7 @@ public class Operator extends CustomXboxController implements Controller {
 
     /*this.start().onTrue(Commands.runOnce(() -> ShiftData.resetMatchTimeCalibration()));*/
 
-    this.back().onTrue(commandFactory.zeroHood());
+    this.back().onTrue(this.changeOperatorStateCommand());
     this.povLeft().onTrue(commandFactory.incrementTurretOffset(1));
     this.povRight().onTrue(commandFactory.incrementTurretOffset(-1));
 

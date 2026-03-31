@@ -206,7 +206,7 @@ public class Turret extends SubsystemBase {
     // Convert all angles to degrees for clamping
     double minDegrees = TurretConstants.MIN_ANGLE.in(Degrees) * TurretConstants.GEAR_RATIO;
     double maxDegrees = TurretConstants.MAX_ANGLE.in(Degrees) * TurretConstants.GEAR_RATIO;
-    double requestedDegrees = position.in(Degrees) + m_dynamicOffsetDegrees;
+    double requestedDegrees = position.in(Degrees) + m_dynamicOffsetDegrees * TurretConstants.GEAR_RATIO;
     double clampedDegrees = Math.max(minDegrees, Math.min(requestedDegrees, maxDegrees));
     // Construct the measure back in degrees
     Angle clampedPosition = Degrees.of(clampedDegrees);
