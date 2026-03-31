@@ -149,7 +149,7 @@ public class Operator extends CustomXboxController implements Controller {
     this.povLeft().onTrue(commandFactory.incrementTurretOffset(1));
     this.povRight().onTrue(commandFactory.incrementTurretOffset(-1));
 
-    this.rumbleCommand();
+  
 
     return this;
   }
