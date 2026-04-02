@@ -112,8 +112,8 @@ Operator OVERRIDE template (manual mode quick reference)
 - Right Trigger: Intake wheels out
 - Left Bumper: Intake pivot in
 - Right Bumper: Intake pivot out
-- D-Pad Up: Hood up (manual)
-- D-Pad Down: Hood down (manual)
+- D-Pad Up: Increase speed of the flywheel for an existing interpolation set retuned from current position (manual)
+- D-Pad Down: Decrease speed of the flywheel for an existing interpolation set retuned from current position (manual)
 - D-Pad Left: Turret left (manual)
 - D-Pad Right: Turret right (manual)
 - B: Flywheel out (interpolated / start flywheels with solution)

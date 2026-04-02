@@ -22,7 +22,6 @@ import frc.robot.subsystems.ShootingMechanism.ShootingSolution;
 import java.util.function.Supplier;
 
 public class FlyWheel extends SubsystemBase {
-
   private TalonFX m_shooterMotor =
       new TalonFX(CANConstants.flyWheelsMotor, CANConstants.mechanismCanivore);
 
