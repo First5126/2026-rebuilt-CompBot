@@ -159,8 +159,7 @@ public class ShootingMechanism extends SubsystemBase {
       // Find the flywheel speed
       AngularVelocity predictedFlyWheelVelocity =
           RotationsPerSecond.of(
-              goalPose.interpolationSet.distanceToFlyWheelSpeed.get(predictedHubDistance)
-                  + goalPose.interpolationSet.flyWheelSpeedTrimRps);
+              goalPose.interpolationSet.distanceToFlyWheelSpeed.get(predictedHubDistance));
 
       m_currentShootingSolution.set(
           predictedHoodAngle, predictedTurretAngle, predictedFlyWheelVelocity);

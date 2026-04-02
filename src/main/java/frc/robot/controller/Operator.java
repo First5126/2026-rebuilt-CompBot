@@ -141,8 +141,6 @@ public class Operator extends CustomXboxController implements Controller {
     /*this.start().onTrue(Commands.runOnce(() -> ShiftData.resetMatchTimeCalibration()));*/
 
     this.back().onTrue(this.changeOperatorStateCommand());
-    this.povUp().onTrue(commandFactory.incrementFlywheelOffset(1));
-    this.povDown().onTrue(commandFactory.incrementFlywheelOffset(-1));
     this.povLeft().onTrue(commandFactory.incrementTurretOffset(1));
     this.povRight().onTrue(commandFactory.incrementTurretOffset(-1));
 
