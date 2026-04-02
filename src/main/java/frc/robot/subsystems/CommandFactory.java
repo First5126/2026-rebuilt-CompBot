@@ -289,6 +289,10 @@ public class CommandFactory {
     return m_turret.adjustPositionDynamically(offsetDegrees);
   }
 
+  public Command incrementFlywheelOffset(double offsetRps) {
+    return m_flyWheel.adjustSpeedDynamically(offsetRps);
+  }
+
   public Command agitateIndexer() {
     return m_indexer.agitateIndexer();
   }

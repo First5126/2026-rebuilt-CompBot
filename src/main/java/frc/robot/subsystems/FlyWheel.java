@@ -22,12 +22,14 @@ import frc.robot.subsystems.ShootingMechanism.ShootingSolution;
 import java.util.function.Supplier;
 
 public class FlyWheel extends SubsystemBase {
+  private static final double FLYWHEEL_TRIM_STEP_RPS = 1.0;
 
   private TalonFX m_shooterMotor =
       new TalonFX(CANConstants.flyWheelsMotor, CANConstants.mechanismCanivore);
 
   private VelocityVoltage m_shooterSpeed = new VelocityVoltage(0);
   private DutyCycleOut m_dutyCycleOut = new DutyCycleOut(0);
+  private double m_dynamicOffsetRps = 0.0;
 
   public FlyWheel() {
     TalonFXConfiguration flyWheelConfiguration = new TalonFXConfiguration();
@@ -51,7 +53,7 @@ public class FlyWheel extends SubsystemBase {
     return runOnce(
         () -> {
           AngularVelocity speed = rps.get();
-          setSpeedControl(speed);
+          setSpeedControlWithOffset(speed);
         });
   }
 
@@ -59,8 +61,20 @@ public class FlyWheel extends SubsystemBase {
     return run(
         () -> {
           ShootingSolution solution = solutionSupplier.get();
-          setSpeedControl(solution.getPredictedFlyWheelVelocity());
+          setSpeedControlWithOffset(solution.getPredictedFlyWheelVelocity());
         });
+  }
+
+  public Command adjustSpeedDynamically(double offsetRps) {
+    return runOnce(() -> m_dynamicOffsetRps += offsetRps);
+  }
+
+  public Command incrementTrimUp() {
+    return adjustSpeedDynamically(FLYWHEEL_TRIM_STEP_RPS);
+  }
+
+  public Command incrementTrimDown() {
+    return adjustSpeedDynamically(-FLYWHEEL_TRIM_STEP_RPS);
   }
 
   public Command stopFlywheelsWhile() {
@@ -108,6 +122,12 @@ public class FlyWheel extends SubsystemBase {
 
     if (rotationSpeed.isEquivalent(RotationsPerSecond.of(0))) stopMotors();
     else m_shooterMotor.setControl(m_shooterSpeed.withVelocity(rotationSpeed));
+  }
+
+  private void setSpeedControlWithOffset(AngularVelocity rotationSpeed) {
+    AngularVelocity adjustedSpeed =
+        rotationSpeed.plus(RotationsPerSecond.of(m_dynamicOffsetRps));
+    setSpeedControl(adjustedSpeed);
   }
 
   private void reverseWheels() {
