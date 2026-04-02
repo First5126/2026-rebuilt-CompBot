@@ -115,6 +115,8 @@ public class Operator extends CustomXboxController implements Controller {
 
     this.a().whileTrue(commandFactory.setHoodToTrenchPosition());
 
+    this.y().whileTrue(commandFactory.stopFlywheel());
+
     this.b()
         .onTrue(commandFactory.startIndexer())
         .onFalse(

@@ -95,6 +95,10 @@ public class CommandFactory {
     return m_flyWheel.shootInCommand().alongWith(m_indexer.reverseIndexing());
   }
 
+  public Command stopFlywheelsWhile() {
+    return m_flyWheel.stopSpinning();
+  }
+
   // Stop both the flywheel and the indexer
   public Command stopFlywheelAndIndexer() {
     return m_flyWheel.stopSpinning().alongWith(m_indexer.stopIndexing());
@@ -189,7 +193,8 @@ public class CommandFactory {
   }
 
   public ConditionalCommand startTurretTracking() {
-    return new ConditionalCommand(m_shootingMechanism.startTrackingCommand(), Commands.none(), this::isNormalOperatingState);
+    return new ConditionalCommand(
+        m_shootingMechanism.startTrackingCommand(), Commands.none(), this::isNormalOperatingState);
     /*
     Commands.defer(
         () -> {

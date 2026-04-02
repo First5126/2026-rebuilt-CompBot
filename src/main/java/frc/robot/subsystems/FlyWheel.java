@@ -63,6 +63,13 @@ public class FlyWheel extends SubsystemBase {
         });
   }
 
+  public Command stopFlywheelsWhile() {
+    return runOnce(
+        () -> {
+          stopMotors();
+        });
+  }
+
   public Command rotateFlywheel() {
     return runOnce(() -> startMotors());
   }
