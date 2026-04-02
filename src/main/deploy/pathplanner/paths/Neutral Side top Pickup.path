@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.819964221824687,
+        "x": 4.1,
         "y": 7.336869409660108
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.303458060297427,
-        "y": 7.336869409660108
+        "x": 7.456025641025641,
+        "y": 7.6914245014245015
       },
       "isLocked": false,
       "linkedName": "Neutral Zone Back Second Sweep"
@@ -20,8 +20,8 @@
         "y": 4.757030411449016
       },
       "prevControl": {
-        "x": 7.48755281690141,
-        "y": 5.812942199993012
+        "x": 7.443105413105412,
+        "y": 6.244358974358975
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.3,
-      "rotationDegrees": -90.0
+      "rotationDegrees": -19.422901458764844
     }
   ],
   "constraintZones": [],
