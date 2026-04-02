@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 7.7994633273703045,
-        "y": 4.0
+        "y": 2.8
       },
       "prevControl": null,
       "nextControl": {
         "x": 7.7994633273703045,
-        "y": 3.1687254573109596
+        "y": 1.9687254573109594
       },
       "isLocked": false,
       "linkedName": "Neutral Zone - Outpost Side Post-Pickup"
