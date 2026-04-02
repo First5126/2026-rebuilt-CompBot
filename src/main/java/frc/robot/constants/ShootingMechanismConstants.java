@@ -16,15 +16,33 @@ public class ShootingMechanismConstants {
     public final InterpolatingDoubleTreeMap distanceToTimeOfFlight;
     public final InterpolatingDoubleTreeMap distanceToFlyWheelSpeed;
     public final InterpolatingDoubleTreeMap distanceToHoodAngle;
+    public double flyWheelSpeedTrimRps;
 
     public InterpolationSet(
         InterpolatingDoubleTreeMap distanceToTimeOfFlight,
         InterpolatingDoubleTreeMap distanceToFlyWheelSpeed,
         InterpolatingDoubleTreeMap distanceToHoodAngle) {
+      this(
+          distanceToTimeOfFlight,
+          distanceToFlyWheelSpeed,
+          distanceToHoodAngle,
+          0.0);
+    }
+
+    public InterpolationSet(
+        InterpolatingDoubleTreeMap distanceToTimeOfFlight,
+        InterpolatingDoubleTreeMap distanceToFlyWheelSpeed,
+        InterpolatingDoubleTreeMap distanceToHoodAngle,
+        double flyWheelSpeedTrimRps) {
 
       this.distanceToTimeOfFlight = distanceToTimeOfFlight;
       this.distanceToFlyWheelSpeed = distanceToFlyWheelSpeed;
       this.distanceToHoodAngle = distanceToHoodAngle;
+      this.flyWheelSpeedTrimRps = flyWheelSpeedTrimRps;
+    }
+
+    public void adjustFlyWheelSpeedTrim(double deltaRps) {
+      flyWheelSpeedTrimRps += deltaRps;
     }
   }
 
@@ -34,6 +52,7 @@ public class ShootingMechanismConstants {
   public static final Time mechanismDelay = Milliseconds.of(52.647);
   public static final Time computationDelay = Milliseconds.of(20);
   public static final int updateCounter = 2;
+  public static final double HUB_FLYWHEEL_SPEED_TRIM_RPS = 0.0;
 
   // Distance first then Time
   private static final InterpolatingDoubleTreeMap DISTANCE_TO_TIME_INTERPOLATOR_HUB =
@@ -136,5 +155,6 @@ public class ShootingMechanismConstants {
       new InterpolationSet(
           DISTANCE_TO_TIME_INTERPOLATOR_HUB,
           DISTANCE_TO_SPEED_INTERPOLATOR_HUB,
-          DISTANCE_TO_ANGLE_INTERPOLATOR_HUB);
+          DISTANCE_TO_ANGLE_INTERPOLATOR_HUB,
+          HUB_FLYWHEEL_SPEED_TRIM_RPS);
 }

@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import frc.robot.FMS.Zones;
 import frc.robot.constants.ControllerConstants.OperatorState;
+import frc.robot.constants.GoalPoseConstants.GoalPose;
 import frc.robot.constants.WaypointConstants;
 import frc.robot.controller.Operator;
 import java.util.Set;
@@ -290,7 +291,13 @@ public class CommandFactory {
   }
 
   public Command incrementFlywheelOffset(double offsetRps) {
-    return m_flyWheel.adjustSpeedDynamically(offsetRps);
+    return Commands.runOnce(
+        () -> {
+          GoalPose goalPose = m_zone.getGoalPose();
+          if (goalPose != null && goalPose.interpolationSet != null) {
+            goalPose.interpolationSet.adjustFlyWheelSpeedTrim(offsetRps);
+          }
+        });
   }
 
   public Command agitateIndexer() {
