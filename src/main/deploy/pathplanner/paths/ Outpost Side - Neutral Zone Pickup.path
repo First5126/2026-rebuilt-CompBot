@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.7994633273703045,
-        "y": 1.8851341681574239
+        "x": 7.647,
+        "y": 1.8
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.7994633273703045,
-        "y": 2.8851341681574243
+        "x": 7.647,
+        "y": 2.8
       },
       "isLocked": false,
       "linkedName": "Neutral Zone - Outpost Side"
     },
     {
       "anchor": {
-        "x": 7.7994633273703045,
-        "y": 2.8
+        "x": 7.63,
+        "y": 2.3
       },
       "prevControl": {
-        "x": 7.7994633273703045,
-        "y": 2.247848887229458
+        "x": 7.63,
+        "y": 1.7478488872294582
       },
       "nextControl": null,
       "isLocked": false,
