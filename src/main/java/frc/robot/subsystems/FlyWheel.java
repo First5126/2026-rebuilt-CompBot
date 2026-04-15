@@ -45,6 +45,7 @@ public class FlyWheel extends SubsystemBase {
     flyWheelConfiguration.Slot0 = slot0;
 
     m_shooterMotor.getConfigurator().apply(flyWheelConfiguration);
+    SmartDashboard.putNumber("Set Shooter Speed (RPS)", 0);
   }
 
   public Command setSpeed(Supplier<AngularVelocity> rps) {

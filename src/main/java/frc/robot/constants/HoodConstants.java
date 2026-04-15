@@ -18,7 +18,7 @@ public class HoodConstants {
 
   // Hood hard/soft travel limits (mechanism angle as configured for the TalonFX fused sensor).
   public static final Angle MIN_ANGLE = Degrees.of(0);
-  public static final Angle MAX_ANGLE = Degrees.of(6);
+  public static final Angle MAX_ANGLE = Degrees.of(25);
 
   public static final double MAX_VOLTAGE_MANUAL = 1;
   public static final Voltage VOLTAGE_AUTO_ZERO = Volts.of(-0.5);

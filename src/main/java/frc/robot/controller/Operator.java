@@ -127,7 +127,7 @@ public class Operator extends CustomXboxController implements Controller {
         .onTrue(commandFactory.clearShootingJam())
         .onFalse(commandFactory.stopFlywheelAndIndexer());
 
-    this.y().whileTrue(commandFactory.rotateTurretToZero());
+    this.y().whileTrue(commandFactory.smartDashboardShoot()).onFalse(commandFactory.stopFlywheelAndStowHood());
 
     this.leftBumper()
         .whileTrue(commandFactory.agitateIntake().alongWith(commandFactory.startIntake()));

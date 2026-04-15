@@ -130,6 +130,8 @@ public class Hood extends SubsystemBase {
             .ignoringDisable(true));
 
     m_hoodCANCoder.setPosition(0);
+
+    SmartDashboard.putNumber("Set Hood Angle (Deg)", 0);
   }
 
   private boolean getLowerLimitValue() {

@@ -287,4 +287,9 @@ public class CommandFactory {
   public Command zeroHood() {
     return m_hood.lowerHoodUntilZero();
   }
+
+  public Command smartDashboardShoot() {
+    return m_hood.setPositionToDashboard()
+    .alongWith(m_flyWheel.setSpeed(m_flyWheel::getDashboardSpeedRPS));
+  }
 }

@@ -112,7 +112,7 @@ public class ShootingMechanismConstants {
           Map.entry(7.3, 60.0),
           Map.entry(8.5, 65.0),
           // Fudged from here
-          Map.entry(16.0, 75.0));
+          Map.entry(16.0, 85.0));
 
   private static final InterpolatingDoubleTreeMap DISTANCE_TO_ANGLE_INTERPOLATOR_FLOOR =
       InterpolatingDoubleTreeMap.ofEntries(
@@ -125,7 +125,7 @@ public class ShootingMechanismConstants {
           Map.entry(7.3, 20.0),
           Map.entry(8.5, 20.0),
           // Fudged from here
-          Map.entry(16.0, 20.0));
+          Map.entry(16.0, 25.0));
 
   public static final InterpolationSet floorInterpolation =
       new InterpolationSet(
