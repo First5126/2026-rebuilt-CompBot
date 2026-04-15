@@ -15,6 +15,7 @@ import frc.robot.RobotLogger;
 import frc.robot.constants.GoalPoseConstants;
 import frc.robot.constants.GoalPoseConstants.GoalPose;
 import frc.robot.constants.ZonesConstants;
+import frc.robot.constants.ZonesConstants.Side;
 import frc.robot.constants.ZonesConstants.Trench;
 import frc.robot.constants.ZonesConstants.Zone;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -76,6 +77,16 @@ public class Zones {
     return zone;
   }
 
+  public Side getSide() {
+    Translation2d robotTranslation = m_pose.get().getTranslation();
+    Side side =
+        ZonesConstants.firstContainingOrDefault(robotTranslation, Side.class, Side.OUT_OF_BOUNDS);
+
+    logger.logAndDisplay("CurrentSide", side);
+
+    return side;
+  }
+
   public boolean isNearBump() {
     double pitch = m_pitch.get().in(Degrees);
     double roll = 180 - Math.abs(m_roll.get().in(Degrees));
@@ -115,6 +126,28 @@ public class Zones {
     return getGoalPose().pose;
   }
 
+  private GoalPose getGoalPoseForSide() {
+    Optional<Alliance> alliance = getAlliance();
+    switch (getSide()) {
+      case LEFT_SIDE:
+        return alliance.get() == Alliance.Blue
+            ? GoalPoseConstants.BLUE_LEFT_SIDE
+            : GoalPoseConstants.RED_LEFT_SIDE;
+      case RIGHT_SIDE:
+        return alliance.get() == Alliance.Blue
+            ? GoalPoseConstants.BLUE_RIGHT_SIDE
+            : GoalPoseConstants.RED_RIGHT_SIDE;
+      case OUT_OF_BOUNDS:
+        return alliance.get() == Alliance.Blue
+            ? GoalPoseConstants.BLUE_HUB
+            : GoalPoseConstants.RED_HUB;
+        default:
+          return alliance.get() == Alliance.Blue
+              ? GoalPoseConstants.BLUE_HUB
+              : GoalPoseConstants.RED_HUB;
+    }
+  }
+
   public GoalPose getGoalPose() {
     getZone();
     Optional<Alliance> alliance = getAlliance();
@@ -127,7 +160,7 @@ public class Zones {
       case BLUE_ZONE:
         return alliance.get() == Alliance.Blue
             ? GoalPoseConstants.BLUE_HUB
-            : GoalPoseConstants.RED_HUB;
+            : getGoalPoseForSide();
       case NEUTRAL_ZONE_LEFT:
         return alliance.get() == Alliance.Blue
             ? GoalPoseConstants.BLUE_LEFT_SIDE
@@ -138,7 +171,7 @@ public class Zones {
             : GoalPoseConstants.RED_RIGHT_SIDE;
       case RED_ZONE:
         return alliance.get() == Alliance.Blue
-            ? GoalPoseConstants.BLUE_HUB
+            ? getGoalPoseForSide()
             : GoalPoseConstants.RED_HUB;
       default:
         break;

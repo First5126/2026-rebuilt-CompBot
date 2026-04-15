@@ -12,6 +12,28 @@ public class ZonesConstants {
     Translation2d getBottomRightTranslation();
   }
 
+  public enum Side implements RectangularRegion {
+    LEFT_SIDE(new Translation2d(0.0, 4.0), new Translation2d(16.5, 8.0)),
+    RIGHT_SIDE(new Translation2d(8.5, 0.0), new Translation2d(16.5, 4.0)),
+    OUT_OF_BOUNDS(null, null);
+
+    private final Translation2d topLeftTranslation;
+    private final Translation2d bottomRightTranslation;
+
+    Side(Translation2d topLeftTranslation, Translation2d bottomRightTranslation) {
+      this.topLeftTranslation = topLeftTranslation;
+      this.bottomRightTranslation = bottomRightTranslation;
+    }
+
+    public Translation2d getTopLeftTranslation() {
+      return topLeftTranslation;
+    }
+
+    public Translation2d getBottomRightTranslation() {
+      return bottomRightTranslation;
+    }
+  }
+
   public enum Zone implements RectangularRegion {
     BLUE_ZONE(new Translation2d(0.0, 0.0), new Translation2d(4.0, 8.0)),
     NEUTRAL_ZONE_RIGHT(new Translation2d(4.0, 0.0), new Translation2d(12.0, 4.0)),
