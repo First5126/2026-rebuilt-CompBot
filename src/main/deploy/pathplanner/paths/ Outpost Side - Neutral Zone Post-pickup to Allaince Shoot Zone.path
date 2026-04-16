@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.7994633273703045,
-        "y": 4.0
+        "x": 7.63,
+        "y": 2.3
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.7994633273703045,
-        "y": 3.1687254573109596
+        "x": 7.63,
+        "y": 1.4687254573109594
       },
       "isLocked": false,
       "linkedName": "Neutral Zone - Outpost Side Post-Pickup"
@@ -32,11 +32,11 @@
     },
     {
       "anchor": {
-        "x": 3.5593485915492966,
+        "x": 2.3,
         "y": 0.682
       },
       "prevControl": {
-        "x": 4.456333451079569,
+        "x": 3.1969848595302723,
         "y": 0.6819999999999999
       },
       "nextControl": null,
@@ -61,7 +61,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 1.5,
+    "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,

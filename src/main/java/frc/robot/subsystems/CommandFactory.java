@@ -6,6 +6,7 @@ import static edu.wpi.first.units.Units.Degrees;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import frc.robot.FMS.Zones;
 import frc.robot.constants.ControllerConstants.OperatorState;
 import frc.robot.constants.WaypointConstants;
@@ -92,6 +93,10 @@ public class CommandFactory {
   // Clear a potential jam by running the flywheel inward while reversing the indexer
   public Command clearShootingJam() {
     return m_flyWheel.shootInCommand().alongWith(m_indexer.reverseIndexing());
+  }
+
+  public Command stopFlywheelsWhile() {
+    return m_flyWheel.stopSpinning();
   }
 
   // Stop both the flywheel and the indexer
@@ -187,8 +192,11 @@ public class CommandFactory {
     return state == null || state == OperatorState.NORMAL;
   }
 
-  public Command startTurretTracking() {
-    return Commands.defer(
+  public ConditionalCommand startTurretTracking() {
+    return new ConditionalCommand(
+        m_shootingMechanism.startTrackingCommand(), Commands.none(), this::isNormalOperatingState);
+    /*
+    Commands.defer(
         () -> {
           if (isNormalOperatingState()) {
             Command turretCommand = m_shootingMechanism.startTrackingCommandAuto();
@@ -201,6 +209,7 @@ public class CommandFactory {
           }
         },
         Set.of(m_shootingMechanism, m_turret));
+        */
   }
 
   // Convenience / clearer naming for indexing control

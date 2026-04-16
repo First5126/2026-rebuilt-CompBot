@@ -55,21 +55,15 @@
                       }
                     },
                     {
-                      "type": "wait",
+                      "type": "path",
                       "data": {
-                        "waitTime": 3.0
+                        "pathName": "Outpost Side - Alliance Shooting Zone back to Neutral Zone "
                       }
                     },
                     {
                       "type": "named",
                       "data": {
                         "name": "StopIndexandShoot"
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "Outpost Side - Alliance Shooting Zone back to Neutral Zone "
                       }
                     },
                     {

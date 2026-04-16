@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RobotLogger {
   private static final String SEPERATOR = "/";
-  private static boolean enabled = false;
+  private static boolean enabled = true;
 
   static {
     DogLog.setEnabled(enabled);
