@@ -37,6 +37,15 @@ import java.util.concurrent.ConcurrentHashMap;
 public class LimelightHelpers {
 
   private static final Map<String, DoubleArrayEntry> doubleArrayEntries = new ConcurrentHashMap<>();
+  // Cache NetworkTable objects per limelight name to avoid repeated lookups
+  private static final Map<String, NetworkTable> networkTableCache = new ConcurrentHashMap<>();
+  // Cache last JSON string and parsed result to avoid re-parsing identical JSON repeatedly
+  private static final Map<String, String> lastJsonDump = new ConcurrentHashMap<>();
+  private static final Map<String, LimelightResults> lastParsedJson = new ConcurrentHashMap<>();
+  // Cache pose timestamps and previously computed PoseEstimate to avoid reprocessing identical pose
+  // arrays
+  private static final Map<String, Long> lastPoseTimestamp = new ConcurrentHashMap<>();
+  private static final Map<String, PoseEstimate> lastPoseEstimate = new ConcurrentHashMap<>();
 
   /** Represents a Color/Retroreflective Target Result extracted from JSON Output */
   public static class LimelightTarget_Retro {
@@ -725,6 +734,13 @@ public class LimelightHelpers {
       return null; // or some default PoseEstimate
     }
 
+    String cacheKey = sanitizeName(limelightName) + ":" + entryName;
+    Long lastTs = lastPoseTimestamp.get(cacheKey);
+    if (lastTs != null && lastTs == timestamp) {
+      // Return cached pose estimate to avoid recomputing the same data
+      return lastPoseEstimate.get(cacheKey);
+    }
+
     var pose = toPose2D(poseArray);
     double latency = extractArrayEntry(poseArray, 6);
     int tagCount = (int) extractArrayEntry(poseArray, 7);
@@ -739,9 +755,7 @@ public class LimelightHelpers {
     int valsPerFiducial = 7;
     int expectedTotalVals = 11 + valsPerFiducial * tagCount;
 
-    if (poseArray.length != expectedTotalVals) {
-      // Don't populate fiducials
-    } else {
+    if (poseArray.length == expectedTotalVals) {
       for (int i = 0; i < tagCount; i++) {
         int baseIndex = 11 + (i * valsPerFiducial);
         int id = (int) poseArray[baseIndex];
@@ -755,16 +769,22 @@ public class LimelightHelpers {
       }
     }
 
-    return new PoseEstimate(
-        pose,
-        adjustedTimestamp,
-        latency,
-        tagCount,
-        tagSpan,
-        tagDist,
-        tagArea,
-        rawFiducials,
-        isMegaTag2);
+    PoseEstimate estimate =
+        new PoseEstimate(
+            pose,
+            adjustedTimestamp,
+            latency,
+            tagCount,
+            tagSpan,
+            tagDist,
+            tagArea,
+            rawFiducials,
+            isMegaTag2);
+
+    lastPoseTimestamp.put(cacheKey, timestamp);
+    lastPoseEstimate.put(cacheKey, estimate);
+
+    return estimate;
   }
 
   /**
@@ -888,18 +908,40 @@ public class LimelightHelpers {
     return pose != null && pose.rawFiducials != null && pose.rawFiducials.length != 0;
   }
 
+  /**
+   * Checks whether a PoseEstimate is valid (has at least one detected fiducial).
+   *
+   * @param pose PoseEstimate to validate
+   * @return true if the pose contains at least one fiducial, false otherwise
+   */
   public static NetworkTable getLimelightNTTable(String tableName) {
-    return NetworkTableInstance.getDefault().getTable(sanitizeName(tableName));
+    String key = sanitizeName(tableName);
+    return networkTableCache.computeIfAbsent(
+        key, k -> NetworkTableInstance.getDefault().getTable(k));
   }
 
+  /**
+   * Gets (and caches) the NetworkTable instance for a Limelight table name.
+   *
+   * @param tableName Limelight table name ("" for default)
+   * @return NetworkTable for the given limelight
+   */
   public static void Flush() {
     NetworkTableInstance.getDefault().flush();
   }
 
+  /** Flushes NetworkTables immediately to ensure values are written. */
   public static NetworkTableEntry getLimelightNTTableEntry(String tableName, String entryName) {
     return getLimelightNTTable(tableName).getEntry(entryName);
   }
 
+  /**
+   * Returns a NetworkTableEntry for a given Limelight table and entry name.
+   *
+   * @param tableName Limelight table name
+   * @param entryName Entry key
+   * @return the NetworkTableEntry for the given table/entry
+   */
   public static DoubleArrayEntry getLimelightDoubleArrayEntry(String tableName, String entryName) {
     String key = tableName + "/" + entryName;
     return doubleArrayEntries.computeIfAbsent(
@@ -910,30 +952,80 @@ public class LimelightHelpers {
         });
   }
 
+  /**
+   * Returns a cached DoubleArrayEntry for the given limelight table/entry to avoid repeated topic
+   * lookups.
+   *
+   * @param tableName Limelight table name
+   * @param entryName Entry key
+   * @return DoubleArrayEntry for the requested table/entry
+   */
   public static double getLimelightNTDouble(String tableName, String entryName) {
     return getLimelightNTTableEntry(tableName, entryName).getDouble(0.0);
   }
 
+  /**
+   * Reads a double value from a Limelight NetworkTable entry.
+   *
+   * @param tableName Limelight table name
+   * @param entryName Entry key
+   * @return the double value, or 0.0 if not present
+   */
   public static void setLimelightNTDouble(String tableName, String entryName, double val) {
     getLimelightNTTableEntry(tableName, entryName).setDouble(val);
   }
 
+  /**
+   * Sets a double value on a Limelight NetworkTable entry.
+   *
+   * @param tableName Limelight table name
+   * @param entryName Entry key
+   * @param val Value to set
+   */
   public static void setLimelightNTDoubleArray(String tableName, String entryName, double[] val) {
     getLimelightNTTableEntry(tableName, entryName).setDoubleArray(val);
   }
 
+  /**
+   * Sets a double array on a Limelight NetworkTable entry.
+   *
+   * @param tableName Limelight table name
+   * @param entryName Entry key
+   * @param val Array value to set
+   */
   public static double[] getLimelightNTDoubleArray(String tableName, String entryName) {
     return getLimelightNTTableEntry(tableName, entryName).getDoubleArray(new double[0]);
   }
 
+  /**
+   * Reads a double array from a Limelight NetworkTable entry.
+   *
+   * @param tableName Limelight table name
+   * @param entryName Entry key
+   * @return the double array, or an empty array if not present
+   */
   public static String getLimelightNTString(String tableName, String entryName) {
     return getLimelightNTTableEntry(tableName, entryName).getString("");
   }
 
+  /**
+   * Reads a string value from a Limelight NetworkTable entry.
+   *
+   * @param tableName Limelight table name
+   * @param entryName Entry key
+   * @return the string value, or empty string if not present
+   */
   public static String[] getLimelightNTStringArray(String tableName, String entryName) {
     return getLimelightNTTableEntry(tableName, entryName).getStringArray(new String[0]);
   }
 
+  /**
+   * Reads a string array from a Limelight NetworkTable entry.
+   *
+   * @param tableName Limelight table name
+   * @param entryName Entry key
+   * @return the string array, or an empty array if not present
+   */
   public static URL getLimelightURLString(String tableName, String request) {
     String urlString = "http://" + sanitizeName(tableName) + ".local:5807/" + request;
     URL url;
@@ -941,10 +1033,19 @@ public class LimelightHelpers {
       url = new URL(urlString);
       return url;
     } catch (MalformedURLException e) {
-      System.err.println("bad LL URL");
+      System.err.println("ERROR: bad LL URL - " + e.getMessage());
+      e.printStackTrace(System.err);
     }
     return null;
   }
+
+  /**
+   * Builds a URL for a Limelight web request.
+   *
+   * @param tableName Limelight table name
+   * @param request Path or request string to append to the Limelight web server
+   * @return URL object or null if the URL is malformed
+   */
 
   /////
   /////
@@ -1704,10 +1805,11 @@ public class LimelightHelpers {
       if (responseCode == 200) {
         return true;
       } else {
-        System.err.println("Bad LL Request");
+        System.err.println("ERROR: Bad LL Request (response code " + responseCode + ")");
       }
     } catch (IOException e) {
-      System.err.println(e.getMessage());
+      System.err.println("ERROR: IOException in SYNCH_TAKESNAPSHOT - " + e.getMessage());
+      e.printStackTrace(System.err);
     }
     return false;
   }
@@ -1728,9 +1830,33 @@ public class LimelightHelpers {
     }
 
     try {
-      results = mapper.readValue(getJSONDump(limelightName), LimelightResults.class);
+      String json = getJSONDump(limelightName);
+      if (json == null || json.isEmpty()) {
+        // no data available, return default
+        return results;
+      }
+
+      String last = lastJsonDump.get(limelightName);
+      if (last != null && last.equals(json)) {
+        // Return cached parsed result to avoid reparsing identical JSON
+        LimelightResults cached = lastParsedJson.get(limelightName);
+        if (cached != null) {
+          cached.latency_jsonParse = 0; // parsing skipped
+          return cached;
+        }
+      }
+
+      results = mapper.readValue(json, LimelightResults.class);
+      // Cache parsed result (we store the object as-is; caller should treat as immutable)
+      lastJsonDump.put(limelightName, json);
+      lastParsedJson.put(limelightName, results);
     } catch (JsonProcessingException e) {
       results.error = "lljson error: " + e.getMessage();
+      System.err.println("ERROR: lljson error: " + e.getMessage());
+      e.printStackTrace(System.err);
+      // Cache the failing result to avoid repeated expensive parsing of identical bad JSON
+      lastJsonDump.put(limelightName, getJSONDump(limelightName));
+      lastParsedJson.put(limelightName, results);
     }
 
     long end = System.nanoTime();

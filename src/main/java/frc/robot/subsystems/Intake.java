@@ -13,6 +13,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.CANConstants;
 import frc.robot.constants.IntakeConstants;
 
+/**
+ * Intake subsystem controlling the intake wheels.
+ *
+ * <p>Exposes commands to run, outtake, and stop the intake rollers.
+ */
 public class Intake extends SubsystemBase {
   private final TalonFX m_intakeWheelsMotor =
       new TalonFX(CANConstants.intakeWheelsMotor, CANConstants.mechanismCanivore);
@@ -41,14 +46,30 @@ public class Intake extends SubsystemBase {
     }
   }
 
+  /**
+   * Starts the intake rollers at the configured intake speed (one-shot).
+   *
+   * @return Command that runs the intake wheels to pick up game pieces
+   */
   protected Command runIntake() {
     return runOnce(() -> setIntakeSpeed(IntakeConstants.INTAKE_SPEED));
   }
 
+  /**
+   * Runs the intake rollers in the outtake direction at the configured speed (one-shot). Typically
+   * used to expel game pieces.
+   *
+   * @return Command that runs the intake wheels in reverse
+   */
   protected Command runOuttake() {
     return runOnce(() -> setIntakeSpeed(IntakeConstants.OUTTAKE_SPEED));
   }
 
+  /**
+   * Stops the intake rollers (one-shot).
+   *
+   * @return Command that stops the intake motor output
+   */
   protected Command stopIntake() {
     return runOnce(() -> setPowerZero());
   }

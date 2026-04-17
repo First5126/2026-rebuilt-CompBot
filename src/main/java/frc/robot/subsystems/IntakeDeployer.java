@@ -24,6 +24,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.CANConstants;
 import frc.robot.constants.IntakeDeployerConstants;
 
+/**
+ * Intake deployer subsystem controls the pivot and positioning of the intake mechanism.
+ *
+ * <p>Provides commands to raise, lower, and agitate the intake deployment mechanism.
+ */
 public class IntakeDeployer extends SubsystemBase {
 
   private TalonFX m_intakeDeployerMotorRight =
@@ -79,9 +84,20 @@ public class IntakeDeployer extends SubsystemBase {
     return runOnce(() -> raiseIntakeUp());
   }
 
+  /**
+   * Raises the intake to the stowed/raised position (one-shot).
+   *
+   * @return Command that raises the intake
+   */
   public Command agitateIntakeUp() {
     return runOnce(() -> rotateToAgitation());
   }
+
+  /**
+   * Runs a quick agitation motion upward (one-shot) used to free jammed pieces.
+   *
+   * @return Command that agitates the intake
+   */
 
   // public Command agitateIntakeCommand() {
   // return run(() -> agitateIntake()).repeatedly();
@@ -100,12 +116,22 @@ public class IntakeDeployer extends SubsystemBase {
         .repeatedly();
   }
 
+  /**
+   * Composite command that repeatedly agitates the intake (up/down) until cancelled.
+   *
+   * @return Command that repeatedly agitates the intake
+   */
   public Command lowerIntakeDownCommand() {
     return setWheelsDownCommand()
         .andThen(Commands.waitUntil(this::reachedDeploySetpoint))
         .andThen(stopWheelsCommand());
   }
 
+  /**
+   * Lowers the intake until the deploy setpoint is reached, then stops the wheels.
+   *
+   * @return Command that lowers the intake to the deploy position
+   */
   private Boolean reachedDeploySetpoint() {
     return m_intakeDeployerMotorLeft.getPosition().getValue().in(Rotations)
         > IntakeDeployerConstants.INTAKE_HALFWAY_DOWN.in(Rotations);
@@ -144,6 +170,11 @@ public class IntakeDeployer extends SubsystemBase {
     return runOnce(() -> lowerIntakeDown());
   }
 
+  /**
+   * Lowers the intake fully to the down position (one-shot).
+   *
+   * @return Command that lowers the intake fully
+   */
   private void rotate(Angle setpoint) {
     m_intakeDeployerMotorLeft.setControl(m_request.withPosition(setpoint));
   }

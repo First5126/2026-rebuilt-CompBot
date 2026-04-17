@@ -19,6 +19,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
+/**
+ * Telemetry helper that publishes drivetrain state and mechanism telemetry to NetworkTables and
+ * SignalLogger.
+ *
+ * <p>This class is intended to minimize allocations while frequently publishing odometry, module
+ * states, and field visuals for dashboarding and logging.
+ */
 public class Telemetry {
   private final double MaxSpeed;
 

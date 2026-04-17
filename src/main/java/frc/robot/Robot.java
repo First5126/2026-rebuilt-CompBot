@@ -15,6 +15,13 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.controller.Driver;
 import frc.robot.controller.Operator;
 
+/**
+ * Top-level robot class that ties together the command-based robot lifecycle and the
+ * RobotContainer.
+ *
+ * <p>Handles mode transitions (disabled, autonomous, teleop, test) and runs the CommandScheduler
+ * each robot packet.
+ */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 

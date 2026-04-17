@@ -14,6 +14,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+/**
+ * LEDLights controls the CANdle LED driver and exposes commands to set team colors and animations.
+ */
 public class LEDLights extends SubsystemBase {
 
   private static final int kCANdleCANbus = 0;
@@ -36,22 +39,39 @@ public class LEDLights extends SubsystemBase {
     m_candle.getConfigurator().apply(m_configs);
   }
 
+  /** Sets LEDs to team red color immediately. */
   public void setRed() {
     m_candle.setControl(m_solidColorControl.withColor(RED));
   }
 
+  /** Sets LEDs to team green color immediately. */
   public void setGreen() {
     m_candle.setControl(m_solidColorControl.withColor(GREEN));
   }
 
+  /**
+   * Returns a command that sets LEDs to blue when executed.
+   *
+   * @return Command that sets LEDs blue
+   */
   public Command setBlue() {
     return run(() -> applyColor(BLUE));
   }
 
+  /**
+   * Returns a command that sets LEDs to purple when executed.
+   *
+   * @return Command that sets LEDs purple
+   */
   public Command setPurple() {
     return run(() -> applyColor(PURPLE));
   }
 
+  /**
+   * Stops any running animation and sets a static color (red) as a stop state.
+   *
+   * @return Command that stops animations
+   */
   public Command stopRainbow() {
     return run(() -> m_candle.setControl(m_solidColorControl.withColor(RED)));
   }

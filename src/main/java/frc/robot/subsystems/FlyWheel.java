@@ -21,6 +21,12 @@ import frc.robot.constants.FlyWheelConstants;
 import frc.robot.subsystems.ShootingMechanism.ShootingSolution;
 import java.util.function.Supplier;
 
+/**
+ * Flywheel subsystem that controls shooter motors.
+ *
+ * <p>Provides commands to spin the flywheel to target speeds and utility methods for current
+ * velocity reading.
+ */
 public class FlyWheel extends SubsystemBase {
 
   private TalonFX m_shooterMotor =
@@ -47,6 +53,7 @@ public class FlyWheel extends SubsystemBase {
     m_shooterMotor.getConfigurator().apply(flyWheelConfiguration);
   }
 
+  /** Constructs the FlyWheel subsystem and configures the shooter motor. */
   public Command setSpeed(Supplier<AngularVelocity> rps) {
     return runOnce(
         () -> {
@@ -55,6 +62,19 @@ public class FlyWheel extends SubsystemBase {
         });
   }
 
+  /**
+   * Returns a one-shot command that sets the flywheel speed from the supplied angular velocity.
+   *
+   * @param rps supplier of angular velocity (RPS)
+   * @return Command that sets the flywheel speed once
+   */
+
+  /**
+   * Returns a command that sets the flywheel speed once from the provided supplier.
+   *
+   * @param rps Supplier providing target angular velocity for the flywheel
+   * @return Command to set the speed once
+   */
   public Command setSpeedWithSolution(Supplier<ShootingSolution> solutionSupplier) {
     return run(
         () -> {
@@ -63,30 +83,64 @@ public class FlyWheel extends SubsystemBase {
         });
   }
 
+  /**
+   * Returns a command that continuously sets the flywheel speed according to a provided {@link
+   * ShootingSolution} supplier.
+   *
+   * @param solutionSupplier Supplier of {@link ShootingSolution}
+   * @return Command that applies the requested speed on each execution
+   */
   public Command rotateFlywheel() {
     return runOnce(() -> startMotors());
   }
 
+  /**
+   * Spins up the flywheel (one-shot) using the configured duty/voltage.
+   *
+   * @return Command that begins wheel rotation
+   */
   public Command stopSpinning() {
     return runOnce(() -> stopMotors());
   }
 
+  /**
+   * Stops the flywheel motors (one-shot).
+   *
+   * @return Command that stops motor output
+   */
   public Command reverseSpinning() {
     return runOnce(() -> reverseWheels());
   }
+
+  /**
+   * Reverses flywheel direction for the duration of a one-shot command.
+   *
+   * @return Command that runs the flywheel in reverse
+   */
 
   // public LinearVelocity getDashboardSpeed() {
   //  return MetersPerSecond.of(SmartDashboard.getNumber("Set Shooter Speed (MPS)", 0));
   // }
 
+  /**
+   * Reads a dashboard-provided target speed (RPS) and returns it as an AngularVelocity.
+   *
+   * @return Dashboard-configured angular velocity for the shooter
+   */
   public AngularVelocity getDashboardSpeedRPS() {
     return RotationsPerSecond.of(SmartDashboard.getNumber("Set Shooter Speed (RPS)", 0));
   }
 
+  /**
+   * Returns the current measured angular velocity of the flywheel motor.
+   *
+   * @return Current flywheel {@link AngularVelocity}
+   */
   public AngularVelocity getCurrentSpeed() {
     return m_shooterMotor.getVelocity().getValue();
   }
 
+  /** Periodic no-op for FlyWheel; update logic may be added later. */
   @Override
   public void periodic() {}
 
@@ -132,4 +186,9 @@ public class FlyWheel extends SubsystemBase {
           m_shooterMotor.setControl(m_dutyCycleOut.withOutput(-0.30));
         });
   }
+  /**
+   * Runs the shooter inward briefly to clear jams (one-shot).
+   *
+   * @return Command that runs the motor inward once
+   */
 }

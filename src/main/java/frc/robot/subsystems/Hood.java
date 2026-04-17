@@ -35,6 +35,12 @@ import frc.robot.constants.HoodConstants;
 import frc.robot.subsystems.ShootingMechanism.ShootingSolution;
 import java.util.function.Supplier;
 
+/**
+ * Hood mechanism subsystem.
+ *
+ * <p>Controls the hood position for aiming and exposes commands for manual and automated
+ * positioning.
+ */
 public class Hood extends SubsystemBase {
   private TalonFX m_hoodMotor;
   private CANdi m_CANdi;
@@ -61,6 +67,9 @@ public class Hood extends SubsystemBase {
     m_hoodMotor.setControl(m_positionVoltageRequest.withPosition(clampPosition(position)));
   }
 
+  /**
+   * Constructs the Hood subsystem and initializes motor, encoder, and limit switch configuration.
+   */
   public Hood() {
     m_hoodMotor = new TalonFX(CANConstants.hoodMotor, CANConstants.mechanismCanivore);
     m_CANdi = new CANdi(CANConstants.hoodCANdi, CANConstants.mechanismCanivore);
@@ -142,6 +151,11 @@ public class Hood extends SubsystemBase {
     logger.logAndDisplay("Hood Angle (deg)", currentAngle);
   }
 
+  /**
+   * Lowers the hood using a fixed voltage until the lower limit switch is reached, then stops.
+   *
+   * @return Command sequence that performs the auto-zero routine
+   */
   public Command lowerHoodUntilZero() {
     return setVoltage(HoodConstants.VOLTAGE_AUTO_ZERO)
         .andThen(Commands.waitUntil(m_zeroTrigger).andThen(setVoltage(Volt.of(0))));
@@ -154,6 +168,12 @@ public class Hood extends SubsystemBase {
         });
   }
 
+  /**
+   * Returns a one-shot command to adjust the hood by the provided delta angle.
+   *
+   * @param amountOfRotation Angle to add to current hood position
+   * @return Command that updates the hood position once
+   */
   public Command setPosition(Angle angle) {
     return runOnce(
         () -> {
@@ -161,6 +181,12 @@ public class Hood extends SubsystemBase {
         });
   }
 
+  /**
+   * Returns a command that moves the hood to the given absolute angle.
+   *
+   * @param angle Target hood {@link Angle}
+   * @return Command that sets the hood position once
+   */
   public Command moveAngleUpCommand() {
     return Commands.run(
         () -> {
@@ -169,6 +195,11 @@ public class Hood extends SubsystemBase {
         this);
   }
 
+  /**
+   * Returns a command that nudges the hood slightly up while held/executing.
+   *
+   * @return Command that increments the hood angle
+   */
   public Command moveAngleDownCommand() {
     return Commands.run(
         () -> {
@@ -177,6 +208,11 @@ public class Hood extends SubsystemBase {
         this);
   }
 
+  /**
+   * Returns a command that nudges the hood slightly down while held/executing.
+   *
+   * @return Command that decrements the hood angle
+   */
   public Command manualRotationWithSticks(Supplier<Double> controlerY) {
     return run(
         () -> {
@@ -185,6 +221,12 @@ public class Hood extends SubsystemBase {
         });
   }
 
+  /**
+   * Returns a command for manual hood control driven by a joystick supplier.
+   *
+   * @param controlerY supplier for manual input
+   * @return Command that applies manual voltage while running
+   */
   public Command holdCertainPosition(Angle angle) {
     return run(() -> {
           setPositionInternal(angle);
@@ -192,6 +234,12 @@ public class Hood extends SubsystemBase {
         .withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
   }
 
+  /**
+   * Holds the hood at a fixed absolute angle until interrupted.
+   *
+   * @param angle Target angle to hold
+   * @return Command that continuously enforces the angle
+   */
   public Command setPosition(Supplier<ShootingSolution> shootingSolution) {
     return run(
         () -> {
@@ -199,6 +247,13 @@ public class Hood extends SubsystemBase {
         });
   }
 
+  /**
+   * Sets the hood position from a {@link ShootingSolution} supplier (used by higher-level
+   * commands).
+   *
+   * @param shootingSolution Supplier that provides a {@link ShootingSolution}
+   * @return Command that applies the supplied position
+   */
   public Command setPositionToDashboard() {
     return runOnce(
         () -> {
@@ -207,6 +262,11 @@ public class Hood extends SubsystemBase {
         });
   }
 
+  /**
+   * Sets the hood based on a dashboard-provided angle (one-shot).
+   *
+   * @return Command that reads dashboard and sets the hood
+   */
   public Command setVoltage(Voltage voltage) {
     return runOnce(
         () -> {
@@ -214,7 +274,19 @@ public class Hood extends SubsystemBase {
         });
   }
 
+  /**
+   * Applies a direct voltage to the hood motor (one-shot). Useful for auto-zero or manual override.
+   *
+   * @param voltage Voltage to apply
+   * @return Command that applies the voltage
+   */
   public Angle getPosition() {
     return m_hoodCANCoder.getPosition().getValue();
   }
+
+  /**
+   * Returns the current absolute hood position as reported by the CANcoder.
+   *
+   * @return Current hood {@link Angle}
+   */
 }

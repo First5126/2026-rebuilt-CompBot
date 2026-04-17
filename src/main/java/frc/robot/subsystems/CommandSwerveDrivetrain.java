@@ -230,18 +230,43 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return run(() -> this.setControl(request.get()));
     }
 
+    /**
+     * Returns the current estimated pose of the robot from the drivetrain odometry.
+     *
+     * @return Current robot pose as a {@link Pose2d}
+     */
     public Pose2d getPose2d(){
         return getState().Pose;
     }
 
+    /**
+     * Returns a command which drives the robot to the given field-relative pose using the
+     * configured path-following/autonomous utilities.
+     *
+     * @param pose Target field-relative {@link Pose2d}
+     * @return Command that performs the motion
+     */
     public Command goToPose(Pose2d pose) {
         return AutoBuilder.pathfindToPose(pose, DrivetrainConstants.pathConstraints);
     }
 
+    /**
+     * Variant of {@link #goToPose(Pose2d)} that accepts a supplier for dynamic targets.
+     *
+     * @param pose Supplier that provides the target {@link Pose2d}
+     * @return Command that performs the motion
+     */
     public Command goToPose(Supplier<Pose2d> pose) {
         return goToPose(pose.get());
     }
 
+    /**
+     * Predicts the robot pose after a short delay using the current chassis speeds.
+     * Useful for compensating for known mechanism or flight time delays.
+     *
+     * @param delayTime Seconds in the future to predict the pose for
+     * @return Predicted {@link Pose2d} after the provided delay
+     */
     public Pose2d getPredictedPose2d(double delayTime) {
 
         ChassisSpeeds robotSpeeds = this.getSpeeds();
@@ -315,6 +340,18 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return driveHeadingDegrees;
     }
 
+    /**
+     * Calculates the current heading (in degrees) of the drivetrain motion vector in field coordinates.
+     *
+     * @return Heading in degrees of the current drive motion
+     */
+
+    /**
+     * Computes a turret heading (robot-relative) useful for spinning the duck wheel or aligning
+     * to the opposite direction.
+     *
+     * @return Turret heading in degrees (robot-relative)
+     */
     public double getTurretHeadingForDuck() {
         Rotation2d poseRotations = getState().Pose.getRotation();
         double oppositeDeg = MathUtil.inputModulus(getDriveHeadingDegrees() + 180.0, -180.0, 180.0);
@@ -378,6 +415,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             resetPose(pose);
         });
     }
+
+    /**
+     * Returns a pose snapshot from the internal state buffer for the given timestamp.
+     *
+     * @param timestampSeconds Timestamp (seconds) to sample
+     * @return Optional containing the pose at that time or empty if unavailable
+     */
 
     /**
      * Return the pose at a given timestamp, if the buffer is not empty.
@@ -478,17 +522,36 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             });
   }
 
-  public double percentOutputToMetersPerSecond(double percentOutput) {
-    return DrivetrainConstants.maxSpeedMetersPerSecond * percentOutput;
-  }
+    /**
+     * Converts controller percent output (-1.0..1.0) into forward/back velocity in meters/sec
+     * using the drivetrain maximum speed configured in constants.
+     *
+     * @param percentOutput Percent of full speed (-1.0 to 1.0)
+     * @return Velocity in meters per second
+     */
+    public double percentOutputToMetersPerSecond(double percentOutput) {
+        return DrivetrainConstants.maxSpeedMetersPerSecond * percentOutput;
+    }
 
-  public double percentOutputToRadiansPerSecond(double percentOutput) {
-    return DrivetrainConstants.maxAngularVelocityRadiansPerSecond * percentOutput;
-  }
+    /**
+     * Converts controller percent output (-1.0..1.0) into angular velocity (radians/sec)
+     * using the drivetrain maximum angular velocity in constants.
+     *
+     * @param percentOutput Percent of full rotation rate (-1.0 to 1.0)
+     * @return Angular velocity in radians per second
+     */
+    public double percentOutputToRadiansPerSecond(double percentOutput) {
+        return DrivetrainConstants.maxAngularVelocityRadiansPerSecond * percentOutput;
+    }
 
-  public ChassisSpeeds getSpeeds() {
-    return getState().Speeds;
-  }
+    /**
+     * Returns the current robot-relative chassis speeds measured by the drivetrain.
+     *
+     * @return Current {@link ChassisSpeeds}
+     */
+    public ChassisSpeeds getSpeeds() {
+        return getState().Speeds;
+    }
 
   private void configureAutobuilder() {
     // Load the RobotConfig from the GUI settings. You should probably
@@ -533,9 +596,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
           },
           this // Reference to this subsystem to set requirements
           );
-    } catch (Exception e) {
-      // Handle exception as needed
-      e.printStackTrace();
-    }
+        } catch (Exception e) {
+            // Log to stderr so it is clearly visible on the console
+            System.err.println("ERROR: Exception in CommandSwerveDrivetrain - " + e.getMessage());
+            e.printStackTrace(System.err);
+        }
   }
 }

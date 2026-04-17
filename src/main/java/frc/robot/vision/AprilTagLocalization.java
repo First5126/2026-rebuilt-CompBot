@@ -43,6 +43,22 @@ public class AprilTagLocalization extends SubsystemBase {
   private static final int LOG_EVERY_N_ESTIMATES = 25; // ~0.5s if estimates run at 20ms
   private LimelightDetails[] m_LimelightDetails; // list of limelights that can provide updates
   private PhotonDetails[] m_PhotonVisionCameras; // list of limelights that can provide updates
+  private double[]
+      m_lastPhotonTimestamps; // track last processed timestamp per photon camera to avoid duplicate
+  // work
+  // Cache last computed interpolation scale & stddevs per limelight to avoid repeated Matrix
+  // allocations when scale does not change between estimates
+  private double[] m_lastLimelightScale;
+
+  @SuppressWarnings("rawtypes")
+  private Matrix[] m_lastLimelightInterpolated;
+
+  // Cache last computed interpolation scale & stddevs per photon camera
+  private double[] m_lastPhotonScale;
+
+  @SuppressWarnings("rawtypes")
+  private Matrix[] m_lastPhotonInterpolated;
+
   private Supplier<Pose2d> m_robotPoseSupplier; // supplies the pose of the robot
   private boolean m_FullTrust; // to allow for button trust the tag estimate over all else.
   private MutAngle m_yaw = Degrees.mutable(0);
@@ -76,6 +92,39 @@ public class AprilTagLocalization extends SubsystemBase {
       LimelightDetails... details) {
     m_LimelightDetails = details;
     m_PhotonVisionCameras = photonDetails;
+    if (m_PhotonVisionCameras != null) {
+      m_lastPhotonTimestamps = new double[m_PhotonVisionCameras.length];
+      for (int i = 0; i < m_lastPhotonTimestamps.length; i++) {
+        m_lastPhotonTimestamps[i] = 0.0;
+      }
+    } else {
+      m_lastPhotonTimestamps = new double[0];
+    }
+    // Initialize interpolation caches for limelights
+    if (m_LimelightDetails != null) {
+      m_lastLimelightScale = new double[m_LimelightDetails.length];
+      // generic array creation - acceptable here for caching
+      m_lastLimelightInterpolated = new Matrix[m_LimelightDetails.length];
+      for (int i = 0; i < m_lastLimelightScale.length; i++) {
+        m_lastLimelightScale[i] = Double.NaN;
+        m_lastLimelightInterpolated[i] = null;
+      }
+    } else {
+      m_lastLimelightScale = new double[0];
+      m_lastLimelightInterpolated = new Matrix[0];
+    }
+    // Initialize interpolation caches for photon cameras
+    if (m_PhotonVisionCameras != null) {
+      m_lastPhotonScale = new double[m_PhotonVisionCameras.length];
+      m_lastPhotonInterpolated = new Matrix[m_PhotonVisionCameras.length];
+      for (int i = 0; i < m_lastPhotonScale.length; i++) {
+        m_lastPhotonScale[i] = Double.NaN;
+        m_lastPhotonInterpolated[i] = null;
+      }
+    } else {
+      m_lastPhotonScale = new double[0];
+      m_lastPhotonInterpolated = new Matrix[0];
+    }
     m_robotPoseSupplier = poseSupplier;
     m_poseReset = resetPose;
     m_VisionConsumer = visionConsumer;
@@ -152,7 +201,8 @@ public class AprilTagLocalization extends SubsystemBase {
     final double robotYawDegrees = robotPose.getRotation().getDegrees();
     final double maxTagDistanceMeters = MAX_TAG_DISTANCE.in(Meters);
 
-    for (LimelightDetails limelightDetail : m_LimelightDetails) {
+    for (int li = 0; li < m_LimelightDetails.length; li++) {
+      LimelightDetails limelightDetail = m_LimelightDetails[li];
       m_yaw.mut_replace(Degrees.of(robotYawDegrees));
       AngularVelocity yawRate = (m_yaw.minus(m_OldYaw).div(LOCALIZATION_PERIOD));
       // Set Orientation using LimelightHelpers.SetRobotOrientation and the m_robotPoseSupplier
@@ -198,8 +248,7 @@ public class AprilTagLocalization extends SubsystemBase {
         double scale =
             poseEstimate.avgTagDist
                 / maxTagDistanceMeters; // scale the std deviation by the distance
-        // Validate the pose for sanity reject bad poses  if fullTrust is true accept regarless of
-        // sanity
+        // Validate the pose for sanity; reject bad poses. If fullTrust is true accept regardless.
         if (m_FullTrust) {
           // set the pose in the pose consumer
           m_poseReset.accept(
@@ -211,9 +260,19 @@ public class AprilTagLocalization extends SubsystemBase {
             && poseEstimate.avgTagDist
                 < maxTagDistanceMeters) { // reject poses that are more than max tag distance we
           // trust
-          // scale std deviation by distance if fullTrust is true set the stdDevs super low.
-          Matrix<N3, N1> interpolated =
-              interpolate(limelightDetail.closeStdDevs, limelightDetail.farStdDevs, scale);
+          // Compute or reuse cached interpolated stddevs (only when needed)
+          Matrix<N3, N1> interpolated;
+          double last = m_lastLimelightScale[li];
+          if (Double.isNaN(last) || Math.abs(last - scale) > 1e-6) {
+            interpolated =
+                interpolate(limelightDetail.closeStdDevs, limelightDetail.farStdDevs, scale);
+            m_lastLimelightInterpolated[li] = interpolated;
+            m_lastLimelightScale[li] = scale;
+          } else {
+            @SuppressWarnings("unchecked")
+            Matrix<N3, N1> cached = (Matrix<N3, N1>) m_lastLimelightInterpolated[li];
+            interpolated = cached;
+          }
 
           // set the pose in the pose consumer
           m_VisionConsumer.accept(poseEstimate.pose, poseEstimate.timestampSeconds, interpolated);
@@ -222,11 +281,23 @@ public class AprilTagLocalization extends SubsystemBase {
       }
     }
 
-    for (PhotonDetails photonDetail : m_PhotonVisionCameras) {
-      PhotonPipelineResult result = photonDetail.camera.getLatestResult();
-      if (!result.hasTargets()) {
+    for (int i = 0; i < m_PhotonVisionCameras.length; i++) {
+      PhotonDetails photonDetail = m_PhotonVisionCameras[i];
+      if (photonDetail == null || photonDetail.camera == null) {
         continue;
       }
+
+      PhotonPipelineResult result =
+          frc.robot.vision.PhotonVisionHelpers.getResultOfCamera(photonDetail.camera);
+
+      // Fast path checks: must have targets and be newer than last processed timestamp
+      double resultTs = result.getTimestampSeconds();
+      if (!result.hasTargets() || resultTs <= m_lastPhotonTimestamps[i]) {
+        continue;
+      }
+
+      // Mark this timestamp as processed up-front to avoid reprocessing the same frame
+      m_lastPhotonTimestamps[i] = resultTs;
 
       Optional<EstimatedRobotPose> estimation =
           photonDetail.poseEstimator.estimateCoprocMultiTagPose(result);
@@ -234,43 +305,71 @@ public class AprilTagLocalization extends SubsystemBase {
       if (estimation.isEmpty()) {
         estimation = photonDetail.poseEstimator.estimateLowestAmbiguityPose(result);
       }
-      final var finalEstimation = estimation;
-      estimation.ifPresent(
-          est -> {
-            double scale =
-                PhotonVisionHelpers.getAverageDistanceBetweenTags(
-                        photonDetail, finalEstimation.get().estimatedPose.toPose2d())
-                    / maxTagDistanceMeters;
-            // TODO: replace with real STDV's new Matrix<N3, N1>
-            // TODO: interpolate this
-            Matrix<N3, N1> interpolated =
-                interpolate(photonDetail.closeStdDevs, photonDetail.farStdDevs, scale);
 
-            m_VisionConsumer.accept(
-                est.estimatedPose.toPose2d(), est.timestampSeconds, interpolated);
-          });
+      if (estimation.isPresent()) {
+        EstimatedRobotPose est = estimation.get();
+        // Reuse the computed Pose2d to avoid allocating it twice
+        Pose2d photonPose2d = est.estimatedPose.toPose2d();
+        double scale =
+            PhotonVisionHelpers.getAverageDistanceBetweenTags(photonDetail, photonPose2d)
+                / maxTagDistanceMeters;
+
+        // compute or reuse interpolated stddevs based on distance to avoid repeated allocations
+        Matrix<N3, N1> interpolated;
+        double lastP = m_lastPhotonScale[i];
+        if (Double.isNaN(lastP) || Math.abs(lastP - scale) > 1e-6) {
+          interpolated = interpolate(photonDetail.closeStdDevs, photonDetail.farStdDevs, scale);
+          m_lastPhotonInterpolated[i] = interpolated;
+          m_lastPhotonScale[i] = scale;
+        } else {
+          @SuppressWarnings("unchecked")
+          Matrix<N3, N1> cached = (Matrix<N3, N1>) m_lastPhotonInterpolated[i];
+          interpolated = cached;
+        }
+
+        // Only pass the measurement once per new result (timestamp guard above)
+        m_VisionConsumer.accept(photonPose2d, est.timestampSeconds, interpolated);
+      }
     }
   }
 
   /**
-   * Defines a function pointer to a function with a signature ( Pose2d visionRobotPoseMeters,
-   * double timestampSeconds, Matrix<N3, N1> visionMeasurementStdDevs) to accept the vision pose
-   * estimate
+   * Consumer callback interface for accepting vision pose estimates.
+   *
+   * <p>Implementations receive a vision-derived robot pose, the timestamp of the observation, and
+   * the measurement standard deviations as a 3x1 matrix.
    */
   @FunctionalInterface
   public interface VisionConsumer {
+    /**
+     * Accepts a vision pose estimate and associated measurement properties.
+     *
+     * @param visionRobotPoseMeters Pose2d estimate in field coordinates
+     * @param timestampSeconds observation timestamp in seconds
+     * @param visionMeasurementStdDevs 3x1 matrix containing stddevs for [x, y, theta]
+     */
     void accept(
         Pose2d visionRobotPoseMeters,
         double timestampSeconds,
         Matrix<N3, N1> visionMeasurementStdDevs);
   }
 
+  /** Functional interface used to reset or set the drivetrain pose from vision. */
   @FunctionalInterface
   public interface ResetPose {
+    /**
+     * Accepts a Pose2d to reset the robot/drivetrain pose.
+     *
+     * @param pose2d new pose to apply to the drivetrain
+     */
     void accept(Pose2d pose2d);
   }
 
   @Override
+  /**
+   * Periodic scheduler hook. Runs pose estimation on a throttled cadence unless the robot is in
+   * certain zones (e.g. near the bump) where estimation is skipped.
+   */
   public void periodic() {
     if (m_zone.isNearBump()) {
       return;

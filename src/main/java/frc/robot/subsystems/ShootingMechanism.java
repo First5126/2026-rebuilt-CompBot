@@ -24,6 +24,12 @@ import frc.robot.constants.ShootingMechanismConstants;
 import frc.robot.constants.TurretConstants;
 import java.util.function.Supplier;
 
+/**
+ * Shooting mechanism that coordinates hood, turret, and flywheel to generate shooting solutions.
+ *
+ * <p>Computes predicted hood/turret angles and flywheel speed based on the robot pose and target
+ * and exposes commands for tracking and shooting routines.
+ */
 public class ShootingMechanism extends SubsystemBase {
   public static final RobotLogger logger = new RobotLogger("ShootingMechanism");
   private int updateCounter = 1;
@@ -33,6 +39,14 @@ public class ShootingMechanism extends SubsystemBase {
     private Angle predictedTurretAngle;
     private AngularVelocity predictedFlyWheelVelocity;
 
+    /**
+     * Represents a computed shooting solution containing hood angle, turret angle, and flywheel
+     * velocity predictions.
+     *
+     * @param hoodAngle Predicted hood angle
+     * @param turretAngle Predicted turret angle
+     * @param flyWheelVelocity Predicted flywheel angular velocity
+     */
     public ShootingSolution(Angle hoodAngle, Angle turretAngle, AngularVelocity flyWheelVelocity) {
       predictedHoodAngle = hoodAngle;
       predictedTurretAngle = turretAngle;
@@ -45,14 +59,23 @@ public class ShootingMechanism extends SubsystemBase {
       predictedFlyWheelVelocity = flyWheelVelocity;
     }
 
+    /**
+     * @return Predicted hood {@link Angle}
+     */
     public Angle getPredictedHoodAngle() {
       return predictedHoodAngle;
     }
 
+    /**
+     * @return Predicted turret {@link Angle}
+     */
     public Angle getPredictedTurretAngle() {
       return predictedTurretAngle;
     }
 
+    /**
+     * @return Predicted flywheel {@link AngularVelocity}
+     */
     public AngularVelocity getPredictedFlyWheelVelocity() {
       return predictedFlyWheelVelocity;
     }
@@ -89,19 +112,37 @@ public class ShootingMechanism extends SubsystemBase {
     SmartDashboard.putData("Field", m_field);
   }
 
+  /**
+   * Constructs a ShootingMechanism coordinating turret, drivetrain, zone, hood and flywheel.
+   *
+   * @param turret turret subsystem used for aiming
+   * @param drivetrain drivetrain subsystem used for pose prediction
+   * @param zone field zone supplier for goal poses
+   * @param hood hood subsystem
+   * @param flyWheel flywheel subsystem
+   */
+
+  /**
+   * Returns a trigger that indicates whether the mechanism is currently able to shoot.
+   *
+   * @return Trigger that becomes true when shooting conditions are met
+   */
   public Trigger getCanShoot() {
     return canShoot;
   }
 
+  /**
+   * @return Current {@link ShootingSolution} containing predicted hood, turret, and flywheel values
+   */
   public ShootingSolution getShootingSolution() {
     return m_currentShootingSolution;
   }
 
   /**
+   * Updates the internal shooting solution using the provided robot and goal pose suppliers.
+   *
    * @param robotPoseSupplier The current pose of the robot
    * @param goalPoseSupplier The pose of the goal/target
-   * @return A shooting soltuion {@link frc.robot.subsystems.ShootingMechanism.ShootingSolution}
-   *     that contains the predicted angle for the hood and turret
    */
   private void updateShootingSolution(
       Supplier<Pose2d> robotPoseSupplier, Supplier<GoalPose> goalPoseSupplier) {
@@ -182,7 +223,9 @@ public class ShootingMechanism extends SubsystemBase {
     }
   }
 
-  @Override
+  /**
+   * Periodic update for the shooting mechanism; updates the shooting solution on a timed cadence.
+   */
   public void periodic() {
     if (ShootingMechanismConstants.updateCounter <= updateCounter) {
       updateShootingSolution(m_drivetrain::getPose2d, m_zone::getGoalPose);
@@ -220,23 +263,35 @@ public class ShootingMechanism extends SubsystemBase {
     return check;
   }
 
+  /**
+   * Returns a command that will start closed-loop turret + hood tracking to the computed shooting
+   * solution.
+   *
+   * @return Command to run for tracking
+   */
   public Command startTrackingCommand() {
-    // Command trackingCommand =
-    // m_turret.rotateToPosition(this::getShootingSolution).alongWith(m_hood.setPosition(this::getShootingSolution));
     Command trackingCommand = m_turret.rotateToPositionAuto(this::getShootingSolution);
     trackingCommand.addRequirements(this);
     return trackingCommand;
   }
 
+  /**
+   * Like {@link #startTrackingCommand()} but returns an auto/continuous tracking variation.
+   *
+   * @return Command to run for continuous auto tracking
+   */
   public Command startTrackingCommandAuto() {
-    // Command trackingCommand =
-    // m_turret.rotateToPosition(this::getShootingSolution).alongWith(m_hood.setPosition(this::getShootingSolution));
     Command trackingCommand = m_turret.rotateToPositionAutoCont(this::getShootingSolution);
-    // Command flywheelCommand = m_flyWheel.setSpeedWithSolution(this::getShootingSolution);
     trackingCommand.addRequirements(this);
     return trackingCommand;
   }
 
+  /**
+   * Returns a command that starts the flywheel to the speed specified by the current {@link
+   * ShootingSolution}.
+   *
+   * @return Command that controls the flywheel
+   */
   public Command startFlyWheel() {
     Command flywheelCommand = m_flyWheel.setSpeedWithSolution(this::getShootingSolution);
     return flywheelCommand;

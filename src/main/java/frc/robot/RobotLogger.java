@@ -4,6 +4,12 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+/**
+ * Small structured logger wrapper around DogLog and SmartDashboard for subsystem-scoped logging.
+ *
+ * <p>Provides convenience methods to log values and show them on the SmartDashboard when logging is
+ * enabled.
+ */
 public class RobotLogger {
   private static final String SEPERATOR = "/";
   private static boolean enabled = false;
