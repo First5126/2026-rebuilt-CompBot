@@ -20,6 +20,12 @@ import frc.robot.constants.TurretConstants;
 import frc.robot.subsystems.ShootingMechanism.ShootingSolution;
 import java.util.function.Supplier;
 
+/**
+ * Turret mechanism subsystem.
+ *
+ * <p>Controls turret motor and exposes commands to move to specific angles, manual control, and
+ * dynamic offset adjustments.
+ */
 public class Turret extends SubsystemBase {
   private static final RobotLogger logger = new RobotLogger("Turret");
   private final TalonFXS m_turretMotor;
@@ -28,6 +34,7 @@ public class Turret extends SubsystemBase {
   private final VoltageOut m_voltageControl;
   private double m_dynamicOffsetDegrees = 0.0;
 
+  /** Constructs the Turret subsystem and configures motor, limits, and control parameters. */
   public Turret() {
     m_turretMotor = new TalonFXS(CANConstants.turretMotor, CANConstants.mechanismCanivore);
     /*
@@ -102,6 +109,12 @@ public class Turret extends SubsystemBase {
         });
   }
 
+  /**
+   * Returns a command to manually drive the turret using a supplier value (typically joystick).
+   *
+   * @param controlerX Supplier providing the manual control input ([-1..1])
+   * @return Command that applies voltage proportional to the supplied input
+   */
   public Command manualRotationWithSticks(Supplier<Double> controlerX) {
     return run(
         () -> {
@@ -111,6 +124,13 @@ public class Turret extends SubsystemBase {
         });
   }
 
+  /**
+   * Returns a one-shot command that rotates the turret to the position provided by the shooting
+   * solution supplier.
+   *
+   * @param shootingSolution supplier of {@link ShootingSolution}
+   * @return Command that sets turret position once
+   */
   public Command rotateToPosition(Supplier<ShootingSolution> shootingSolution) {
     return runOnce(
         () -> {
@@ -118,6 +138,12 @@ public class Turret extends SubsystemBase {
         });
   }
 
+  /**
+   * Returns a command which continuously rotates the turret to follow a supplied shooting solution.
+   *
+   * @param shootingSolution Supplier of {@link ShootingSolution}
+   * @return Command that applies the turret setpoint each execution
+   */
   public Command rotateToPositionTracking(Supplier<ShootingSolution> shootingSolution) {
     return run(
         () -> {
@@ -125,6 +151,12 @@ public class Turret extends SubsystemBase {
         });
   }
 
+  /**
+   * Continuously rotates the turret to follow the supplied shooting solution (auto mode).
+   *
+   * @param shootingSolution Supplier of {@link ShootingSolution}
+   * @return Command that repeatedly applies the shooting solution's turret setpoint
+   */
   public Command rotateToPositionAuto(Supplier<ShootingSolution> shootingSolution) {
     return run(
         () -> {
@@ -132,6 +164,11 @@ public class Turret extends SubsystemBase {
         });
   }
 
+  /**
+   * Returns a one-shot command that rotates the turret to zero (0 degrees).
+   *
+   * @return Command that sets turret to zero position
+   */
   public Command rotateToZero() {
     return runOnce(
         () -> {
@@ -139,6 +176,13 @@ public class Turret extends SubsystemBase {
         });
   }
 
+  /**
+   * Returns a command which continuously applies the supplied shooting solution's turret setpoint
+   * (repeating).
+   *
+   * @param shootingSolution supplier of {@link ShootingSolution}
+   * @return repeating Command that tracks the provided solution
+   */
   public Command rotateToPositionAutoCont(Supplier<ShootingSolution> shootingSolution) {
     return run(() -> {
           setPosition(shootingSolution.get().getPredictedTurretAngle());
@@ -146,6 +190,11 @@ public class Turret extends SubsystemBase {
         .repeatedly();
   }
 
+  /**
+   * Returns a command that sets the logical current position as zero on the hardware.
+   *
+   * @return Command that zeroes the turret encoder/position
+   */
   public Command setZero() {
     return runOnce(
         () -> {
@@ -159,15 +208,34 @@ public class Turret extends SubsystemBase {
     logger.logAndDisplay("Turret Angle (deg)", currentAngle / TurretConstants.GEAR_RATIO);
   }
 
+  /**
+   * Computes a time-of-flight estimate for a given shooting distance.
+   *
+   * @param distance Distance to target in meters
+   * @return Time in seconds that the projectile will be in flight
+   * @throws UnsupportedOperationException if not implemented
+   */
   public double findTimeFromFuelShootingDistance(double distance) {
     throw new UnsupportedOperationException(
         "TODO: Implement findTimeFromFuelShootingDistance(double distance) based on shooter model\"");
   }
 
+  /**
+   * Returns the current turret position as reported by the motor controller.
+   *
+   * @return Current turret {@link edu.wpi.first.units.measure.Angle}
+   */
   public Angle getPosition() {
     return m_turretMotor.getPosition().getValue();
   }
 
+  /**
+   * Checks whether the turret is within a tolerance of a target position.
+   *
+   * @param targetPosition Target angle
+   * @param tolerance Allowed angular tolerance
+   * @return true if current position is near target within tolerance
+   */
   public boolean isAtPosition(Angle targetPosition, Angle tolerance) {
     return getPosition().isNear(targetPosition, tolerance);
   }
@@ -179,6 +247,19 @@ public class Turret extends SubsystemBase {
         });
   }
 
+  /**
+   * Adjusts the turret offset by the specified degrees in a one-shot command.
+   *
+   * @param offsetDegrees Degrees to add to the dynamic offset
+   * @return Command that updates the dynamic offset once
+   */
+  public Command adjustPositionDynamically(double offsetDegrees) {
+    return runOnce(
+        () -> {
+          incrementDynamicOffset(offsetDegrees);
+        });
+  }
+
   private void incrementDynamicOffset(final double offsetDegrees) {
     m_dynamicOffsetDegrees += offsetDegrees;
   }
@@ -187,13 +268,11 @@ public class Turret extends SubsystemBase {
     m_dynamicOffsetDegrees = 0.0;
   }
 
-  public Command adjustPositionDynamically(double offsetDegrees) {
-    return runOnce(
-        () -> {
-          incrementDynamicOffset(offsetDegrees);
-        });
-  }
-
+  /**
+   * Returns a command that resets the turret's dynamic offset value to zero.
+   *
+   * @return Command that resets the dynamic offset
+   */
   public Command resetDynamicOffsetCommand() {
     return run(
         () -> {

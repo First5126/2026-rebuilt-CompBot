@@ -33,6 +33,12 @@ import frc.robot.subsystems.ShootingMechanism;
 import frc.robot.subsystems.Turret;
 import frc.robot.vision.AprilTagLocalization;
 
+/**
+ * RobotContainer binds subsystems, commands, and operator input together.
+ *
+ * <p>Creates and configures subsystems, command factories, and autopicker. This is the central
+ * place to declare robot wiring and default commands.
+ */
 public class RobotContainer {
   private final RobotLogger robotLogger = new RobotLogger("RobotContainer");
   private double MaxSpeed =
@@ -70,7 +76,7 @@ public class RobotContainer {
 
   // End of Declaring
 
-  PhotonDetails[] photonDetails = {};
+  PhotonDetails[] photonDetails = {AprilTagLocalizationConstants.camera1Details};
   public CommandFactory m_commandFactory =
       new CommandFactory(
           m_drivetrain,

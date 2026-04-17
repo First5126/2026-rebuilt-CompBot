@@ -12,6 +12,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.CANConstants;
 import frc.robot.constants.IndexerConstants;
 
+/**
+ * Indexer subsystem responsible for feeding game pieces into the shooter.
+ *
+ * <p>Provides commands to start, stop, reverse, and agitate the indexing mechanisms.
+ */
 public class Indexer extends SubsystemBase {
 
   private TalonFX m_indexerMotor =
@@ -50,20 +55,40 @@ public class Indexer extends SubsystemBase {
     return runOnce(() -> startMotors());
   }
 
+  /**
+   * Starts the indexing motors to feed game pieces into the shooter (one-shot).
+   *
+   * @return Command that begins indexing
+   */
   public Command stopIndexing() {
     return runOnce(() -> stopMotors());
   }
 
+  /**
+   * Stops the indexing motors (one-shot).
+   *
+   * @return Command that stops indexing
+   */
   public Command reverseIndexing() {
     return runOnce(() -> reverseMotors());
   }
 
+  /**
+   * Reverses the indexer briefly to clear jams (one-shot).
+   *
+   * @return Command that runs indexer in reverse
+   */
   public Command agitateIndexer() {
     return startIndexing()
         .andThen(
             Commands.waitSeconds(1).andThen(reverseIndexing().andThen(Commands.waitSeconds(0.1))));
   }
 
+  /**
+   * Runs an agitate routine which briefly indexes forward then reverses to help clear jams.
+   *
+   * @return Composite command that agitates the indexer
+   */
   private void startMotors() {
     m_indexerMotor.setControl(m_indexerVoltageOut.withOutput(IndexerConstants.indexerSpeed));
     m_spindexerMotor.setControl(m_spindexerVoltageOut.withOutput(IndexerConstants.spindexerSpeed));
