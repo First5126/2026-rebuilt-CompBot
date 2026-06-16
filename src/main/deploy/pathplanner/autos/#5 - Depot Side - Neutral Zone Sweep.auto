@@ -55,21 +55,15 @@
                       }
                     },
                     {
-                      "type": "wait",
+                      "type": "path",
                       "data": {
-                        "waitTime": 3.5
+                        "pathName": "Depot Back to Neutral Side"
                       }
                     },
                     {
                       "type": "named",
                       "data": {
                         "name": "StopIndexandShoot"
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "Depot Back to Neutral Side"
                       }
                     },
                     {
