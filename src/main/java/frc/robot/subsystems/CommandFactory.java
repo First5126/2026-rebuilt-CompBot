@@ -261,10 +261,6 @@ public class CommandFactory {
     return m_intakeDeployer.lowerIntakeDownCommand();
   }
 
-  public Command agitateIntake() {
-    return m_intakeDeployer.agitateIntakeCo();
-  }
-
   public Command startIntake() {
     return m_intake.runIntake();
   }

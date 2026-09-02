@@ -127,9 +127,6 @@ public class Operator extends CustomXboxController implements Controller {
 
     this.x().onTrue(commandFactory.clearShootingJam());
 
-    this.leftBumper()
-        .whileTrue(commandFactory.agitateIntake().alongWith(commandFactory.startIntake()));
-
     this.rightBumper().onTrue(commandFactory.lowerIntake());
 
     this.rightTrigger().onTrue(commandFactory.startIntake()).onFalse(commandFactory.stopIntake());
