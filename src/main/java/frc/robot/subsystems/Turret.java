@@ -6,7 +6,6 @@ import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXSConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFXS;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorArrangementValue;
@@ -25,7 +24,6 @@ public class Turret extends SubsystemBase {
   private final TalonFXS m_turretMotor;
   // private final CANcoder m_turretEncoder;
   private final PositionVoltage m_positionControl;
-  private final VoltageOut m_voltageControl;
   private double m_dynamicOffsetDegrees = 0.0;
 
   public Turret() {
@@ -85,30 +83,7 @@ public class Turret extends SubsystemBase {
     m_turretMotor.getConfigurator().apply(talonFXSConfiguration);
     // m_turretMotor.setPosition(m_turretEncoder.getPosition().getValue());
     m_positionControl = new PositionVoltage(0);
-    m_voltageControl = new VoltageOut(0);
     m_turretMotor.setPosition(0);
-  }
-
-  /**
-   * Returns a command that rotates the turret to the specified position.
-   *
-   * @param position The target angle (use WPILib Units, e.g. Units.Degrees.of(90))
-   * @return a WPILib Command object to run once
-   */
-  public Command manualRotation(Angle amountOfMovement) {
-    return run(
-        () -> {
-          setPosition(m_turretMotor.getPosition().getValue().plus(amountOfMovement));
-        });
-  }
-
-  public Command manualRotationWithSticks(Supplier<Double> controlerX) {
-    return run(
-        () -> {
-          m_turretMotor.setControl(
-              m_voltageControl.withOutput(
-                  TurretConstants.MAX_VOLTAGE_MANUAL * (controlerX.get() - 0.1)));
-        });
   }
 
   public Command rotateToPosition(Supplier<ShootingSolution> shootingSolution) {
@@ -118,39 +93,11 @@ public class Turret extends SubsystemBase {
         });
   }
 
-  public Command rotateToPositionTracking(Supplier<ShootingSolution> shootingSolution) {
-    return run(
-        () -> {
-          setPosition(shootingSolution.get().getPredictedTurretAngle());
-        });
-  }
-
-  public Command rotateToPositionAuto(Supplier<ShootingSolution> shootingSolution) {
-    return run(
-        () -> {
-          setPosition(shootingSolution.get().getPredictedTurretAngle());
-        });
-  }
-
-  public Command rotateToZero() {
-    return runOnce(
-        () -> {
-          setPosition(Degrees.of(0));
-        });
-  }
-
   public Command rotateToPositionAutoCont(Supplier<ShootingSolution> shootingSolution) {
     return run(() -> {
           setPosition(shootingSolution.get().getPredictedTurretAngle());
         })
         .repeatedly();
-  }
-
-  public Command setZero() {
-    return runOnce(
-        () -> {
-          m_turretMotor.setPosition(0);
-        });
   }
 
   @Override
@@ -168,10 +115,6 @@ public class Turret extends SubsystemBase {
     return m_turretMotor.getPosition().getValue();
   }
 
-  public boolean isAtPosition(Angle targetPosition, Angle tolerance) {
-    return getPosition().isNear(targetPosition, tolerance);
-  }
-
   public Command holdCertainPosition(Angle angle) {
     return run(
         () -> {
@@ -183,21 +126,10 @@ public class Turret extends SubsystemBase {
     m_dynamicOffsetDegrees += offsetDegrees;
   }
 
-  private void resetDynamicOffset() {
-    m_dynamicOffsetDegrees = 0.0;
-  }
-
   public Command adjustPositionDynamically(double offsetDegrees) {
     return runOnce(
         () -> {
           incrementDynamicOffset(offsetDegrees);
-        });
-  }
-
-  public Command resetDynamicOffsetCommand() {
-    return run(
-        () -> {
-          resetDynamicOffset();
         });
   }
 

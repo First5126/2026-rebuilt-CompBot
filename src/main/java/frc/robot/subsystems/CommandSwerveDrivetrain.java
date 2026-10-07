@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Volts;
 
@@ -19,7 +17,6 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -303,25 +300,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
         }
-    }
-
-    public double getDriveHeadingDegrees() {
-        SwerveDriveState state = getState();
-        Rotation2d poseRotations = state.Pose.getRotation();
-        ChassisSpeeds fieldSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(state.Speeds, poseRotations);
-        double driveHeadingDegrees = Math.toDegrees(Math.atan2(fieldSpeeds.vyMetersPerSecond, fieldSpeeds.vxMetersPerSecond));
-        logger.log("Drive Heading (Degrees)", driveHeadingDegrees);
-
-        return driveHeadingDegrees;
-    }
-
-    public double getTurretHeadingForDuck() {
-        Rotation2d poseRotations = getState().Pose.getRotation();
-        double oppositeDeg = MathUtil.inputModulus(getDriveHeadingDegrees() + 180.0, -180.0, 180.0);
-        double turretRobotRelativeDeg = MathUtil.inputModulus(oppositeDeg - poseRotations.getDegrees(), -180, 180);
-        logger.log("Turret Heading for Duck (Degrees)", turretRobotRelativeDeg);
-
-        return turretRobotRelativeDeg;
     }
 
     private void startSimThread() {

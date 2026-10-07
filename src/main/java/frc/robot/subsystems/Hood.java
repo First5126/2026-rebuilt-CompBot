@@ -6,7 +6,6 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Rotations;
-import static edu.wpi.first.units.Units.Volt;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.DigitalInputsConfigs;
@@ -15,18 +14,14 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.S1CloseStateValue;
 import com.ctre.phoenix6.signals.S2CloseStateValue;
 import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.units.measure.Voltage;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.RobotLogger;
@@ -45,7 +40,6 @@ public class Hood extends SubsystemBase {
   private Slot0Configs m_motorConfigs;
 
   private PositionVoltage m_positionVoltageRequest;
-  private VoltageOut m_voltageOut = new VoltageOut(0);
   private static final RobotLogger logger = new RobotLogger("Hood");
 
   private Angle clampPosition(final Angle position) {
@@ -142,49 +136,6 @@ public class Hood extends SubsystemBase {
     logger.logAndDisplay("Hood Angle (deg)", currentAngle);
   }
 
-  public Command lowerHoodUntilZero() {
-    return setVoltage(HoodConstants.VOLTAGE_AUTO_ZERO)
-        .andThen(Commands.waitUntil(m_zeroTrigger).andThen(setVoltage(Volt.of(0))));
-  }
-
-  public Command manualRotation(Angle amountOfRotation) {
-    return runOnce(
-        () -> {
-          setPositionInternal(m_hoodMotor.getPosition().getValue().plus(amountOfRotation));
-        });
-  }
-
-  public Command setPosition(Angle angle) {
-    return runOnce(
-        () -> {
-          setPositionInternal(angle);
-        });
-  }
-
-  public Command moveAngleUpCommand() {
-    return Commands.run(
-        () -> {
-          setPositionInternal(Degrees.of(m_hoodMotor.getPosition().getValue().in(Degrees) + 0.1));
-        },
-        this);
-  }
-
-  public Command moveAngleDownCommand() {
-    return Commands.run(
-        () -> {
-          setPositionInternal(Degrees.of(m_hoodMotor.getPosition().getValue().in(Degrees) - 0.1));
-        },
-        this);
-  }
-
-  public Command manualRotationWithSticks(Supplier<Double> controlerY) {
-    return run(
-        () -> {
-          m_hoodCANCoder.setControl(
-              m_voltageOut.withOutput(HoodConstants.MAX_VOLTAGE_MANUAL * (controlerY.get() - 0.1)));
-        });
-  }
-
   public Command holdCertainPosition(Angle angle) {
     return run(() -> {
           setPositionInternal(angle);
@@ -196,21 +147,6 @@ public class Hood extends SubsystemBase {
     return run(
         () -> {
           setPositionInternal(shootingSolution.get().getPredictedHoodAngle());
-        });
-  }
-
-  public Command setPositionToDashboard() {
-    return runOnce(
-        () -> {
-          Angle angle = Degrees.of(SmartDashboard.getNumber("Set Hood Angle (Deg)", 0));
-          setPositionInternal(angle);
-        });
-  }
-
-  public Command setVoltage(Voltage voltage) {
-    return runOnce(
-        () -> {
-          m_hoodMotor.setControl(m_voltageOut.withOutput(voltage));
         });
   }
 

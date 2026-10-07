@@ -6,23 +6,11 @@ import frc.robot.constants.AprilTagLocalizationConstants;
 import frc.robot.constants.AprilTagLocalizationConstants.PhotonDetails;
 import java.util.List;
 import java.util.Optional;
-import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class PhotonVisionHelpers {
-
-  /**
-   * Retrieves the latest pipeline result from a Photon camera.
-   *
-   * @param camera photon camera instance
-   * @return latest pipeline result
-   */
-  public static PhotonPipelineResult getResultOfCamera(PhotonCamera camera) {
-
-    return camera.getLatestResult();
-  }
 
   /**
    * Computes the distance between two poses.
@@ -40,14 +28,14 @@ public class PhotonVisionHelpers {
    * Computes the average distance from the robot pose to visible AprilTags.
    *
    * @param photonDetail configured PhotonVision camera details
+   * @param result the latest pipeline result for the camera
    * @param robotPose2d current robot pose
    * @return average distance in meters, or 0.0 if no targets are visible
    */
   public static double getAverageDistanceBetweenTags(
-      PhotonDetails photonDetail, Pose2d robotPose2d) {
+      PhotonDetails photonDetail, PhotonPipelineResult result, Pose2d robotPose2d) {
 
-    // TODO Cole  Replace deprecated getLatestResult
-    List<PhotonTrackedTarget> targets = photonDetail.camera.getLatestResult().getTargets();
+    List<PhotonTrackedTarget> targets = result.getTargets();
     int numberOfTargets = targets.size();
 
     // Return 0.0 when no targets are available to avoid division by zero.
@@ -67,6 +55,9 @@ public class PhotonVisionHelpers {
         totalDistanceOfTargets +=
             PhotonUtils.getDistanceToPose(robotPose2d, currentTagPose.get().toPose2d());
       }
+    }
+    if (numberOfValildTargets == 0) {
+      return 0.0;
     }
     return totalDistanceOfTargets / numberOfValildTargets;
   }

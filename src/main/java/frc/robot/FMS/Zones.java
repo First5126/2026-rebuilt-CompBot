@@ -6,11 +6,13 @@ package frc.robot.FMS;
 
 import static edu.wpi.first.units.Units.Degrees;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.RobotLogger;
 import frc.robot.constants.GoalPoseConstants;
 import frc.robot.constants.GoalPoseConstants.GoalPose;
@@ -23,6 +25,9 @@ import java.util.function.Supplier;
 
 /** Add your docs here. */
 public class Zones {
+  private static final double LOG_PERIOD_SECONDS = 0.1;
+  private static final double TRENCH_CHECK_PERIOD_SECONDS = 0.1;
+
   private final Supplier<Pose2d> m_pose;
   private final Supplier<Angle> m_pitch;
   private final Supplier<Angle> m_roll;
@@ -30,9 +35,14 @@ public class Zones {
   private final RobotLogger logger = new RobotLogger("Zones");
 
   private final CommandSwerveDrivetrain m_commandSwerveDrivetrain;
+  private final Pigeon2 m_pigeon;
 
   private Optional<Alliance> cachedAlliance = Optional.empty();
   private boolean allianceCached = false;
+  private double m_lastLogSeconds = 0.0;
+  private Alliance m_lastLoggedAlliance = null;
+  private double m_lastTrenchCheckSeconds = 0.0;
+  private boolean m_cachedNearTrench = false;
 
   public Zones(CommandSwerveDrivetrain commandSwerveDrivetrain) {
     this(commandSwerveDrivetrain, DriverStation::getAlliance);
@@ -43,10 +53,11 @@ public class Zones {
       Supplier<Optional<Alliance>> allianceSupplier) {
     m_commandSwerveDrivetrain = commandSwerveDrivetrain;
     m_allianceSupplier = allianceSupplier;
+    m_pigeon = commandSwerveDrivetrain.getPigeon2();
 
     m_pose = () -> commandSwerveDrivetrain.getPose2d();
-    m_pitch = () -> commandSwerveDrivetrain.getPigeon2().getPitch().getValue();
-    m_roll = () -> commandSwerveDrivetrain.getPigeon2().getRoll().getValue();
+    m_pitch = () -> m_pigeon.getPitch().getValue();
+    m_roll = () -> m_pigeon.getRoll().getValue();
   }
 
   private Optional<Alliance> getAlliance() {
@@ -58,10 +69,11 @@ public class Zones {
       }
     }
 
-    logger.log(
-        "Alliance",
-        "Retrieved Alliance: "
-            + (cachedAlliance.isPresent() ? cachedAlliance.get().name() : "Unknown"));
+    if (cachedAlliance.isPresent() && m_lastLoggedAlliance != cachedAlliance.get()) {
+      m_lastLoggedAlliance = cachedAlliance.get();
+      logger.log(
+          "Alliance", "Retrieved Alliance: " + (cachedAlliance.isPresent() ? cachedAlliance.get().name() : "Unknown"));
+    }
 
     return cachedAlliance;
   }
@@ -71,7 +83,11 @@ public class Zones {
     Zone zone =
         ZonesConstants.firstContainingOrDefault(robotTranslation, Zone.class, Zone.OUT_OF_BOUNDS);
 
-    logger.logAndDisplay("CurrentZone", zone);
+    double nowSeconds = Timer.getFPGATimestamp();
+    if (nowSeconds - m_lastLogSeconds >= LOG_PERIOD_SECONDS) {
+      m_lastLogSeconds = nowSeconds;
+      logger.logAndDisplay("CurrentZone", zone);
+    }
 
     return zone;
   }
@@ -88,10 +104,13 @@ public class Zones {
   }
 
   public boolean isNearTrench() {
-    Pose2d robotPose = m_commandSwerveDrivetrain.getPredictedPose2d(0.25);
-    Translation2d robotTranslation = robotPose.getTranslation();
-    boolean isNearTrench = ZonesConstants.containsAny(robotTranslation, Trench.class);
-    return isNearTrench;
+    double nowSeconds = Timer.getFPGATimestamp();
+    if (nowSeconds - m_lastTrenchCheckSeconds >= TRENCH_CHECK_PERIOD_SECONDS) {
+      m_lastTrenchCheckSeconds = nowSeconds;
+      Pose2d robotPose = m_commandSwerveDrivetrain.getPredictedPose2d(0.25);
+      m_cachedNearTrench = ZonesConstants.containsAny(robotPose.getTranslation(), Trench.class);
+    }
+    return m_cachedNearTrench;
   }
 
   public boolean isInDeadZone() {
@@ -116,14 +135,14 @@ public class Zones {
   }
 
   public GoalPose getGoalPose() {
-    getZone();
+    Zone zone = getZone();
     Optional<Alliance> alliance = getAlliance();
     if (!alliance.isPresent()) {
       logger.log("GoalPose", "Alliance information not available, defaulting to Blue Hub pose");
       return GoalPoseConstants.BLUE_HUB;
     }
 
-    switch (getZone()) {
+    switch (zone) {
       case BLUE_ZONE:
         return alliance.get() == Alliance.Blue
             ? GoalPoseConstants.BLUE_HUB

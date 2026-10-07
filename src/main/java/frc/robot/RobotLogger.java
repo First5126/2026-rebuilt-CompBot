@@ -29,10 +29,8 @@ public class RobotLogger {
   }
 
   public void log(String key, double value) {
-    // Log to DogLog with a structured key
-    String fullKey = subsystemName + SEPERATOR + key;
     if (enabled) {
-      DogLog.log(fullKey, value);
+      DogLog.log(subsystemName + SEPERATOR + key, value);
     }
   }
 
@@ -43,10 +41,8 @@ public class RobotLogger {
   }
 
   public void log(String key, boolean value) {
-    String fullKey = subsystemName + SEPERATOR + key;
-
     if (enabled) {
-      DogLog.log(fullKey, value);
+      DogLog.log(subsystemName + SEPERATOR + key, value);
     }
   }
 
@@ -56,9 +52,8 @@ public class RobotLogger {
   }
 
   public void log(String key, String value) {
-    String fullKey = subsystemName + SEPERATOR + key;
     if (enabled) {
-      DogLog.log(fullKey, value);
+      DogLog.log(subsystemName + SEPERATOR + key, value);
     }
   }
 
@@ -68,9 +63,8 @@ public class RobotLogger {
   }
 
   public <T extends Enum<T>> void log(String key, T value) {
-    String fullKey = subsystemName + SEPERATOR + key;
     if (enabled) {
-      DogLog.log(fullKey, value.name());
+      DogLog.log(subsystemName + SEPERATOR + key, value.name());
     }
   }
 

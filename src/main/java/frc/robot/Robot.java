@@ -20,6 +20,9 @@ public class Robot extends TimedRobot {
 
   private final RobotContainer m_robotContainer;
 
+  private boolean m_logEnabled = true;
+  private int m_logPollCounter = 0;
+
   /* log and replay timestamp and joystick data */
   private final HootAutoReplay m_timeAndJoystickReplay =
       new HootAutoReplay().withTimestampReplay().withJoystickReplay();
@@ -35,9 +38,10 @@ public class Robot extends TimedRobot {
   /** Runs once per robot packet. */
   @Override
   public void robotPeriodic() {
-    // Read the value from SmartDashboard
-    boolean logEnabled = SmartDashboard.getBoolean("Enable DogLog", true);
-    RobotLogger.setEnabled(logEnabled);
+    if (m_logPollCounter++ % 10 == 0) {
+      m_logEnabled = SmartDashboard.getBoolean("Enable DogLog", true);
+    }
+    RobotLogger.setEnabled(m_logEnabled);
 
     m_timeAndJoystickReplay.update();
     if (RobotLogger.isEnabled()) {

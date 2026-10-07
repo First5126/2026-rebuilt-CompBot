@@ -33,8 +33,6 @@ public class Intake extends SubsystemBase {
 
     intakeWheelsConfiguration.Slot0 = intakeWheelsSlot0Configs;
 
-    m_intakeWheelsMotor.getConfigurator().apply(intakeWheelsConfiguration);
-
     StatusCode status = m_intakeWheelsMotor.getConfigurator().apply(intakeWheelsConfiguration);
     if (!status.isOK()) {
       DriverStation.reportError("Failed to apply Intake TalonFX config: " + status, false);

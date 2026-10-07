@@ -1,123 +1,47 @@
 # Driver Controls
 
-Summary: mappings for the Driver controller. Actions are executed directly (no Operator state switching).
+Summary: mappings for the Driver controller (port 0). Drive input uses a "gas pedal" scheme: the triggers set speed, the left stick sets direction.
 
-- Left Trigger: Drive Robot-Centric (hold to drive relative to robot heading)
-- Right Trigger: Drive Field-Centric (hold to drive relative to field heading)
-- Left Bumper: Reset zero (zero sensors / heading)
-- Right Stick (analog): Rotation control (rotate robot with right stick)
-- Left Stick Click: Movement (translation with left stick)
-- D-Pad / A / B / X / Y / Start / Back / Right Bumper / Right Stick Click: unused / no mapping
+- Right Trigger: Field-centric drive - hold to move relative to the field heading (full speed). Left stick sets direction.
+- Left Trigger: Robot-centric drive - hold to move relative to the robot heading (half speed). Left stick sets direction.
+- Left Stick: Movement direction. Direction comes from the stick; speed comes from whichever trigger is held.
+- Right Stick X: Rotation (capped at half the max angular rate).
+- Left Bumper: Reset field-centric heading (seedFieldCentric) - re-zeros forward.
+- A / B / X / Y / Start / Back / D-Pad / Right Bumper / stick clicks: unused.
 
 Notes:
-- Driver mappings are immediate control inputs used for robot motion only.
-- Joystick deadbands and controller constants are configured in code (see ControllerConstants).
+- If both triggers are held, the right (field-centric) trigger takes priority.
+- With no trigger and no rotation input, the drivetrain brakes.
+- Deadbands are configured in code (see ControllerConstants / CustomXboxController).
 
 # Operator Controls
 
-Summary: mappings for the Operator controller. Many bindings are state-dependent (NORMAL vs OVERRIDE). Toggle operator state with Back button. Start button resets match-time calibration.
+Summary: mappings for the Operator controller (port 1). All button bindings are state-independent in the current code. The Operator state (NORMAL vs OVERRIDE) only affects the turret-tracking default command: in NORMAL the turret tracks the shooting solution; in OVERRIDE the turret does nothing.
 
-Operator state behavior:
-- NORMAL: primary automated/operator-assisted behaviors.
-- OVERRIDE: manual / direct control mode for testing or field adjustments.
-- Back button toggles state and updates SmartDashboard key: `Operator OVERRIDE Active` (boolean).
+Operator state:
+- NORMAL: default - turret tracking enabled.
+- OVERRIDE: manual/test mode - turret tracking disabled.
+- Back toggles the state and updates the SmartDashboard key `Operator OVERRIDE Active` (boolean).
 
-Common implementation details:
-- Deadband triggers created for left/right sticks at 0.10.
-- Several buttons use SelectCommand to choose a command depending on OperatorState.
-- `CommandFactory` must be provided to Operator (init) before configureBindings is called.
+Mappings:
+- A (while held): set hood to trench position (0 degrees)
+- Y (while held): stop flywheel
+- B (on press): start indexer
+- B (on release): clear shooting jam - flywheel inward + indexer reverse for 0.25 s, then stop indexer
+- X (on press): clear shooting jam - flywheel inward + indexer reverse
+- Right Bumper (on press): lower intake pivot
+- Right Trigger (on press / on release): intake wheels in / stop
+- Left Trigger (on press / on release): intake wheels out / stop
+- D-Pad Left (on press): turret offset +1 degree
+- D-Pad Right (on press): turret offset -1 degree
+- Back (on press): toggle Operator state (NORMAL <-> OVERRIDE)
+- Start: unused
+- D-Pad Up / Down: unused
+- Left / Right sticks: unused
 
-Mappings (state-specific where applicable):
-
-- A
-  - On press (onTrue):
-  - NORMAL: lowerIntake()
-  - OVERRIDE: startIndexer()
-  - On release (onFalse):
-  - NORMAL: raiseIntake()
-  - OVERRIDE: stopIndexer()
-  - While held (whileTrue):
-  - NORMAL: setHoodToTrenchPosition()
-    - OVERRIDE: none
-
-- B
-  - On press:
-  - NORMAL: startIndexer()
-  - OVERRIDE: startFlywheelWithSolution()
-  - On release:
-  - NORMAL: stopIndexer()
-  - OVERRIDE: stopFlywheel()
-
-- X
-  - On press:
-    - NORMAL: none
-    - OVERRIDE: clearShootingJam()
-  - On release:
-    - NORMAL: none
-    - OVERRIDE: stopFlywheelAndIndexer()
-
-- Y
-  - On press: no-op in both states
-
-- D-Pad Up / Down
-  - While held:
-    - NORMAL: none
-    - OVERRIDE: raiseHoodSlowly() (manual hood movement)
-
-- D-Pad Left / Right
-  - While held:
-    - NORMAL: none
-    - OVERRIDE: rotateTurretBy(Degrees.of(0.1)) (manual turret movement)
-
-- Left Bumper
-  - On press:
-    - NORMAL: raiseIntake()
-    - OVERRIDE: raiseIntake()
-
-- Right Bumper
-  - On press:
-    - NORMAL: lowerIntake()
-    - OVERRIDE: lowerIntake()
-
-- Right Trigger
-  - On press:
-    - NORMAL: none
-    - OVERRIDE: reverseIntake()
-  - On release:
-    - NORMAL: none
-    - OVERRIDE: stopIntake()
-
-- Left Trigger
-  - On press:
-    - NORMAL: none
-    - OVERRIDE: startIntake()
-  - On release:
-    - NORMAL: none
-    - OVERRIDE: stopIntake()
-
-- Left stick X (deadband > 0.10)
-  - While held: rotateTurretWithStickInput(this::getLeftX) — manual turret with analogue input
-
-- Right stick Y (deadband > 0.10)
-  - While held: rotateHoodWithStickInput(this::getRightY) — manual hood with analogue input
-
-- Start
-  - On press: reset match-time calibration (ShiftData.resetMatchTimeCalibration())
-
-- Back
-  - On press: toggle Operator state (NORMAL <-> OVERRIDE) and update SmartDashboard key `Operator OVERRIDE Active`
-
-Operator OVERRIDE template (manual mode quick reference)
-- Left Trigger: Intake wheels in
-- Right Trigger: Intake wheels out
-- Left Bumper: Intake pivot in
-- Right Bumper: Intake pivot out
-- D-Pad Up: Hood up (manual)
-- D-Pad Down: Hood down (manual)
-- D-Pad Left: Turret left (manual)
-- D-Pad Right: Turret right (manual)
-- B: Flywheel out (interpolated / start flywheels with solution)
-- A: Spin indexer / spindexer (indexing while held)
-- X: Stop/Everything in (static speed) — mapped to reverse/stop shooting in code
+Default commands (RobotContainer):
+- ShootingMechanism: turret tracking (NORMAL state only)
+- FlyWheel: flywheel + hood set to the current shooting solution
+- When the robot is near the trench, the hood is commanded to the trench position.
 
 -- End of controls documentation.
