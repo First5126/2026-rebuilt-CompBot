@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.Degrees;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import frc.robot.FMS.Zones;
@@ -54,13 +55,17 @@ public class CommandFactory {
     return m_hood.holdCertainPosition(Degrees.of(0));
   }
 
+  public Command duckHood() {
+    return m_hood
+        .holdCertainPosition(Degrees.of(0))
+        .withInterruptBehavior(InterruptionBehavior.kCancelSelf);
+  }
+
   public Command stopEverything() {
-    return Commands.runOnce(
-        () -> {
-          stopFlywheel();
-          stopIndexer();
-          stopIntake();
-        });
+    return m_flyWheel
+        .stopSpinningOnce()
+        .alongWith(m_indexer.stopIndexing())
+        .alongWith(m_intake.stopIntake());
   }
 
   public Command intake() {

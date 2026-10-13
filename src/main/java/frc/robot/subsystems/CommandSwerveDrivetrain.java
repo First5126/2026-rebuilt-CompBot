@@ -248,8 +248,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         double predictedX = robotPose.getX() + robotFieldRelitiveSpeed.vxMetersPerSecond * delayTime;
         double predictedY = robotPose.getY() + robotFieldRelitiveSpeed.vyMetersPerSecond * delayTime;
+        Rotation2d predictedRotation =
+            robotPose.getRotation().plus(
+                Rotation2d.fromRadians(
+                    robotFieldRelitiveSpeed.omegaRadiansPerSecond * delayTime));
 
-        Pose2d predictedPose = new Pose2d(predictedX, predictedY, robotPose.getRotation());
+        Pose2d predictedPose = new Pose2d(predictedX, predictedY, predictedRotation);
         return predictedPose;
     }
 
@@ -300,6 +304,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
         }
+
+        Pose2d currentPose = getPose2d();
+        ChassisSpeeds currentSpeeds = getSpeeds();
+        logger.log("Robot Pose", currentPose);
+        logger.log("Robot Heading (deg)", currentPose.getRotation().getDegrees());
+        logger.log("Velocity X (m/s)", currentSpeeds.vxMetersPerSecond);
+        logger.log("Velocity Y (m/s)", currentSpeeds.vyMetersPerSecond);
+        logger.log("Angular Velocity (rad/s)", currentSpeeds.omegaRadiansPerSecond);
     }
 
     private void startSimThread() {

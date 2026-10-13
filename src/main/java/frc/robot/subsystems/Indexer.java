@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
@@ -8,10 +10,13 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotLogger;
 import frc.robot.constants.CANConstants;
 import frc.robot.constants.IndexerConstants;
 
 public class Indexer extends SubsystemBase {
+
+  private static final RobotLogger logger = new RobotLogger("Indexer");
 
   private TalonFX m_indexerMotor =
       new TalonFX(CANConstants.indexFeederMotor, CANConstants.mechanismCanivore);
@@ -71,5 +76,13 @@ public class Indexer extends SubsystemBase {
     m_indexerMotor.setControl(m_indexerVoltageOut.withOutput(IndexerConstants.indexerSpeedReverse));
     m_spindexerMotor.setControl(
         m_spindexerVoltageOut.withOutput(IndexerConstants.spindexerSpeedReverse));
+  }
+
+  @Override
+  public void periodic() {
+    logger.log(
+        "Indexer Speed (rps)", m_indexerMotor.getVelocity().getValue().in(RotationsPerSecond));
+    logger.log(
+        "Spindexer Speed (rps)", m_spindexerMotor.getVelocity().getValue().in(RotationsPerSecond));
   }
 }

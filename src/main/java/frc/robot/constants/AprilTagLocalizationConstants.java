@@ -62,18 +62,18 @@ public class AprilTagLocalizationConstants {
 
   public static final String LIMELIGHT_NAME_RIGHT = "limelight-right";
   public static final Matrix<N3, N1> LIMELIGHT_CLOSE_STDDEV_RIGHT =
-      VecBuilder.fill(0.01, 0.01, 999999999.9);
+      VecBuilder.fill(0.03, 0.03, 999999999.9);
   public static final Matrix<N3, N1> LIMELIGHT_FAR_STDDEV_RIGHT =
-      VecBuilder.fill(0.05, 0.05, 999999999.9);
+      VecBuilder.fill(0.20, 0.20, 999999999.9);
   public static final LimelightDetails LIMELIGHT_DETAILS_RIGHT =
       new LimelightDetails(
           LIMELIGHT_NAME_RIGHT, LIMELIGHT_CLOSE_STDDEV_RIGHT, LIMELIGHT_FAR_STDDEV_RIGHT);
 
   public static final String LIMELIGHT_NAME_LEFT = "limelight-left";
   public static final Matrix<N3, N1> LIMELIGHT_CLOSE_STDDEV_LEFT =
-      VecBuilder.fill(0.01, 0.01, 999999999.9);
+      VecBuilder.fill(0.03, 0.03, 999999999.9);
   public static final Matrix<N3, N1> LIMELIGHT_FAR_STDDEV_LEFT =
-      VecBuilder.fill(0.05, 0.05, 999999999.9);
+      VecBuilder.fill(0.20, 0.20, 999999999.9);
   public static final LimelightDetails LIMELIGHT_DETAILS_LEFT =
       new LimelightDetails(
           LIMELIGHT_NAME_LEFT, LIMELIGHT_CLOSE_STDDEV_LEFT, LIMELIGHT_FAR_STDDEV_LEFT);
@@ -82,4 +82,8 @@ public class AprilTagLocalizationConstants {
       AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
   public static final Distance MAX_TAG_DISTANCE = Meters.of(5.0);
   public static final Time LOCALIZATION_PERIOD = Seconds.of(0.02);
+
+  public static final int MIN_TAG_COUNT = 2;
+  public static final Distance MIN_TAG_DISTANCE = Meters.of(0.25);
+  public static final Distance MAX_MEASUREMENT_JUMP = Meters.of(2.0);
 }

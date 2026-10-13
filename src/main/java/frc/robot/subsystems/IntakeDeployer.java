@@ -20,10 +20,15 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotLogger;
 import frc.robot.constants.CANConstants;
 import frc.robot.constants.IntakeDeployerConstants;
 
 public class IntakeDeployer extends SubsystemBase {
+
+  private static final double DEPLOY_TOLERANCE_ROTATIONS = 0.01;
+  private static final double DEPLOY_TIMEOUT_SECONDS = 1.0;
+  private static final RobotLogger logger = new RobotLogger("IntakeDeployer");
 
   private TalonFX m_intakeDeployerMotorRight =
       new TalonFX(CANConstants.intakePivotRightMotor, CANConstants.mechanismCanivore);
@@ -78,13 +83,16 @@ public class IntakeDeployer extends SubsystemBase {
 
   public Command lowerIntakeDownCommand() {
     return setWheelsDownCommand()
-        .andThen(Commands.waitUntil(this::reachedDeploySetpoint))
+        .andThen(
+            Commands.waitUntil(this::reachedDeploySetpoint)
+                .withTimeout(DEPLOY_TIMEOUT_SECONDS))
         .andThen(stopWheelsCommand());
   }
 
   private Boolean reachedDeploySetpoint() {
-    return m_intakeDeployerMotorLeft.getPosition().getValue().in(Rotations)
-        > IntakeDeployerConstants.INTAKE_HALFWAY_DOWN.in(Rotations);
+    double position = m_intakeDeployerMotorLeft.getPosition().getValue().in(Rotations);
+    return Math.abs(position - IntakeDeployerConstants.INTAKE_HALFWAY_DOWN.in(Rotations))
+        <= DEPLOY_TOLERANCE_ROTATIONS;
   }
 
   private Command setWheelsDownCommand() {
@@ -109,5 +117,13 @@ public class IntakeDeployer extends SubsystemBase {
 
   private void stopMotor() {
     m_intakeDeployerMotorLeft.setControl(m_dutyRequest.withOutput(0));
+  }
+
+  @Override
+  public void periodic() {
+    double positionRotations =
+        m_intakeDeployerMotorLeft.getPosition().getValue().in(Rotations);
+    logger.log("Position (rot)", positionRotations);
+    logger.log("Reached Deploy Setpoint", reachedDeploySetpoint());
   }
 }

@@ -20,6 +20,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.S1CloseStateValue;
 import com.ctre.phoenix6.signals.S2CloseStateValue;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -40,6 +41,8 @@ public class Hood extends SubsystemBase {
   private Slot0Configs m_motorConfigs;
 
   private PositionVoltage m_positionVoltageRequest;
+  private double m_lastLogSeconds = 0.0;
+  private static final double LOG_PERIOD_SECONDS = 0.1;
   private static final RobotLogger logger = new RobotLogger("Hood");
 
   private Angle clampPosition(final Angle position) {
@@ -133,7 +136,15 @@ public class Hood extends SubsystemBase {
   @Override
   public void periodic() {
     double currentAngle = m_hoodMotor.getPosition().getValueAsDouble() * 360.0;
-    logger.logAndDisplay("Hood Angle (deg)", currentAngle);
+
+    logger.log("Angle (deg)", currentAngle);
+    logger.log("Lower Limit Switch", getLowerLimitValue());
+
+    double nowSeconds = Timer.getFPGATimestamp();
+    if (nowSeconds - m_lastLogSeconds >= LOG_PERIOD_SECONDS) {
+      m_lastLogSeconds = nowSeconds;
+      logger.logAndDisplay("Angle (deg)", currentAngle);
+    }
   }
 
   public Command holdCertainPosition(Angle angle) {

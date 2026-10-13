@@ -12,6 +12,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.FMS.Zones;
@@ -97,7 +98,7 @@ public class RobotContainer {
 
     // Intake Deployer
     NamedCommands.registerCommand("Lower Intake", m_commandFactory.setIntakeDown());
-    NamedCommands.registerCommand("Raise Intake ", m_intakeDeployer.raiseIntakeUpCommand());
+    NamedCommands.registerCommand("Raise Intake", m_intakeDeployer.raiseIntakeUpCommand());
     NamedCommands.registerCommand("SetTurretToZero", m_commandFactory.setTurretToZero());
 
     // Shoot
@@ -105,7 +106,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Test", m_commandFactory.test());
 
     // Duck
-    NamedCommands.registerCommand("Duck Hood", m_commandFactory.setHoodToTrenchPosition());
+    NamedCommands.registerCommand("Duck Hood", m_commandFactory.duckHood());
 
     autoChooser = AutoBuilder.buildAutoChooser();
     configureBindings();
@@ -146,10 +147,12 @@ public class RobotContainer {
    * @return command to run during autonomous
    */
   public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
+    Command selected = autoChooser.getSelected();
+    robotLogger.log("Selected Auto", selected != null ? selected.getName() : "None");
+    return selected;
   }
 
   public void stopAllMotors() {
-    m_commandFactory.stopEverything();
+    CommandScheduler.getInstance().schedule(m_commandFactory.stopEverything());
   }
 }

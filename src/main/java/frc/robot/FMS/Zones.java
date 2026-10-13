@@ -86,7 +86,7 @@ public class Zones {
     double nowSeconds = Timer.getFPGATimestamp();
     if (nowSeconds - m_lastLogSeconds >= LOG_PERIOD_SECONDS) {
       m_lastLogSeconds = nowSeconds;
-      logger.logAndDisplay("CurrentZone", zone);
+      logger.logAndDisplay("Current Zone", zone);
     }
 
     return zone;
@@ -94,11 +94,13 @@ public class Zones {
 
   public boolean isNearBump() {
     double pitch = m_pitch.get().in(Degrees);
-    double roll = 180 - Math.abs(m_roll.get().in(Degrees));
+    double roll = m_roll.get().in(Degrees);
+    double pitchFromLevel = Math.min(Math.abs(pitch), Math.abs(180.0 - Math.abs(pitch)));
+    double rollFromLevel = Math.min(Math.abs(roll), Math.abs(180.0 - Math.abs(roll)));
 
     boolean onBump =
-        Math.abs(pitch) > ZonesConstants.BUMP_ANGLE.in(Degrees)
-            || Math.abs(roll) > ZonesConstants.BUMP_ANGLE.in(Degrees);
+        pitchFromLevel > ZonesConstants.BUMP_ANGLE.in(Degrees)
+            || rollFromLevel > ZonesConstants.BUMP_ANGLE.in(Degrees);
 
     return onBump;
   }
@@ -109,6 +111,8 @@ public class Zones {
       m_lastTrenchCheckSeconds = nowSeconds;
       Pose2d robotPose = m_commandSwerveDrivetrain.getPredictedPose2d(0.25);
       m_cachedNearTrench = ZonesConstants.containsAny(robotPose.getTranslation(), Trench.class);
+      logger.log("Near Trench", m_cachedNearTrench);
+      logger.log("Near Bump", isNearBump());
     }
     return m_cachedNearTrench;
   }
@@ -126,7 +130,7 @@ public class Zones {
         isInDeadZone =
             ZonesConstants.contains(robotTranslation, ZonesConstants.HubDeadZone.RED_HUB_DEADZONE);
     }
-    logger.log("IsInDeadZone", isInDeadZone);
+    logger.log("In Dead Zone", isInDeadZone);
     return isInDeadZone;
   }
 

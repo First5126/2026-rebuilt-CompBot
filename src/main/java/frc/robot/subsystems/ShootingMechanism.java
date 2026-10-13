@@ -146,10 +146,32 @@ public class ShootingMechanism extends SubsystemBase {
 
       double predictedHubDistance = Math.hypot(targetDistanceX, targetDistanceY);
 
+      // refine the time of flight using the predicted distance to the target
+      delayTime =
+          goalPose.interpolationSet.distanceToTimeOfFlight.get(predictedHubDistance)
+              + AprilTagLocalizationConstants.LOCALIZATION_PERIOD.in(Seconds)
+              + ShootingMechanismConstants.mechanismDelay.in(Seconds)
+              + ShootingMechanismConstants.computationDelay.in(Seconds);
+
+      predictedRobotPose = m_drivetrain.getPredictedPose2d(delayTime);
+      robotHeadingRad = predictedRobotPose.getRotation().getRadians();
+      cosHeading = Math.cos(robotHeadingRad);
+      sinHeading = Math.sin(robotHeadingRad);
+      turretPoseX =
+          predictedRobotPose.getX() + (turretOffsetX * cosHeading) - (turretOffsetY * sinHeading);
+      turretPoseY =
+          predictedRobotPose.getY() + (turretOffsetX * sinHeading) + (turretOffsetY * cosHeading);
+      targetDistanceX = targetPose.getX() - turretPoseX;
+      targetDistanceY = targetPose.getY() - turretPoseY;
+      predictedHubDistance = Math.hypot(targetDistanceX, targetDistanceY);
+
       // find the robot relative angle of the turret (avoid Rotation2d object churn)
       double fieldRelativeAngleRad = Math.atan2(targetDistanceY, targetDistanceX) - Math.PI;
       double predictedTurretAngleRad =
           MathUtil.angleModulus(fieldRelativeAngleRad - robotHeadingRad);
+      double maxTurretAngleRad = Math.toRadians(TurretConstants.MAX_ANGLE.in(Degrees));
+      predictedTurretAngleRad =
+          MathUtil.clamp(predictedTurretAngleRad, -maxTurretAngleRad, maxTurretAngleRad);
       Angle predictedTurretAngle = Radians.of(predictedTurretAngleRad);
 
       // find the angle of the hood from the predicted pose
@@ -168,6 +190,14 @@ public class ShootingMechanism extends SubsystemBase {
       if (nowSeconds - m_lastDashboardUpdateSeconds >= DASHBOARD_UPDATE_PERIOD_SECONDS) {
         m_lastDashboardUpdateSeconds = nowSeconds;
         logger.log("Valid Shooting Solution", true);
+        logger.log("Robot Pose", robotPose);
+        logger.log("Goal Pose", targetPose);
+        logger.log("Predicted Robot Pose", predictedRobotPose);
+        logger.log("Predicted Hub Distance (m)", predictedHubDistance);
+        logger.log("Delay Time (s)", delayTime);
+        logger.log("Turret Angle (deg)", predictedTurretAngle.in(Degrees));
+        logger.log("Hood Angle (deg)", predictedHoodAngle.in(Degrees));
+        logger.log("Flywheel Speed (rps)", predictedFlyWheelVelocity.in(RotationsPerSecond));
 
         m_field.setRobotPose(robotPose);
         m_predictedPoseObject.setPose(predictedRobotPose);

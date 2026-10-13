@@ -11,6 +11,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorArrangementValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotLogger;
@@ -20,11 +21,14 @@ import frc.robot.subsystems.ShootingMechanism.ShootingSolution;
 import java.util.function.Supplier;
 
 public class Turret extends SubsystemBase {
+  private static final double LOG_PERIOD_SECONDS = 0.1;
   private static final RobotLogger logger = new RobotLogger("Turret");
   private final TalonFXS m_turretMotor;
   // private final CANcoder m_turretEncoder;
   private final PositionVoltage m_positionControl;
   private double m_dynamicOffsetDegrees = 0.0;
+  private double m_lastCommandedAngleDeg = 0.0;
+  private double m_lastLogSeconds = 0.0;
 
   public Turret() {
     m_turretMotor = new TalonFXS(CANConstants.turretMotor, CANConstants.mechanismCanivore);
@@ -103,7 +107,18 @@ public class Turret extends SubsystemBase {
   @Override
   public void periodic() {
     double currentAngle = m_turretMotor.getPosition().getValueAsDouble() * 360.0;
-    logger.logAndDisplay("Turret Angle (deg)", currentAngle / TurretConstants.GEAR_RATIO);
+    double currentAngleDeg = currentAngle / TurretConstants.GEAR_RATIO;
+
+    logger.log("Angle (deg)", currentAngleDeg);
+    logger.log("Commanded Angle (deg)", m_lastCommandedAngleDeg);
+    logger.log("Dynamic Offset (deg)", m_dynamicOffsetDegrees);
+
+    double nowSeconds = Timer.getFPGATimestamp();
+    if (nowSeconds - m_lastLogSeconds >= LOG_PERIOD_SECONDS) {
+      m_lastLogSeconds = nowSeconds;
+      logger.logAndDisplay("Angle (deg)", currentAngleDeg);
+      logger.logAndDisplay("Commanded Angle (deg)", m_lastCommandedAngleDeg);
+    }
   }
 
   public double findTimeFromFuelShootingDistance(double distance) {
@@ -141,6 +156,18 @@ public class Turret extends SubsystemBase {
     double requestedDegrees =
         position.in(Degrees) + m_dynamicOffsetDegrees * TurretConstants.GEAR_RATIO;
     double clampedDegrees = Math.max(minDegrees, Math.min(requestedDegrees, maxDegrees));
+
+    // Never command more than the full physical travel from the current position, so a wrapped
+    // bearing can not demand a rotation through the mechanism zero at full speed.
+    double currentDegrees = m_turretMotor.getPosition().getValue().in(Degrees);
+    double maxStepDegrees = TurretConstants.MAX_ANGLE.in(Degrees) * TurretConstants.GEAR_RATIO;
+    clampedDegrees =
+        Math.max(
+            currentDegrees - maxStepDegrees,
+            Math.min(clampedDegrees, currentDegrees + maxStepDegrees));
+
+    m_lastCommandedAngleDeg = clampedDegrees / TurretConstants.GEAR_RATIO;
+
     // Construct the measure back in degrees
     Angle clampedPosition = Degrees.of(clampedDegrees);
 
