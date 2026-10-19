@@ -45,6 +45,8 @@ public class FlyWheel extends SubsystemBase {
     flyWheelConfiguration.Slot0 = slot0;
 
     m_shooterMotor.getConfigurator().apply(flyWheelConfiguration);
+
+    SmartDashboard.putNumber("Interpolation/Set Flywheel Speed (rps)", 0);
   }
 
   public Command setSpeed(Supplier<AngularVelocity> rps) {
@@ -90,6 +92,15 @@ public class FlyWheel extends SubsystemBase {
     return RotationsPerSecond.of(SmartDashboard.getNumber("Set Shooter Speed (RPS)", 0));
   }
 
+  public Command setSpeedToDashboard() {
+    return run(
+        () -> {
+          setSpeedControl(
+              RotationsPerSecond.of(
+                  SmartDashboard.getNumber("Interpolation/Set Flywheel Speed (rps)", 0)));
+        });
+  }
+
   public AngularVelocity getCurrentSpeed() {
     return m_shooterMotor.getVelocity().getValue();
   }
@@ -118,7 +129,7 @@ public class FlyWheel extends SubsystemBase {
     m_shooterMotor.setControl(m_dutyCycleOut.withOutput(0.60));
   }
 
-  private void setSpeed(AngularVelocity speed) {
+  public void setSpeed(AngularVelocity speed) {
     m_shooterMotor.setControl(m_shooterSpeed.withVelocity(speed));
   }
 

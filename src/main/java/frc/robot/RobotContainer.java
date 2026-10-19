@@ -98,6 +98,10 @@ public class RobotContainer {
 
   /** Creates the container and configures bindings. */
   public RobotContainer() {
+    SmartDashboard.putNumber(
+        "Interpolation/Set Flywheel Speed (rps)",
+        m_flyWheel.getCurrentSpeed().in(RotationsPerSecond));
+    SmartDashboard.putNumber("Interpolation/Set Hood Angle (deg)", 0);
 
     // Intake Wheels
     NamedCommands.registerCommand("Intake", m_commandFactory.intake());
@@ -135,7 +139,10 @@ public class RobotContainer {
 
     // Shooting Mechanism Default Command
     m_shootingMechanism.setDefaultCommand(m_commandFactory.startTurretTracking());
-    m_flyWheel.setDefaultCommand(m_commandFactory.startShootingWithSolution());
+    // m_flyWheel.setDefaultCommand(m_commandFactory.startShootingWithSolution());
+    Command command = m_commandFactory.interpolationCommand();
+    command.addRequirements(m_hood, m_flyWheel);
+    m_flyWheel.setDefaultCommand(command);
 
     // Turret Default Command
 

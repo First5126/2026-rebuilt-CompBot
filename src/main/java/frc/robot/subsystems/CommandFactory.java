@@ -2,8 +2,10 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -124,6 +126,30 @@ public class CommandFactory {
 
   public Command rotateHoodBy(Angle amountOfMovement) {
     return m_hood.manualRotation(amountOfMovement);
+  }
+
+  public Command interpolationCommand() {
+    return Commands.run(
+            () -> {
+              ShootingMechanism.ShootingSolution solution =
+                  m_shootingMechanism.getShootingSolution();
+              Supplier<Double> distance = () -> m_shootingMechanism.getPredictedHubDistance();
+              SmartDashboard.putNumber(
+                  "Interpolation/Distance (m)", distance.get());
+              SmartDashboard.putNumber(
+                  "Interpolation/Table Hood Angle (deg)",
+                  solution.getPredictedHoodAngle().in(Degrees));
+              SmartDashboard.putNumber(
+                  "Interpolation/Table Flywheel Speed (rps)",
+                  solution.getPredictedFlyWheelVelocity().in(RotationsPerSecond));
+              // These need to be suppliers so they only work once at the start of the robot code
+              SmartDashboard.putNumber(
+                  "Interpolation/Current Hood Angle (deg)", m_hood.getAngle().in(Degrees));
+              SmartDashboard.putNumber(
+                  "Interpolation/Current Flywheel Speed (rps)",
+                  m_flyWheel.getCurrentSpeed().in(RotationsPerSecond));
+            })
+        .alongWith(m_hood.setPositionToDashboard(), m_flyWheel.setSpeedToDashboard());
   }
 
   public Command spinFlywheelContinuously() {

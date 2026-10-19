@@ -130,6 +130,8 @@ public class Hood extends SubsystemBase {
             .ignoringDisable(true));
 
     m_hoodCANCoder.setPosition(0);
+
+    SmartDashboard.putNumber("Interpolation/Set Hood Angle (deg)", 0);
   }
 
   private boolean getLowerLimitValue() {
@@ -138,8 +140,7 @@ public class Hood extends SubsystemBase {
 
   @Override
   public void periodic() {
-    double currentAngle = m_hoodMotor.getPosition().getValueAsDouble() * 360.0;
-    logger.logAndDisplay("Hood Angle (deg)", currentAngle);
+    logger.logAndDisplay("Hood Angle (deg)", getAngle().in(Degrees));
   }
 
   public Command lowerHoodUntilZero() {
@@ -200,10 +201,10 @@ public class Hood extends SubsystemBase {
   }
 
   public Command setPositionToDashboard() {
-    return runOnce(
+    return run(
         () -> {
-          Angle angle = Degrees.of(SmartDashboard.getNumber("Set Hood Angle (Deg)", 0));
-          setPositionInternal(angle);
+          setPositionInternal(
+              Degrees.of(SmartDashboard.getNumber("Interpolation/Set Hood Angle (deg)", 0)));
         });
   }
 
@@ -216,5 +217,9 @@ public class Hood extends SubsystemBase {
 
   public Angle getPosition() {
     return m_hoodCANCoder.getPosition().getValue();
+  }
+
+  public Angle getAngle() {
+    return m_hoodMotor.getPosition().getValue();
   }
 }

@@ -75,6 +75,7 @@ public class ShootingMechanism extends SubsystemBase {
   private final Field2d m_field = new Field2d();
   private final FieldObject2d m_predictedPoseObject;
   private double m_lastDashboardUpdateSeconds = 0.0;
+  private double m_predictedHubDistance = 0.0;
 
   public ShootingMechanism(
       Turret turret, CommandSwerveDrivetrain drivetrain, Zones zone, Hood hood, FlyWheel flyWheel) {
@@ -95,6 +96,10 @@ public class ShootingMechanism extends SubsystemBase {
 
   public ShootingSolution getShootingSolution() {
     return m_currentShootingSolution;
+  }
+
+  public double getPredictedHubDistance() {
+    return m_predictedHubDistance;
   }
 
   /**
@@ -145,6 +150,7 @@ public class ShootingMechanism extends SubsystemBase {
       double targetDistanceY = targetPose.getY() - turretPoseY;
 
       double predictedHubDistance = Math.hypot(targetDistanceX, targetDistanceY);
+      m_predictedHubDistance = predictedHubDistance;
 
       // find the robot relative angle of the turret (avoid Rotation2d object churn)
       double fieldRelativeAngleRad = Math.atan2(targetDistanceY, targetDistanceX) - Math.PI;
