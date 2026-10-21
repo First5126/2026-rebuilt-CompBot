@@ -134,8 +134,7 @@ public class CommandFactory {
               ShootingMechanism.ShootingSolution solution =
                   m_shootingMechanism.getShootingSolution();
               Supplier<Double> distance = () -> m_shootingMechanism.getPredictedHubDistance();
-              SmartDashboard.putNumber(
-                  "Interpolation/Distance (m)", distance.get());
+              SmartDashboard.putNumber("Interpolation/Distance (m)", distance.get());
               SmartDashboard.putNumber(
                   "Interpolation/Table Hood Angle (deg)",
                   solution.getPredictedHoodAngle().in(Degrees));
