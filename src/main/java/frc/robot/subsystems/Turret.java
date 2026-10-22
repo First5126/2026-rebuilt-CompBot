@@ -157,6 +157,7 @@ public class Turret extends SubsystemBase {
   public void periodic() {
     double currentAngle = m_turretMotor.getPosition().getValueAsDouble() * 360.0;
     logger.logAndDisplay("Turret Angle (deg)", currentAngle / TurretConstants.GEAR_RATIO);
+    logger.logAndDisplay("Turret Offset", m_dynamicOffsetDegrees);
   }
 
   public double findTimeFromFuelShootingDistance(double distance) {
