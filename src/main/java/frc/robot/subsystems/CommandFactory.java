@@ -310,6 +310,10 @@ public class CommandFactory {
     return m_turret.adjustPositionDynamically(offsetDegrees);
   }
 
+  public Command incrementFlywheelMultiplier(double offsetMultiplier) {
+    return m_flyWheel.adjustMultiplierDynamically(offsetMultiplier);
+  }
+
   public Command agitateIndexer() {
     return m_indexer.agitateIndexer();
   }

@@ -138,6 +138,8 @@ public class Operator extends CustomXboxController implements Controller {
     this.back().onTrue(this.changeOperatorStateCommand());
     this.povLeft().onTrue(commandFactory.incrementTurretOffset(1));
     this.povRight().onTrue(commandFactory.incrementTurretOffset(-1));
+    this.povUp().onTrue(commandFactory.incrementFlywheelMultiplier(0.05));
+    this.povDown().onTrue(commandFactory.incrementFlywheelMultiplier(-0.05));
 
     return this;
   }

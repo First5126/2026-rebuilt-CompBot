@@ -16,18 +16,20 @@ import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotLogger;
 import frc.robot.constants.CANConstants;
 import frc.robot.constants.FlyWheelConstants;
 import frc.robot.subsystems.ShootingMechanism.ShootingSolution;
 import java.util.function.Supplier;
 
 public class FlyWheel extends SubsystemBase {
-
+  private static final RobotLogger logger = new RobotLogger("FlyWheel");
   private TalonFX m_shooterMotor =
       new TalonFX(CANConstants.flyWheelsMotor, CANConstants.mechanismCanivore);
 
   private VelocityVoltage m_shooterSpeed = new VelocityVoltage(0);
   private DutyCycleOut m_dutyCycleOut = new DutyCycleOut(0);
+  private double m_dynamicOffsetMultiplier = 1.0;
 
   public FlyWheel() {
     TalonFXConfiguration flyWheelConfiguration = new TalonFXConfiguration();
@@ -106,7 +108,9 @@ public class FlyWheel extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {}
+  public void periodic() {
+    logger.logAndDisplay("Flywheel Multiplier", m_dynamicOffsetMultiplier);
+  }
 
   /*private void setSpeedControl(Supplier<LinearVelocity> ballSpeed) {
     AngularVelocity motorSpeed = calculateAngularVelocity(ballSpeed.get());
@@ -118,7 +122,9 @@ public class FlyWheel extends SubsystemBase {
   private void setSpeedControl(AngularVelocity rotationSpeed) {
 
     if (rotationSpeed.isEquivalent(RotationsPerSecond.of(0))) stopMotors();
-    else m_shooterMotor.setControl(m_shooterSpeed.withVelocity(rotationSpeed));
+    else
+      m_shooterMotor.setControl(
+          m_shooterSpeed.withVelocity(rotationSpeed.times(m_dynamicOffsetMultiplier)));
   }
 
   private void reverseWheels() {
@@ -148,6 +154,17 @@ public class FlyWheel extends SubsystemBase {
     return runOnce(
         () -> {
           m_shooterMotor.setControl(m_dutyCycleOut.withOutput(-0.30));
+        });
+  }
+
+  private void incrementDynamicOffset(final double offsetMultiplier) {
+    m_dynamicOffsetMultiplier = Math.max(m_dynamicOffsetMultiplier += offsetMultiplier, 1);
+  }
+
+  public Command adjustMultiplierDynamically(double offsetMultiplier) {
+    return runOnce(
+        () -> {
+          incrementDynamicOffset(offsetMultiplier);
         });
   }
 }
