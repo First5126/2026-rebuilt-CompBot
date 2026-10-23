@@ -98,7 +98,7 @@ public class Turret extends SubsystemBase {
   public Command manualRotation(Angle amountOfMovement) {
     return run(
         () -> {
-          setPosition(m_turretMotor.getPosition().getValue().plus(amountOfMovement));
+          setPosition(getPosition().plus(amountOfMovement));
         });
   }
 
@@ -155,8 +155,7 @@ public class Turret extends SubsystemBase {
 
   @Override
   public void periodic() {
-    double currentAngle = m_turretMotor.getPosition().getValueAsDouble() * 360.0;
-    logger.logAndDisplay("Turret Angle (deg)", currentAngle / TurretConstants.GEAR_RATIO);
+    logger.logAndDisplay("Turret Angle (deg)", getPosition().in(Degrees));
     logger.logAndDisplay("Turret Offset", m_dynamicOffsetDegrees);
   }
 
@@ -166,7 +165,8 @@ public class Turret extends SubsystemBase {
   }
 
   public Angle getPosition() {
-    return m_turretMotor.getPosition().getValue();
+    return Degrees.of(
+        m_turretMotor.getPosition().getValue().in(Degrees) / TurretConstants.GEAR_RATIO);
   }
 
   public boolean isAtPosition(Angle targetPosition, Angle tolerance) {
@@ -203,15 +203,10 @@ public class Turret extends SubsystemBase {
   }
 
   private void setPosition(Angle position) {
-    position = position.times(TurretConstants.GEAR_RATIO);
-    // Convert all angles to degrees for clamping
-    double minDegrees = TurretConstants.MIN_ANGLE.in(Degrees) * TurretConstants.GEAR_RATIO;
-    double maxDegrees = TurretConstants.MAX_ANGLE.in(Degrees) * TurretConstants.GEAR_RATIO;
-    double requestedDegrees =
-        position.in(Degrees) + m_dynamicOffsetDegrees * TurretConstants.GEAR_RATIO;
-    double clampedDegrees = Math.max(minDegrees, Math.min(requestedDegrees, maxDegrees));
-    // Construct the measure back in degrees
-    Angle clampedPosition = Degrees.of(clampedDegrees);
+    // Clamp in mechanism-space degrees to preserve startup-defined zero reference.
+    double motorDegrees =
+        TurretMath.computeClampedMotorDegrees(position.in(Degrees), m_dynamicOffsetDegrees);
+    Angle clampedPosition = Degrees.of(motorDegrees);
 
     m_turretMotor.setControl(m_positionControl.withPosition(clampedPosition));
   }
