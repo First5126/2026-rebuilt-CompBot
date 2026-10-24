@@ -161,6 +161,12 @@ public class Turret extends SubsystemBase {
   public void periodic() {
     double measuredMotorDegrees = m_turretMotor.getPosition().getValue().in(Degrees);
     double measuredMechanismDegrees = measuredMotorDegrees / TurretConstants.GEAR_RATIO;
+    double closedLoopErrorMotorDegrees = m_lastCommandedMotorDegrees - measuredMotorDegrees;
+    double closedLoopErrorMechanismDegrees =
+        closedLoopErrorMotorDegrees / TurretConstants.GEAR_RATIO;
+    double motorVoltage = m_turretMotor.getMotorVoltage().getValueAsDouble();
+    double statorCurrent = m_turretMotor.getStatorCurrent().getValueAsDouble();
+    double motorVelocity = m_turretMotor.getVelocity().getValueAsDouble();
 
     logger.logAndDisplay("Turret Angle (deg)", measuredMechanismDegrees);
     logger.logAndDisplay("Turret Offset", m_dynamicOffsetDegrees);
@@ -169,6 +175,11 @@ public class Turret extends SubsystemBase {
     logger.logAndDisplay("Turret Cmd Mechanism Clamped (deg)", m_lastClampedMechanismDegrees);
     logger.logAndDisplay("Turret Cmd Motor (deg)", m_lastCommandedMotorDegrees);
     logger.logAndDisplay("Turret Cmd Clipped", m_lastCommandWasClipped ? 1.0 : 0.0);
+    logger.logAndDisplay("Turret ClosedLoop Error Motor (deg)", closedLoopErrorMotorDegrees);
+    logger.logAndDisplay("Turret ClosedLoop Error Mech (deg)", closedLoopErrorMechanismDegrees);
+    logger.logAndDisplay("Turret Motor Voltage (V)", motorVoltage);
+    logger.logAndDisplay("Turret Stator Current (A)", statorCurrent);
+    logger.logAndDisplay("Turret Velocity (raw)", motorVelocity);
 
     if (m_lastLoggedCommandedMotorDegrees == null
         || Math.abs(m_lastLoggedCommandedMotorDegrees - m_lastCommandedMotorDegrees) > 1e-6
