@@ -27,6 +27,12 @@ public class Turret extends SubsystemBase {
   private final PositionVoltage m_positionControl;
   private final VoltageOut m_voltageControl;
   private double m_dynamicOffsetDegrees = 0.0;
+  private double m_lastRequestedMechanismDegrees = 0.0;
+  private double m_lastClampedMechanismDegrees = 0.0;
+  private double m_lastCommandedMotorDegrees = 0.0;
+  private boolean m_lastCommandWasClipped = false;
+  private Double m_lastLoggedCommandedMotorDegrees = null;
+  private Boolean m_lastLoggedCommandWasClipped = null;
 
   public Turret() {
     m_turretMotor = new TalonFXS(CANConstants.turretMotor, CANConstants.mechanismCanivore);
@@ -70,8 +76,6 @@ public class Turret extends SubsystemBase {
         TurretConstants.MIN_ANGLE.times(TurretConstants.GEAR_RATIO));
     talonFXSConfiguration.SoftwareLimitSwitch.withReverseSoftLimitEnable(true);
 
-    talonFXSConfiguration.ExternalFeedback.FeedbackRemoteSensorID = CANConstants.turretEncoder;
-
     Slot0Configs slotConfigs = new Slot0Configs();
     slotConfigs.kP = TurretConstants.kP;
     slotConfigs.kI = TurretConstants.kI;
@@ -98,7 +102,7 @@ public class Turret extends SubsystemBase {
   public Command manualRotation(Angle amountOfMovement) {
     return run(
         () -> {
-          setPosition(m_turretMotor.getPosition().getValue().plus(amountOfMovement));
+          setPosition(getPosition().plus(amountOfMovement));
         });
   }
 
@@ -155,9 +159,42 @@ public class Turret extends SubsystemBase {
 
   @Override
   public void periodic() {
-    double currentAngle = m_turretMotor.getPosition().getValueAsDouble() * 360.0;
-    logger.logAndDisplay("Turret Angle (deg)", currentAngle / TurretConstants.GEAR_RATIO);
+    double measuredMotorDegrees = m_turretMotor.getPosition().getValue().in(Degrees);
+    double measuredMechanismDegrees = measuredMotorDegrees / TurretConstants.GEAR_RATIO;
+    double closedLoopErrorMotorDegrees = m_lastCommandedMotorDegrees - measuredMotorDegrees;
+    double closedLoopErrorMechanismDegrees =
+        closedLoopErrorMotorDegrees / TurretConstants.GEAR_RATIO;
+    double motorVoltage = m_turretMotor.getMotorVoltage().getValueAsDouble();
+    double statorCurrent = m_turretMotor.getStatorCurrent().getValueAsDouble();
+    double motorVelocity = m_turretMotor.getVelocity().getValueAsDouble();
+
+    logger.logAndDisplay("Turret Angle (deg)", measuredMechanismDegrees);
     logger.logAndDisplay("Turret Offset", m_dynamicOffsetDegrees);
+    logger.logAndDisplay("Turret Measured Motor (deg)", measuredMotorDegrees);
+    logger.logAndDisplay("Turret Cmd Mechanism Req (deg)", m_lastRequestedMechanismDegrees);
+    logger.logAndDisplay("Turret Cmd Mechanism Clamped (deg)", m_lastClampedMechanismDegrees);
+    logger.logAndDisplay("Turret Cmd Motor (deg)", m_lastCommandedMotorDegrees);
+    logger.logAndDisplay("Turret Cmd Clipped", m_lastCommandWasClipped ? 1.0 : 0.0);
+    logger.logAndDisplay("Turret ClosedLoop Error Motor (deg)", closedLoopErrorMotorDegrees);
+    logger.logAndDisplay("Turret ClosedLoop Error Mech (deg)", closedLoopErrorMechanismDegrees);
+    logger.logAndDisplay("Turret Motor Voltage (V)", motorVoltage);
+    logger.logAndDisplay("Turret Stator Current (A)", statorCurrent);
+    logger.logAndDisplay("Turret Velocity (raw)", motorVelocity);
+
+    if (m_lastLoggedCommandedMotorDegrees == null
+        || Math.abs(m_lastLoggedCommandedMotorDegrees - m_lastCommandedMotorDegrees) > 1e-6
+        || m_lastLoggedCommandWasClipped == null
+        || m_lastLoggedCommandWasClipped != m_lastCommandWasClipped) {
+      logger.logAndDisplay("Turret Diag Event Req (deg)", m_lastRequestedMechanismDegrees);
+      logger.logAndDisplay("Turret Diag Event Clamped (deg)", m_lastClampedMechanismDegrees);
+      logger.logAndDisplay("Turret Diag Event Cmd Motor (deg)", m_lastCommandedMotorDegrees);
+      logger.logAndDisplay("Turret Diag Event Meas Motor (deg)", measuredMotorDegrees);
+      logger.logAndDisplay("Turret Diag Event Meas Mech (deg)", measuredMechanismDegrees);
+      logger.logAndDisplay("Turret Diag Event Clipped", m_lastCommandWasClipped ? 1.0 : 0.0);
+
+      m_lastLoggedCommandedMotorDegrees = m_lastCommandedMotorDegrees;
+      m_lastLoggedCommandWasClipped = m_lastCommandWasClipped;
+    }
   }
 
   public double findTimeFromFuelShootingDistance(double distance) {
@@ -166,7 +203,8 @@ public class Turret extends SubsystemBase {
   }
 
   public Angle getPosition() {
-    return m_turretMotor.getPosition().getValue();
+    return Degrees.of(
+        m_turretMotor.getPosition().getValue().in(Degrees) / TurretConstants.GEAR_RATIO);
   }
 
   public boolean isAtPosition(Angle targetPosition, Angle tolerance) {
@@ -203,15 +241,18 @@ public class Turret extends SubsystemBase {
   }
 
   private void setPosition(Angle position) {
-    position = position.times(TurretConstants.GEAR_RATIO);
-    // Convert all angles to degrees for clamping
-    double minDegrees = TurretConstants.MIN_ANGLE.in(Degrees) * TurretConstants.GEAR_RATIO;
-    double maxDegrees = TurretConstants.MAX_ANGLE.in(Degrees) * TurretConstants.GEAR_RATIO;
-    double requestedDegrees =
-        position.in(Degrees) + m_dynamicOffsetDegrees * TurretConstants.GEAR_RATIO;
-    double clampedDegrees = Math.max(minDegrees, Math.min(requestedDegrees, maxDegrees));
-    // Construct the measure back in degrees
-    Angle clampedPosition = Degrees.of(clampedDegrees);
+    // Clamp in mechanism-space degrees to preserve startup-defined zero reference.
+    double requestedMechanismDegrees = position.in(Degrees) + m_dynamicOffsetDegrees;
+    double clampedMechanismDegrees =
+        TurretMath.clampMechanismDegrees(position.in(Degrees), m_dynamicOffsetDegrees);
+    double motorDegrees = TurretMath.mechanismToMotorDegrees(clampedMechanismDegrees);
+
+    m_lastRequestedMechanismDegrees = requestedMechanismDegrees;
+    m_lastClampedMechanismDegrees = clampedMechanismDegrees;
+    m_lastCommandedMotorDegrees = motorDegrees;
+    m_lastCommandWasClipped = Math.abs(requestedMechanismDegrees - clampedMechanismDegrees) > 1e-9;
+
+    Angle clampedPosition = Degrees.of(motorDegrees);
 
     m_turretMotor.setControl(m_positionControl.withPosition(clampedPosition));
   }
